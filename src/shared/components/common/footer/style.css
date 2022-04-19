@@ -1,0 +1,10 @@
+.footItem {
+  font-size: small;
+  margin: 0.5rem;
+}
+
+.footItem:hover {
+  text-decoration: underline;
+  cursor: pointer;
+  color: blue;
+}
