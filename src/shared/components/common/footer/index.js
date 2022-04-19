@@ -1,10 +1,12 @@
 import React from "react";
 import './style.css'
 
+
 const Footer = () => {
   return (
     <div className='d-flex flex-column fixed-bottom'>
-      <footer className='footer d-flex bg-light flex-wrap justify-content-center'>
+      <footer className='footer d-flex bg-light flex-wrap justify-content-center align-items-center'>
+        <img class="footLogo" src={require('../../../../assets/svg/logo.svg').default}/>
         <p className='footItem'>About</p>
         <p className='footItem'>Accessibility</p>
         <p className='footItem'>User Agreement</p>
