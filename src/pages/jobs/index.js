@@ -1,9 +1,13 @@
-import React from "react";
+import React, { useState } from "react";
+import CreateCard from "../../shared/components/common/createCard";
 import Footer from "../../shared/components/common/footer";
 import Header from "../../shared/components/common/header";
 import JobCard from "../../shared/components/common/JobCard";
 
 const Jobs = () => {
+  const [open, setOpen] = useState(false);
+  const openModal = () => setOpen(true);
+  const hideModal = () => setOpen(false);
   return (
     <>
       <Header />
@@ -27,6 +31,15 @@ const Jobs = () => {
             />
           </span>
         </div>
+        <hr />
+        <CreateCard
+          openModal2={openModal}
+          hideModal2={hideModal}
+          open2={open}
+          txt="Post a job"
+          job
+        />
+        <hr />
         <div className="row">
           <JobCard />
           <JobCard />

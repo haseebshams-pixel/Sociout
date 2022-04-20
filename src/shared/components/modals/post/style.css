@@ -1,0 +1,9 @@
+.close-icon-container {
+  display: flex;
+  justify-content: flex-end;
+  margin-right: 12px;
+  margin-top: 15px;
+}
+.close-icon {
+  color: #75787d;
+}

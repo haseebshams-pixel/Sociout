@@ -1,0 +1,31 @@
+.card-container {
+  padding-bottom: 30px;
+}
+
+.carosal {
+  height: 400px;
+  background-color: lightgray;
+  margin-bottom: 7px;
+  align-items: center;
+}
+.carosal-image {
+  height: 400px;
+  object-fit: contain;
+  width: 100%;
+}
+
+.postCard-btn {
+  align-items: center;
+  border: none;
+  border-radius: 2px;
+  background: none;
+  cursor: pointer;
+  font-family: inherit;
+  font-weight: 600;
+  display: inline-flex;
+  justify-content: center;
+  min-width: 6.4rem;
+  max-width: 480px;
+  overflow: hidden;
+  text-align: center;
+}
