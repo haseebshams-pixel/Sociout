@@ -1,9 +1,14 @@
 import React from "react";
+import JobCard from "../../shared/components/common/JobCard";
 
 const Jobs = () => {
   return (
-    <div>
-      <div>Jobs</div>
+    <div class="container">
+      <div class="row">
+        <JobCard/>
+        <JobCard/>
+        <JobCard/>
+      </div>
     </div>
   );
 };

@@ -1,0 +1,24 @@
+.jobTitle {
+  font-size: medium;
+  font-weight: bold;
+  color: #0c8ed3;
+}
+
+.jobSubtitle {
+  font-size: smaller;
+}
+
+.jobCard {
+  box-shadow: 0 4px 12px rgb(0 0 0 / 15%);
+}
+
+.jobTitle:hover {
+  text-decoration: underline;
+  cursor: pointer;
+  color: #0c8ed3;
+}
+
+.posted {
+  color: #3ec786;
+  font-size: x-small;
+}
