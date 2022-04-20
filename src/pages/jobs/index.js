@@ -7,11 +7,15 @@ const Jobs = () => {
   return (
     <>
       <Header />
-      <div class="container">
-        <div className="text-center search_searchinput">
+      <div className="container">
+        <div
+          className="text-center search_searchinput"
+          data-aos="fade-up"
+          data-aos-duration="350"
+        >
           <input
             type="text"
-            className="w-100 mt-4 mb-4 ps-3 pt-2 pb-2 pe-5 rounded search_inputag"
+            className="w-100 mb-4 ps-3 pt-2 pb-2 pe-5 rounded search_inputag"
             placeholder="Search..."
           ></input>
           <span className="search_iconinside">
@@ -23,7 +27,7 @@ const Jobs = () => {
             />
           </span>
         </div>
-        <div class="row">
+        <div className="row">
           <JobCard />
           <JobCard />
           <JobCard />

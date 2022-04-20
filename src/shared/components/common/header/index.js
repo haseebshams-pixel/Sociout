@@ -1,6 +1,5 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { Link } from "react-router-dom";
-
 import FeatherIcon from "feather-icons-react";
 import { useDispatch, useSelector } from "react-redux";
 import { resetUser } from "../../../redux/reducers/userSlice";
@@ -10,11 +9,9 @@ import SideNav from "./sideNav";
 import { useHistory } from "react-router-dom";
 import "./style.css";
 
-export default function Header(props) {
+export default function Header() {
   const history = useHistory();
-
   const [offCanvas, setOffCanvas] = useState(false);
-  const [loader, setLoader] = useState(false);
   const signOutPressHandler = () => {
     confirmAlert({
       message: "Are you sure you want to Sign Out?",
@@ -33,100 +30,112 @@ export default function Header(props) {
       ],
     });
   };
-  const navigate1 = (id) => {
-    console.log(user?.user._id);
-    history.push(`/home/${id}`);
+  const navigate = () => {
+    history.push("/");
   };
-
   const openSideNav = () => setOffCanvas(true);
   const closeSideNav = () => setOffCanvas(false);
   const dispatch = useDispatch();
   const user = useSelector((state) => state.root.user);
-
   return (
     <div>
-      <header>
-        <div className="container">
-          <div className="header-flex">
-            <div className="logo">
-              <Link to="/">
-                <img
-                  src={require("../../../../assets/svg/logo.svg").default}
-                  alt="logo"
-                />
-              </Link>
-            </div>
-            <div className="cus-navigation">
-              <nav>
-                <ul role="button">
-                  {user?.isLoggedIn && (
-                    <>
-                      <li role="button" className="nav-hover">
-                        <Link
-                          to="#"
-                          onClick={() => navigate1(user.user._id)}
-                          role="button"
-                        >
-                          Home
-                        </Link>
-                      </li>
-                      {user?.user?.type === "bookreader" && (
-                        <>
-                          <li role="button" className="nav-hover">
-                            <Link to="/offers" role="button">
-                              Offers
-                            </Link>
-                          </li>
-                          <li role="button" className="nav-hover">
-                            <Link to="/" role="button">
-                              Market Place
-                            </Link>
-                          </li>
-                        </>
-                      )}
-                      {user?.user?.type === "publisher" && (
-                        <li role="button" className="nav-hover">
-                          <Link to="/publish" role="button">
-                            Publish
-                          </Link>
-                        </li>
-                      )}
-                    </>
-                  )}
-                </ul>
-              </nav>
-
-              {user?.isLoggedIn && (
-                <>
-                  <Link to="#">
-                    <div className="profile-ctn">
-                      <img
-                        src={require("../../../../assets/images/profilePlaceholder.png")}
-                        className="profile-pic"
-                      />
-                    </div>
-                  </Link>
-                  <li role="button" className="ml-3">
-                    <FeatherIcon icon="bell" />
-                  </li>
-                  <button
-                    onClick={signOutPressHandler}
-                    className="custom-site-btn3"
+      <header className="header py-1">
+        <div className="container d-flex justify-content-between align-items-center">
+          <div>
+            <Link to="/feed">
+              <img
+                src={require("../../../../assets/svg/logo.svg").default}
+                width="200"
+                alt="logo"
+              />
+            </Link>
+          </div>
+          <div>
+            <nav className="d-flex">
+              <ul className="p-0 m-0 header-list-style d-lg-flex d-none">
+                <li>
+                  <Link
+                    className="d-flex flex-column align-items-center justify-content-center header-list-item"
+                    to="/feed"
                   >
-                    Sign Out
+                    <FeatherIcon icon="home" size="20" />
+                    <small>Home</small>
+                  </Link>
+                </li>
+                {user?.isLoggedIn && (
+                  <>
+                    <li>
+                      <Link
+                        className="d-flex flex-column align-items-center justify-content-center header-list-item"
+                        to="/jobs"
+                      >
+                        <FeatherIcon icon="briefcase" size="20" />
+                        <small>Jobs</small>
+                      </Link>
+                    </li>
+                    <li>
+                      <Link
+                        className="d-flex flex-column align-items-center justify-content-center header-list-item"
+                        to="/search"
+                      >
+                        <FeatherIcon icon="search" size="20" />
+                        <small>Search</small>
+                      </Link>
+                    </li>
+                    <li role="button">
+                      <Link
+                        className="d-flex flex-column align-items-center justify-content-center header-list-item"
+                        to="#"
+                      >
+                        <FeatherIcon icon="bell" size="20" />
+                        <small>Notifications</small>
+                      </Link>
+                    </li>
+                    <li>
+                      <Link
+                        to="/profile/1234567"
+                        className="d-flex flex-column align-items-center justify-content-center header-list-item"
+                      >
+                        <div className="profile-ctn">
+                          <img
+                            src={require("../../../../assets/images/profilePlaceholder.png")}
+                            className="profile-pic"
+                            alt="profile-pic"
+                          />
+                        </div>
+                      </Link>
+                    </li>
+                  </>
+                )}
+              </ul>
+              {user?.isLoggedIn && (
+                <button
+                  onClick={signOutPressHandler}
+                  className="header-signout-btn"
+                >
+                  Sign Out
+                </button>
+              )}
+              {!user?.isLoggedIn && (
+                <>
+                  <button onClick={navigate} className="header-signout-btn">
+                    Sign up
+                  </button>
+                  <button onClick={navigate} className="header-signout-btn">
+                    Log in
                   </button>
                 </>
               )}
-              <div className="menu-bar">
+              <div className="menu-bar d-lg-none d-flex">
                 <i className="hamburger" onClick={openSideNav}>
                   <FeatherIcon icon="menu" />
                 </i>
               </div>
-            </div>
+            </nav>
           </div>
         </div>
       </header>
-      <div className="empty-header"></div>
+      <div className="empty-header" />
       <SideNav offCanvas={offCanvas} closeSideNav={closeSideNav} user={user} />
     </div>
   );

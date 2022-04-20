@@ -54,9 +54,7 @@
   margin-bottom: 0;
   line-height: 1.5;
 }
-.offcanvas-header i {
-  font-size: 25px;
-}
+
 .offcanvas-body {
   flex-grow: 1;
   padding: 30px 30px 0px 30px;
@@ -66,5 +64,10 @@
 ul li a {
   margin-right: 25px;
   color: #151515;
+  font-weight: 700;
+}
+
+ul li a:hover {
+  color: #0c8ed3;
   font-weight: 700;
 }

@@ -3,7 +3,12 @@ import "./style.css";
 
 const JobCard = () => {
   return (
-    <div role="button" className="col-md-6">
+    <div
+      role="button"
+      className="col-md-6"
+      data-aos="fade-up"
+      data-aos-duration="600"
+    >
       <div className="jobCard card d-flex p-3 m-2">
         <div className="jobTitle">Trainee Software Developer</div>
         <div className="jobSubtitle">Coding Pixel</div>
