@@ -9,7 +9,7 @@ const Home = () => {
   const [card, setCard] = useState(true);
   return (
     <>
-      <div className="container d-flex align-items-center justify-content-center row m-auto mt-5 mb-5">
+      <div className="container d-flex align-items-start justify-content-center row m-auto mt-5 mb-5">
         <div className="col-lg-6 d-flex flex-column align-items-lg-start align-items-center justify-content-center">
           <img src={require("../../assets/svg/logo.svg").default} height="80" />
           <h4 className="my-4">
@@ -30,6 +30,7 @@ const Home = () => {
           </div>
         </div>
       </div>
+      <div className="space" />
       <Footer />
     </>
   );
