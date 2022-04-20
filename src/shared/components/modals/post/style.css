@@ -1,9 +1,32 @@
 .close-icon-container {
   display: flex;
-  justify-content: flex-end;
-  margin-right: 12px;
-  margin-top: 15px;
+  justify-content: center;
+  align-items: center;
 }
 .close-icon {
   color: #75787d;
+}
+
+.image {
+  height: 30px;
+  width: 30px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.image > input {
+  display: none;
+}
+
+.post-modal-btn {
+  border-radius: 50px;
+  border: none;
+  background: #0c8ed3;
+  border: 1px solid #0c8ed3;
+  color: white;
+}
+.post-modal-btn:hover {
+  color: #0c8ed3 !important;
+  background-color: #ffffff;
+  border: 1px solid #0c8ed3;
 }

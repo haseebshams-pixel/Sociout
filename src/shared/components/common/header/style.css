@@ -30,6 +30,7 @@
   font-size: 13px;
   border: 0;
   margin-left: 15px;
+  border: 1px solid #0c8ed3;
 }
 .header-signout-btn:hover {
   color: #0c8ed3 !important;
