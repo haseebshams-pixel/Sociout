@@ -1,45 +1,45 @@
-import React from 'react'
-import { Spinner } from 'react-bootstrap'
-import Form from 'react-bootstrap/Form'
-import FloatingLabel from 'react-bootstrap/FloatingLabel'
-import { useHistory } from 'react-router-dom'
-import { useDispatch } from 'react-redux'
-import { setUser } from '../../../redux/reducers/userSlice'
-import { toastMessage } from '../toast'
-import { Formik } from 'formik'
-import { RegistrationVS } from '../../../utils/validation'
+import React from "react";
+import { Spinner } from "react-bootstrap";
+import Form from "react-bootstrap/Form";
+import FloatingLabel from "react-bootstrap/FloatingLabel";
+import { useHistory } from "react-router-dom";
+import { useDispatch } from "react-redux";
+import { setUser } from "../../../redux/reducers/userSlice";
+import { toastMessage } from "../toast";
+import { Formik } from "formik";
+import { RegistrationVS } from "../../../utils/validation";
 
-import { GoogleLogin } from 'react-google-login'
+import { GoogleLogin } from "react-google-login";
 const SignUpCard = () => {
-  const history = useHistory()
-  const dispatch = useDispatch()
+  const history = useHistory();
+  const dispatch = useDispatch();
   const initialValues = {
-    firstName: '',
-    lastName: '',
-    email: '',
-    password: '',
-    confirmPassword: '',
-    phoneNumber: '',
-    DOB: '',
-  }
+    firstName: "",
+    lastName: "",
+    email: "",
+    password: "",
+    confirmPassword: "",
+    phoneNumber: "",
+    DOB: "",
+  };
   const handleSignUp = async (values, action) => {
     let resp = {
       isLoggedIn: true,
-    }
-    dispatch(setUser(resp))
-    action.setSubmitting(false)
-    history.push('/feed')
-    toastMessage('User Logged In Successfully', 'success')
-  }
+    };
+    dispatch(setUser(resp));
+    action.setSubmitting(false);
+    history.push("/feed");
+    toastMessage("User Logged In Successfully", "success");
+  };
   const responseGoogle = (response) => {
-    console.log(response)
-    const data = {
-      email: response.profileObj.email,
-      firstname: response.profileObj.givenName,
-      lastname: response.profileObj.familyName,
-      googleId: response.profileObj.googleId,
-    }
-  }
+    console.log(response);
+    // const data = {
+    //   email: response.profileObj.email,
+    //   firstname: response.profileObj.givenName,
+    //   lastname: response.profileObj.familyName,
+    //   googleId: response.profileObj.googleId,
+    // }
+  };
   return (
     <>
       <div className="card py-3 px-4 login-card-container">
@@ -48,8 +48,8 @@ const SignUpCard = () => {
         <Formik
           initialValues={initialValues}
           onSubmit={(values, action) => {
-            action.setSubmitting(true)
-            handleSignUp(values, action)
+            action.setSubmitting(true);
+            handleSignUp(values, action);
           }}
           validationSchema={RegistrationVS}
         >
@@ -72,7 +72,7 @@ const SignUpCard = () => {
                     <Form.Control
                       type="text"
                       placeholder="First Name"
-                      onChange={handleChange('firstName')}
+                      onChange={handleChange("firstName")}
                       value={values.firstName}
                       className="mb-4"
                     />
@@ -80,7 +80,7 @@ const SignUpCard = () => {
                   <div className="error">
                     {touched.firstName && errors.firstName
                       ? errors.firstName
-                      : ''}
+                      : ""}
                   </div>
                 </div>
                 <div className="position-relative">
@@ -92,13 +92,13 @@ const SignUpCard = () => {
                     <Form.Control
                       type="text"
                       placeholder="Last Name"
-                      onChange={handleChange('lastName')}
+                      onChange={handleChange("lastName")}
                       value={values.lastName}
                       className="mb-4"
                     />
                   </FloatingLabel>
                   <div className="error">
-                    {touched.lastName && errors.lastName ? errors.lastName : ''}
+                    {touched.lastName && errors.lastName ? errors.lastName : ""}
                   </div>
                 </div>
               </div>
@@ -112,13 +112,13 @@ const SignUpCard = () => {
                   <Form.Control
                     type="email"
                     placeholder="name@example.com"
-                    onChange={handleChange('email')}
+                    onChange={handleChange("email")}
                     value={values.email}
                     className="mb-4"
                   />
                 </FloatingLabel>
                 <div className="error">
-                  {touched.email && errors.email ? errors.email : ''}
+                  {touched.email && errors.email ? errors.email : ""}
                 </div>
               </div>
               <div className="position-relative">
@@ -126,13 +126,13 @@ const SignUpCard = () => {
                   <Form.Control
                     type="password"
                     placeholder="Password"
-                    onChange={handleChange('password')}
+                    onChange={handleChange("password")}
                     value={values.password}
                     className="mb-3"
                   />
                 </FloatingLabel>
                 <div className="error">
-                  {touched.password && errors.password ? errors.password : ''}
+                  {touched.password && errors.password ? errors.password : ""}
                 </div>
               </div>
               <div className="position-relative">
@@ -143,7 +143,7 @@ const SignUpCard = () => {
                   <Form.Control
                     type="password"
                     placeholder="confirm Password"
-                    onChange={handleChange('confrimPassword')}
+                    onChange={handleChange("confrimPassword")}
                     value={values.password}
                     className="mb-3"
                   />
@@ -151,7 +151,7 @@ const SignUpCard = () => {
                 <div className="error">
                   {touched.confirmPassword && errors.confirmPassword
                     ? errors.confirmPassword
-                    : ''}
+                    : ""}
                 </div>
               </div>
               <div className="position-relative">
@@ -162,7 +162,7 @@ const SignUpCard = () => {
                   <Form.Control
                     type="phonenumber"
                     placeholder="Phone Number"
-                    onChange={handleChange('phoneNumber')}
+                    onChange={handleChange("phoneNumber")}
                     value={values.phoneNumber}
                     className="mb-3"
                   />
@@ -170,7 +170,7 @@ const SignUpCard = () => {
                 <div className="error">
                   {touched.phoneNumber && errors.phoneNumber
                     ? errors.phoneNumber
-                    : ''}
+                    : ""}
                 </div>
               </div>
               <div className="position-relative">
@@ -178,13 +178,13 @@ const SignUpCard = () => {
                   <Form.Control
                     type="date"
                     placeholder="DOB"
-                    onChange={handleChange('DOB')}
+                    onChange={handleChange("DOB")}
                     value={values.DOB}
                     className="mb-3"
                   />
                 </FloatingLabel>
                 <div className="error">
-                  {touched.DOB && errors.DOB ? errors.DOB : ''}
+                  {touched.DOB && errors.DOB ? errors.DOB : ""}
                 </div>
               </div>
               <button
@@ -208,12 +208,12 @@ const SignUpCard = () => {
           buttonText="Continue with Google"
           onSuccess={responseGoogle}
           onFailure={responseGoogle}
-          cookiePolicy={'single_host_origin'}
+          cookiePolicy={"single_host_origin"}
           className="rounded"
         />
       </div>
     </>
-  )
-}
+  );
+};
 
-export default SignUpCard
+export default SignUpCard;

@@ -21,8 +21,8 @@ const Home = () => {
         </div>
         <div className="d-flex justify-content-end row mt-3">
           <div className="col-lg-6 d-flex  justify-content-center">
-            <span>
-              {card ? "New to LinkedIn?" : "Already have an account?"}
+            <span className="me-1">
+              {card ? "New to Sociout?" : "Already have an account?"}
             </span>
             <span className="login-forgot-txt" onClick={() => setCard(!card)}>
               <b>{card ? "Join Now" : "Sign In"}</b>

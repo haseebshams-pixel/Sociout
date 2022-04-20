@@ -11,9 +11,10 @@ const history = createBrowserHistory();
 
 function AuthRoute() {
   const { user } = useSelector((state) => state.root);
+  console.log(user.isLoggedIn);
   return (
     <Router history={history}>
-      {user?.isLoggedIn ? (
+      {!user.isLoggedIn ? (
         <Switch>
           {logedInRoute.map((route, inx) => {
             return (

@@ -16,8 +16,8 @@ const Search = () => {
           <span className="search_iconinside">
             <img
               src={require("../../assets/svg/search.svg").default}
-              width="22"
-              height="22"
+              width="20"
+              height="20"
             />
           </span>
         </div>

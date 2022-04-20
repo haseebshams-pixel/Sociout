@@ -28,12 +28,12 @@ const LoginCard = () => {
   };
   const responseGoogle = (response) => {
     console.log(response);
-    const data = {
-      email: response.profileObj.email,
-      firstname: response.profileObj.givenName,
-      lastname: response.profileObj.familyName,
-      googleId: response.profileObj.googleId,
-    };
+    // const data = {
+    //   email: response.profileObj.email,
+    //   firstname: response.profileObj.givenName,
+    //   lastname: response.profileObj.familyName,
+    //   googleId: response.profileObj.googleId,
+    // };
   };
   return (
     <>
