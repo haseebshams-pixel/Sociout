@@ -13,7 +13,7 @@ function AuthRoute() {
   const { user } = useSelector((state) => state.root);
   return (
     <Router history={history}>
-      {user?.isLoggedIn ? (
+      {!user?.isLoggedIn ? (
         <Switch>
           {logedInRoute.map((route, inx) => {
             return (
