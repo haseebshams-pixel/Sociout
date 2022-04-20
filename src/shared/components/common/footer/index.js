@@ -4,10 +4,11 @@ import "./style.css";
 const Footer = () => {
   return (
     <div className="d-flex flex-column ">
-      <footer className="footer mt-auto d-flex bg-light flex-wrap justify-content-center align-items-center  mb-3 fixed-bottom">
+      <footer className="footer mt-auto d-flex bg-light flex-wrap justify-content-center align-items-center  fixed-bottom">
         <img
           className="footLogo"
           src={require("../../../../assets/svg/logo.svg").default}
+          alt="logo"
         />
         <p className="footItem">About</p>
         <p className="footItem">Accessibility</p>

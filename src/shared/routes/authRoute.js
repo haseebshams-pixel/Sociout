@@ -14,7 +14,7 @@ function AuthRoute() {
   console.log(user.isLoggedIn);
   return (
     <Router history={history}>
-      {!user.isLoggedIn ? (
+      {user.isLoggedIn ? (
         <Switch>
           {logedInRoute.map((route, inx) => {
             return (

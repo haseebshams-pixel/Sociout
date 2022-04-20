@@ -19,6 +19,7 @@ const Jobs = () => {
               src={require("../../assets/svg/search.svg").default}
               width="20"
               height="20"
+              alt="search-logo"
             />
           </span>
         </div>

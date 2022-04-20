@@ -1,11 +1,13 @@
 import React from "react";
 import PersonCard from "../../shared/components/common/personCard";
 import Footer from "../../shared/components/common/footer";
+import Header from "../../shared/components/common/header";
 import "./style.css";
 
 const Search = () => {
   return (
     <>
+      <Header />
       <div className="container">
         <div className="text-center search_searchinput">
           <input
@@ -18,6 +20,7 @@ const Search = () => {
               src={require("../../assets/svg/search.svg").default}
               width="20"
               height="20"
+              alt="search-icon"
             />
           </span>
         </div>

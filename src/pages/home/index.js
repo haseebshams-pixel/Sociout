@@ -1,5 +1,4 @@
 import React, { useState } from "react";
-import Header from "../../shared/components/common/header";
 import Footer from "../../shared/components/common/footer";
 
 import "./style.css";
@@ -11,7 +10,11 @@ const Home = () => {
     <>
       <div className="container d-flex align-items-start justify-content-center row m-auto mt-5 mb-5">
         <div className="col-lg-6 d-flex flex-column align-items-lg-start align-items-center justify-content-center">
-          <img src={require("../../assets/svg/logo.svg").default} height="80" />
+          <img
+            src={require("../../assets/svg/logo.svg").default}
+            height="80"
+            alt="logo"
+          />
           <h4 className="my-4">
             Sociout helps you connect and share with the people in your life.
           </h4>
