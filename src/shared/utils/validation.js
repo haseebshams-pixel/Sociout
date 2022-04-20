@@ -1,31 +1,33 @@
-import * as yup from "yup";
+import * as yup from 'yup'
 
 const LoginVS = yup.object().shape({
   email: yup
     .string()
-    .required("Email is Required")
-    .email("Invalid Email")
-    .label("email"),
-  password: yup.string().required("Password is Required").label("password"),
-});
+    .required('Email is Required')
+    .email('Invalid Email')
+    .label('email'),
+  password: yup.string().required('Password is Required').label('password'),
+})
 
 const RegistrationVS = yup.object().shape({
   email: yup
     .string()
-    .required("Email is Required")
-    .email("Invalid Email")
-    .label("email"),
-  firstname: yup.string().required("Firstname is Required").label("firstname"),
-  lastname: yup.string().required("Lastname is Required").label("lastname"),
-  phonenumber: yup
+    .required('Email is Required')
+    .email('Invalid Email')
+    .label('email'),
+  firstName: yup.string().required('Firstname is Required').label('firstName'),
+  lastName: yup.string().required('Lastname is Required').label('lastName'),
+  phoneNumber: yup
     .string()
-    .required("Phone Number is Required")
-    .label("phonenumber"),
-  password: yup.string().required("Password is required"),
-  passwordConfirmation: yup
+    .required('Phone Number is Required')
+    .label('phonenumber'),
+  password: yup.string().required('Password is required'),
+  confirmPassword: yup
     .string()
-    .oneOf([yup.ref("password"), null], "Passwords must match"),
-});
+    .oneOf([yup.ref('password'), null], 'Passwords must match'),
+
+  DOB: yup.string().required('Date of Birth is Required').label('DOB'),
+})
 
 // const EditBookVS = yup.object().shape({
 //   name: yup.string().required("Book Title Required").label("name"),
@@ -144,4 +146,4 @@ const RegistrationVS = yup.object().shape({
 //     );
 //   }
 // );
-export { LoginVS, RegistrationVS };
+export { LoginVS, RegistrationVS }
