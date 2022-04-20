@@ -222,3 +222,12 @@ header {
     color: #000 !important;
   }
 }
+.react-confirm-alert-button-group {
+  justify-content: center !important;
+}
+
+.react-confirm-alert-body {
+  display: flex;
+  flex-direction: column;
+  text-align: center;
+}

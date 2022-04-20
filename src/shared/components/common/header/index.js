@@ -18,6 +18,7 @@ export default function Header(props) {
   const signOutPressHandler = () => {
     confirmAlert({
       message: "Are you sure you want to Sign Out?",
+      className: "d-flex justify-content-center",
       buttons: [
         {
           label: "Yes",

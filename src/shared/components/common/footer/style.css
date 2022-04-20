@@ -3,6 +3,9 @@
   margin: 0.75rem;
 }
 
+.footer {
+  z-index: 1;
+}
 .footItem:hover {
   text-decoration: underline;
   cursor: pointer;
