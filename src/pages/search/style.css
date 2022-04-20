@@ -1,0 +1,15 @@
+.search_searchinput {
+  position: relative;
+}
+.search_inputag {
+  border: none;
+  box-shadow: 0 4px 12px rgb(0 0 0 / 15%);
+  outline: 0;
+}
+
+.search_iconinside {
+  position: absolute;
+  right: 5px;
+  top: 29px;
+  cursor: pointer;
+}
