@@ -3,7 +3,7 @@ import FeatherIcon from "feather-icons-react";
 import { Modal } from "react-bootstrap";
 import "./style.css";
 
-const EditProfileModal = ({ show, hide }) => {
+const ChangePasswordModal = ({ show, hide }) => {
   return (
     <Modal
       show={show}
@@ -14,7 +14,7 @@ const EditProfileModal = ({ show, hide }) => {
     >
       <div className="p-3">
         <div className="d-flex justify-content-between align-items-start">
-          <h5 className="m-0 w-75">Edit Profile</h5>
+          <h5 className="m-0 w-75">Change Password</h5>
           <div className="close-icon-container" onClick={hide}>
             <FeatherIcon
               icon="x"
@@ -31,4 +31,4 @@ const EditProfileModal = ({ show, hide }) => {
   );
 };
 
-export default EditProfileModal;
+export default ChangePasswordModal;

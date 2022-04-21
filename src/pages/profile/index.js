@@ -8,8 +8,10 @@ import PersonCard from "../../shared/components/common/personCard";
 import EditProfileModal from "../../shared/components/modals/editProfile";
 import "./style.css";
 import UploadProfilePhotoModal from "../../shared/components/modals/uploadProfilePhoto";
+import ChangePasswordModal from "../../shared/components/modals/changePassword";
 const Profile = () => {
   const [edit, setEdit] = useState(false);
+  const [editPass, setEditPass] = useState(false);
   const [uploadPhoto, setUploadPhoto] = useState(false);
   const openModal = () => {
     setEdit(true);
@@ -22,6 +24,12 @@ const Profile = () => {
   };
   const closeModal2 = () => {
     setUploadPhoto(false);
+  };
+  const openModal3 = () => {
+    setEditPass(true);
+  };
+  const closeModal3 = () => {
+    setEditPass(false);
   };
   return (
     <>
@@ -47,13 +55,23 @@ const Profile = () => {
               </div>
             </div>
             <div className="bg-light p-4 d-flex justify-content-between text-center">
-              <a
-                role="button"
-                className="btn btn-outline-dark btn-sm btn-block text-font-family d-flex align-items-center"
-                onClick={openModal}
-              >
-                Edit profile
-              </a>
+              <div className="d-flex">
+                <a
+                  role="button"
+                  className="btn btn-outline-dark btn-sm btn-block text-font-family d-flex align-items-center"
+                  onClick={openModal}
+                >
+                  Edit profile
+                </a>
+                <a
+                  role="button"
+                  className="btn btn-outline-dark btn-sm btn-block text-font-family d-flex align-items-center ms-2"
+                  onClick={openModal3}
+                >
+                  Change password
+                </a>
+              </div>
+
               <ul className="list-inline mb-0">
                 <li className="list-inline-item">
                   <h5 className="font-weight-bold mb-0 d-block text-font-family">
@@ -102,6 +120,7 @@ const Profile = () => {
       <Footer />
       <EditProfileModal show={edit} hide={closeModal} />
       <UploadProfilePhotoModal show={uploadPhoto} hide={closeModal2} />
+      <ChangePasswordModal show={editPass} hide={closeModal3} />
     </>
   );
 };
