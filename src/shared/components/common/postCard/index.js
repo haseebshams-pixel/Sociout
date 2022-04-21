@@ -5,7 +5,7 @@ import FeatherIcon from "feather-icons-react";
 
 import "./style.css";
 
-function PostCard() {
+function PostCard({ item }) {
   const [like, setLike] = useState(false);
   return (
     <div className="card-container" data-aos="fade-up" data-aos-duration="650">
@@ -22,7 +22,7 @@ function PostCard() {
             </Card.Title>
             <Card.Subtitle className="text-muted">just now</Card.Subtitle>
           </div>
-          <Card.Text>Hello friends! wazzup!!</Card.Text>
+          <Card.Text>{item?.body}</Card.Text>
           <Carousel className="carosal">
             <Carousel.Item>
               <img

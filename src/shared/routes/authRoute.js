@@ -1,7 +1,7 @@
 import React from "react";
 import { createBrowserHistory } from "history";
 import NotFound from "../../pages/notFound";
-import { BrowserRouter as Router, Switch } from "react-router-dom";
+import { BrowserRouter as Router, Switch, Redirect } from "react-router-dom";
 import { useSelector } from "react-redux";
 import Layout from "./layout";
 import { allPublicRoute, logedInRoute } from "./allRoute";
@@ -27,6 +27,17 @@ function AuthRoute() {
               />
             );
           })}
+          <Route
+            exact
+            path="/"
+            render={() => {
+              return user.isLoggedIn ? (
+                <Redirect to="/feed" />
+              ) : (
+                <Redirect to="/" />
+              );
+            }}
+          />
           <Route component={NotFound} />
         </Switch>
       ) : (
@@ -43,6 +54,17 @@ function AuthRoute() {
               />
             );
           })}
+          <Route
+            exact
+            path="/"
+            render={() => {
+              return user.isLoggedIn ? (
+                <Redirect to="/feed" />
+              ) : (
+                <Redirect to="/" />
+              );
+            }}
+          />
           <Route component={NotFound} />
         </Switch>
       )}

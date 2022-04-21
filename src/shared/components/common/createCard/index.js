@@ -15,7 +15,7 @@ const CreateCard = ({
   return (
     <>
       <div
-        className="card flex-row px-3 py-4 align-items-center rounded login-card-container"
+        className="card flex-row px-3 py-4 align-items-center rounded login-card-container w-100"
         data-aos="fade-up"
         data-aos-duration="550"
       >

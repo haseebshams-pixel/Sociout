@@ -1,7 +1,5 @@
 import React, { useState } from "react";
 import Footer from "../../shared/components/common/footer";
-
-import "./style.css";
 import LoginCard from "../../shared/components/common/loginCard";
 import SignUpCard from "../../shared/components/common/signupCard";
 const Home = () => {

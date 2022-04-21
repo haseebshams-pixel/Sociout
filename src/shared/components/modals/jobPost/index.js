@@ -48,7 +48,6 @@ const JobPostModal = ({ show, hide }) => {
           <div className="d-flex mt-2">
             <FeatherIcon icon="mail" />
             <a
-              a
               href="mailto:codingpixel@gmail.com"
               className="ms-2 login-forgot-txt text-decoration-none"
             >
