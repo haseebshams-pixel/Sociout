@@ -7,13 +7,21 @@ import PostCard from "../../shared/components/common/postCard";
 import PersonCard from "../../shared/components/common/personCard";
 import EditProfileModal from "../../shared/components/modals/editProfile";
 import "./style.css";
+import UploadProfilePhotoModal from "../../shared/components/modals/uploadProfilePhoto";
 const Profile = () => {
   const [edit, setEdit] = useState(false);
+  const [uploadPhoto, setUploadPhoto] = useState(false);
   const openModal = () => {
     setEdit(true);
   };
   const closeModal = () => {
     setEdit(false);
+  };
+  const openModal2 = () => {
+    setUploadPhoto(true);
+  };
+  const closeModal2 = () => {
+    setUploadPhoto(false);
   };
   return (
     <>
@@ -29,6 +37,8 @@ const Profile = () => {
                     alt="profilePic"
                     width="130"
                     className="rounded mb-2 img-thumbnail main-profile-pic"
+                    onClick={openModal2}
+                    role="button"
                   />
                 </div>
                 <div className="media-body profile-title-container text-white">
@@ -91,6 +101,7 @@ const Profile = () => {
       <div className="space" />
       <Footer />
       <EditProfileModal show={edit} hide={closeModal} />
+      <UploadProfilePhotoModal show={uploadPhoto} hide={closeModal2} />
     </>
   );
 };

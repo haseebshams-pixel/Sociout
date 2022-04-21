@@ -1,0 +1,9 @@
+.profile-modal-container {
+  background: #293138;
+  color: white;
+}
+.upload-profile-placeHolder {
+  height: 256px;
+  width: 256px;
+  border-radius: 100%;
+}
