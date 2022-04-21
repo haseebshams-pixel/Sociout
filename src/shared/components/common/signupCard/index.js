@@ -29,9 +29,9 @@ const SignUpCard = () => {
     dispatch(setUser(resp));
     action.setSubmitting(false);
     history.push("/feed");
-    toastMessage("User Logged In Successfully", "success");
+    toastMessage("User Registered Successfully", "success");
   };
-  const responseGoogle = (response) => {
+  const responseGoogle = async (response) => {
     console.log(response);
     // const data = {
     //   email: response.profileObj.email,
@@ -39,6 +39,12 @@ const SignUpCard = () => {
     //   lastname: response.profileObj.familyName,
     //   googleId: response.profileObj.googleId,
     // }
+    let resp = {
+      isLoggedIn: true,
+    };
+    dispatch(setUser(resp));
+    history.push("/feed");
+    toastMessage("User Registered Successfully", "success");
   };
   return (
     <>
@@ -204,7 +210,7 @@ const SignUpCard = () => {
           <span className="divider-txt">OR</span>
         </div>
         <GoogleLogin
-          clientId="25061590946-bang7h32caih37tkvj1cr6nu10oijk1b.apps.googleusercontent.com"
+          clientId="325395712191-d421cqk40ijkvqukrbkemtil316tuj8i.apps.googleusercontent.com"
           buttonText="Continue with Google"
           onSuccess={responseGoogle}
           onFailure={responseGoogle}

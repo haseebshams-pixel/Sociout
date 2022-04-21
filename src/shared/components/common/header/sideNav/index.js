@@ -1,10 +1,17 @@
-import React from "react";
+import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import FeatherIcon from "feather-icons-react";
 
 import "./style.css";
+import NotificationsModal from "../../../modals/notifications";
 
 const SideNav = ({ offCanvas, closeSideNav, user }) => {
+  const [notifications, setNotifications] = useState(false);
+  const openNotifications = () => {
+    setNotifications(true);
+    closeSideNav();
+  };
+  const closeNotifications = () => setNotifications(false);
   return (
     <>
       <div
@@ -86,7 +93,7 @@ const SideNav = ({ offCanvas, closeSideNav, user }) => {
                     <Link
                       className="d-flex flex-row align-items-center  header-list-item pb-3"
                       to="#"
-                      onClick={closeSideNav}
+                      onClick={openNotifications}
                     >
                       <FeatherIcon icon="bell" size="20" className="me-2" />
                       Notifications
@@ -98,6 +105,7 @@ const SideNav = ({ offCanvas, closeSideNav, user }) => {
           </div>
         </div>
       </div>
+      <NotificationsModal show={notifications} hide={closeNotifications} />
     </>
   );
 };

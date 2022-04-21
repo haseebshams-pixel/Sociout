@@ -38,7 +38,7 @@ function PostCard() {
           </div>
           <hr className="mt-2 mb-3" />
           <div className="d-flex align-items-center justify-content-between">
-            <button className="postCard-btn" onClick={() => setLike(true)}>
+            <button className="postCard-btn" onClick={() => setLike(!like)}>
               {!like ? (
                 <FeatherIcon icon="heart" />
               ) : (

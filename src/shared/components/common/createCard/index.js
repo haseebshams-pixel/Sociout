@@ -1,6 +1,6 @@
 import React from "react";
 import PostModal from "../../modals/post";
-import JobModal from "../../modals/job";
+import CreateJobModal from "../../modals/createJob";
 import "./style.css";
 const CreateCard = ({
   openModal,
@@ -34,7 +34,7 @@ const CreateCard = ({
         </div>
       </div>
       <PostModal show={open} hide={hideModal} />
-      <JobModal show={open2} hide={hideModal2} />
+      <CreateJobModal show={open2} hide={hideModal2} />
     </>
   );
 };

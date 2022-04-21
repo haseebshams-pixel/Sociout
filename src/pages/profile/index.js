@@ -5,7 +5,7 @@ import Tabs from "react-bootstrap/Tabs";
 import Tab from "react-bootstrap/Tab";
 import PostCard from "../../shared/components/common/postCard";
 import PersonCard from "../../shared/components/common/personCard";
-import EditProfileModal from "../../shared/components/modals/editProfle";
+import EditProfileModal from "../../shared/components/modals/editProfile";
 import "./style.css";
 const Profile = () => {
   const [edit, setEdit] = useState(false);

@@ -3,9 +3,15 @@ import FeatherIcon from "feather-icons-react";
 import { Modal } from "react-bootstrap";
 import "./style.css";
 
-const JobModal = ({ show, hide }) => {
+const CreateJobModal = ({ show, hide }) => {
   return (
-    <Modal show={show} onHide={hide} centered>
+    <Modal
+      show={show}
+      onHide={hide}
+      animation
+      backdrop="static"
+      keyboard={false}
+    >
       <div className="close-icon-container" onClick={hide}>
         <FeatherIcon icon="x" role="button" width="20" className="close-icon" />
       </div>
@@ -16,4 +22,4 @@ const JobModal = ({ show, hide }) => {
   );
 };
 
-export default JobModal;
+export default CreateJobModal;

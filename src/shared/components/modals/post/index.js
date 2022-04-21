@@ -5,7 +5,13 @@ import "./style.css";
 
 const PostModal = ({ show, hide }) => {
   return (
-    <Modal show={show} onHide={hide} centered>
+    <Modal
+      show={show}
+      onHide={hide}
+      animation
+      backdrop="static"
+      keyboard={false}
+    >
       <div className="p-3">
         <div className="d-flex justify-content-between">
           <h3 className="m-0">Create a post</h3>

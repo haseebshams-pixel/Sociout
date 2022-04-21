@@ -74,6 +74,6 @@
   color: #0a66c2;
 }
 .login-forgot-txt:hover {
-  text-decoration: underline;
+  text-decoration: underline !important;
   cursor: pointer;
 }

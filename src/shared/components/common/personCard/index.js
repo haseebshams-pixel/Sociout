@@ -1,12 +1,18 @@
 import React from "react";
+import { useHistory } from "react-router-dom";
 import "./style.css";
 
 const PersonCard = () => {
+  const history = useHistory();
+  const navigate = () => {
+    history.push("/profile/56789");
+  };
   return (
     <div
       className="card personCard_card m-1"
       data-aos="fade-up"
       data-aos-duration="600"
+      onClick={navigate}
     >
       <img
         src={require("../../../../assets/images/profilePlaceholder.png")}

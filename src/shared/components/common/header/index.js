@@ -8,10 +8,12 @@ import "react-confirm-alert/src/react-confirm-alert.css"; // Import css
 import SideNav from "./sideNav";
 import { useHistory } from "react-router-dom";
 import "./style.css";
+import NotificationsModal from "../../modals/notifications";
 
 export default function Header() {
   const history = useHistory();
   const [offCanvas, setOffCanvas] = useState(false);
+  const [notifications, setNotifications] = useState(false);
   const signOutPressHandler = () => {
     confirmAlert({
       message: "Are you sure you want to Sign Out?",
@@ -35,6 +37,8 @@ export default function Header() {
   };
   const openSideNav = () => setOffCanvas(true);
   const closeSideNav = () => setOffCanvas(false);
+  const openNotifications = () => setNotifications(true);
+  const closeNotifications = () => setNotifications(false);
   const dispatch = useDispatch();
   const user = useSelector((state) => state.root.user);
   return (
@@ -59,7 +63,7 @@ export default function Header() {
                     to="/feed"
                   >
                     <FeatherIcon icon="home" size="20" />
-                    <small>Home</small>
+                    <small className="font-weight-light">Home</small>
                   </Link>
                 </li>
                 {user?.isLoggedIn && (
@@ -70,7 +74,7 @@ export default function Header() {
                         to="/jobs"
                       >
                         <FeatherIcon icon="briefcase" size="20" />
-                        <small>Jobs</small>
+                        <small className="font-weight-light">Jobs</small>
                       </Link>
                     </li>
                     <li>
@@ -79,16 +83,19 @@ export default function Header() {
                         to="/search"
                       >
                         <FeatherIcon icon="search" size="20" />
-                        <small>Search</small>
+                        <small className="font-weight-light">Search</small>
                       </Link>
                     </li>
                     <li role="button">
                       <Link
                         className="d-flex flex-column align-items-center justify-content-center header-list-item"
                         to="#"
+                        onClick={openNotifications}
                       >
                         <FeatherIcon icon="bell" size="20" />
-                        <small>Notifications</small>
+                        <small className="font-weight-light">
+                          Notifications
+                        </small>
                       </Link>
                     </li>
                     <li>
@@ -137,6 +144,7 @@ export default function Header() {
       </header>
       <div className="empty-header" />
       <SideNav offCanvas={offCanvas} closeSideNav={closeSideNav} user={user} />
+      <NotificationsModal show={notifications} hide={closeNotifications} />
     </div>
   );
 }
