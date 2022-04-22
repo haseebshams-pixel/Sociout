@@ -11,7 +11,7 @@ const EditProfileModal = ({ show, hide }) => {
   const initialValues = {
     email: "",
   };
-  const handleResetPass = async (values, action) => {
+  const handleEditProfile = async (values, action) => {
     action.setSubmitting(false);
     hide();
     toastMessage("Check your mail", "success");
@@ -43,9 +43,9 @@ const EditProfileModal = ({ show, hide }) => {
             initialValues={initialValues}
             onSubmit={(values, action) => {
               action.setSubmitting(true);
-              handleResetPass(values, action);
+              handleEditProfile(values, action);
             }}
-            validationSchema={ResetPasswordVS}
+            validationSchema={EditProfileVS}
           >
             {({
               values,
