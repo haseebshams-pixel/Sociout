@@ -33,6 +33,13 @@ function PostCard({ item }) {
                 alt="First slide"
               />
             </Carousel.Item>
+            <Carousel.Item>
+              <img
+                className="carosal-image"
+                src={require("../../../../assets/images/test2.png")}
+                alt="Second slide"
+              />
+            </Carousel.Item>
           </Carousel>
           <div className="d-flex align-items-center justify-content-between">
             <span>0 Likes</span>
@@ -80,6 +87,7 @@ function PostCard({ item }) {
                     src={require("../../../../assets/svg/send.svg").default}
                     className="postCard-absolute"
                     width="22"
+                    alt="icon"
                   />
                 </div>
               </div>

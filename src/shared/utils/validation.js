@@ -63,10 +63,33 @@ const ResetPasswordVS = yup.object().shape({
     .label("email"),
 });
 
+const CreateJobVS = yup.object().shape({
+  jobTitle: yup.string().required("Job Title is Required").label("jobTitle"),
+  companyName: yup
+    .string()
+    .required("Company Name is Required")
+    .label("companyName"),
+  employmentType: yup
+    .string()
+    .required("Employment Type is Required")
+    .label("employmentType"),
+  location: yup.string().required("Location is Required").label("location"),
+  contact: yup
+    .string()
+    .required("Contact Email is Required")
+    .email("Invalid Email")
+    .label("contact"),
+  description: yup
+    .string()
+    .required("Description is Required")
+    .label("description"),
+});
+
 export {
   LoginVS,
   RegistrationVS,
   ChangePasswordVS,
   EditProfileVS,
   ResetPasswordVS,
+  CreateJobVS,
 };

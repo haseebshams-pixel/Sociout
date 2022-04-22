@@ -1,3 +1,12 @@
 .modal-top-margin {
   margin-top: 70px;
 }
+
+.error2 {
+  color: red;
+  font-size: 11px;
+  text-align: left;
+  position: absolute;
+  top: 115px;
+  z-index: 1;
+}
