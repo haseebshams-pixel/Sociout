@@ -22,7 +22,6 @@ const EditProfileModal = ({ show, hide }) => {
   return (
     <Modal
       show={show}
-      onHide={hide}
       animation
       backdrop="static"
       keyboard={false}
