@@ -8,6 +8,7 @@ import { setUser } from "../../../redux/reducers/userSlice";
 import { toastMessage } from "../toast";
 import { Formik } from "formik";
 import { RegistrationVS } from "../../../utils/validation";
+import axios from "axios";
 
 import { GoogleLogin } from "react-google-login";
 const SignUpCard = () => {
@@ -23,13 +24,17 @@ const SignUpCard = () => {
     DOB: "",
   };
   const handleSignUp = async (values, action) => {
-    let resp = {
-      isLoggedIn: true,
-    };
-    dispatch(setUser(resp));
-    action.setSubmitting(false);
-    history.push("/feed");
-    toastMessage("User Registered Successfully", "success");
+    const res = await axios
+      .get("https://jsonplaceholder.typicode.com/posts")
+      .then(() => {
+        let resp = {
+          isLoggedIn: true,
+        };
+        dispatch(setUser(resp));
+        action.setSubmitting(false);
+        history.push("/feed");
+        toastMessage("User Registered Successfully", "success");
+      });
   };
   const responseGoogle = async (response) => {
     console.log(response);
@@ -149,8 +154,8 @@ const SignUpCard = () => {
                   <Form.Control
                     type="password"
                     placeholder="confirm Password"
-                    onChange={handleChange("confrimPassword")}
-                    value={values.password}
+                    onChange={handleChange("confirmPassword")}
+                    value={values.confirmPassword}
                     className="mb-4"
                   />
                 </FloatingLabel>
