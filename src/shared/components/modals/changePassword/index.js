@@ -6,7 +6,6 @@ import FloatingLabel from "react-bootstrap/FloatingLabel";
 import { toastMessage } from "../../common/toast";
 import { Formik } from "formik";
 import { ChangePasswordVS } from "../../../utils/validation";
-import "./style.css";
 
 const ChangePasswordModal = ({ show, hide }) => {
   const initialValues = {
@@ -22,10 +21,10 @@ const ChangePasswordModal = ({ show, hide }) => {
   return (
     <Modal
       show={show}
-      onHide={hide}
       animation
       backdrop="static"
       keyboard={false}
+      dialogClassName="reset-modal-dialog"
     >
       <div className="p-3">
         <div className="d-flex justify-content-between align-items-start">

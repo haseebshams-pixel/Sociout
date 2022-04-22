@@ -5,13 +5,7 @@ import "./style.css";
 
 const JobPostModal = ({ show, hide }) => {
   return (
-    <Modal
-      show={show}
-      onHide={hide}
-      animation
-      backdrop="static"
-      keyboard={false}
-    >
+    <Modal show={show} animation backdrop="static" keyboard={false}>
       <div className="p-3">
         <div className="d-flex justify-content-between align-items-start">
           <h5 className="m-0 w-75">

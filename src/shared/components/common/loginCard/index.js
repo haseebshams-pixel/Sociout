@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { Spinner } from "react-bootstrap";
 import Form from "react-bootstrap/Form";
 import FloatingLabel from "react-bootstrap/FloatingLabel";
@@ -10,8 +10,10 @@ import { Formik } from "formik";
 import { LoginVS } from "../../../utils/validation";
 import { GoogleLogin } from "react-google-login";
 import "./style.css";
+import ResetPasswordModal from "../../modals/resetPassword";
 const LoginCard = () => {
   const history = useHistory();
+  const [reset, setReset] = useState(false);
   const dispatch = useDispatch();
   const initialValues = {
     email: "",
@@ -40,6 +42,13 @@ const LoginCard = () => {
     dispatch(setUser(resp));
     history.push("/feed");
     toastMessage("User Logged In Successfully", "success");
+  };
+
+  const openModal = () => {
+    setReset(true);
+  };
+  const closeModal = () => {
+    setReset(false);
   };
   return (
     <>
@@ -95,7 +104,7 @@ const LoginCard = () => {
                   {touched.password && errors.password ? errors.password : ""}
                 </div>
               </div>
-              <div className="d-flex justify-content-end">
+              <div className="d-flex justify-content-end" onClick={openModal}>
                 <span className="login-forgot-txt">Forgot password?</span>
               </div>
               <button
@@ -123,6 +132,7 @@ const LoginCard = () => {
           className="rounded"
         />
       </div>
+      <ResetPasswordModal show={reset} hide={closeModal} />
     </>
   );
 };

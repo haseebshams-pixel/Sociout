@@ -55,4 +55,18 @@ const EditProfileVS = yup.object().shape({
   DOB: yup.string().required("Date of Birth is Required").label("DOB"),
 });
 
-export { LoginVS, RegistrationVS, ChangePasswordVS, EditProfileVS };
+const ResetPasswordVS = yup.object().shape({
+  email: yup
+    .string()
+    .required("Email is Required")
+    .email("Invalid Email")
+    .label("email"),
+});
+
+export {
+  LoginVS,
+  RegistrationVS,
+  ChangePasswordVS,
+  EditProfileVS,
+  ResetPasswordVS,
+};

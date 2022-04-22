@@ -11,6 +11,7 @@ const PostModal = ({ show, hide }) => {
       animation
       backdrop="static"
       keyboard={false}
+      dialogClassName="modal-top-margin"
     >
       <div className="p-3">
         <div className="d-flex justify-content-between">

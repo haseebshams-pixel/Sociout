@@ -5,9 +5,10 @@ import { Modal, Spinner } from "react-bootstrap";
 import FloatingLabel from "react-bootstrap/FloatingLabel";
 import { toastMessage } from "../../common/toast";
 import { Formik } from "formik";
-import { EditProfileVS } from "../../../utils/validation";
+import { ResetPasswordVS } from "../../../utils/validation";
+import "./style.css";
 
-const EditProfileModal = ({ show, hide }) => {
+const ResetPasswordModal = ({ show, hide }) => {
   const initialValues = {
     email: "",
   };
@@ -25,9 +26,9 @@ const EditProfileModal = ({ show, hide }) => {
       keyboard={false}
       dialogClassName="reset-modal-dialog"
     >
-      <div className="p-3">
+      <div className="p-3 ">
         <div className="d-flex justify-content-between align-items-start">
-          <h5 className="m-0 w-75">Edit Profile</h5>
+          <h5 className="m-0 w-75">Reset Password</h5>
           <div className="close-icon-container" onClick={hide}>
             <FeatherIcon
               icon="x"
@@ -89,4 +90,4 @@ const EditProfileModal = ({ show, hide }) => {
   );
 };
 
-export default EditProfileModal;
+export default ResetPasswordModal;
