@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import Card from "react-bootstrap/Card";
 import Carousel from "react-bootstrap/Carousel";
 import FeatherIcon from "feather-icons-react";
+import Post_Comment from "../postComment";
 
 import "./style.css";
 
@@ -54,6 +55,25 @@ function PostCard({ item }) {
               <FeatherIcon icon="share" />
               Share
             </button>
+          </div>
+          <div className="d-flex align-items-center justify-content-between pt-3 pb-3">
+            <img
+              src={require("../../../../assets/images/test.png")}
+              width="36px"
+              height="36px"
+              className="postCard-cmntimage"
+            />
+            <div className="d-flex flex-row postCard-relative w-100">
+              <input
+                type="text"
+                className="w-100 ms-2 ps-2 pt-2 pb-2 postCard-cmnt"
+                placeholder="Add a comment..."
+              ></input>
+              <FeatherIcon icon="send" className="postCard-absolute" />
+            </div>
+          </div>
+          <div className="pb-1">
+            <Post_Comment />
           </div>
         </Card.Body>
       </Card>

@@ -29,3 +29,22 @@
   overflow: hidden;
   text-align: center;
 }
+.postCard-cmntimage {
+  border-radius: 50%;
+}
+.postCard-cmnt {
+  border-radius: 50px;
+  border: 1px solid gray;
+  outline: 0;
+  padding-right: 38px;
+}
+.postCard-relative {
+  position: relative;
+}
+
+.postCard-absolute {
+  position: absolute;
+  top: 8px;
+  right: 10px;
+  cursor: pointer;
+}
