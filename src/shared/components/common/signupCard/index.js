@@ -134,7 +134,7 @@ const SignUpCard = () => {
                     placeholder="Password"
                     onChange={handleChange("password")}
                     value={values.password}
-                    className="mb-3"
+                    className="mb-4"
                   />
                 </FloatingLabel>
                 <div className="error">
@@ -151,7 +151,7 @@ const SignUpCard = () => {
                     placeholder="confirm Password"
                     onChange={handleChange("confrimPassword")}
                     value={values.password}
-                    className="mb-3"
+                    className="mb-4"
                   />
                 </FloatingLabel>
                 <div className="error">
@@ -170,7 +170,7 @@ const SignUpCard = () => {
                     placeholder="Phone Number"
                     onChange={handleChange("phoneNumber")}
                     value={values.phoneNumber}
-                    className="mb-3"
+                    className="mb-4"
                   />
                 </FloatingLabel>
                 <div className="error">
@@ -186,7 +186,7 @@ const SignUpCard = () => {
                     placeholder="DOB"
                     onChange={handleChange("DOB")}
                     value={values.DOB}
-                    className="mb-3"
+                    className="mb-4"
                   />
                 </FloatingLabel>
                 <div className="error">

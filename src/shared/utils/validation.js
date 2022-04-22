@@ -24,6 +24,7 @@ const RegistrationVS = yup.object().shape({
   password: yup.string().required("Password is Required"),
   confirmPassword: yup
     .string()
+    .required("Confirm Password is Required")
     .oneOf([yup.ref("password"), null], "Passwords must match"),
 
   DOB: yup.string().required("Date of Birth is Required").label("DOB"),
@@ -40,6 +41,7 @@ const ChangePasswordVS = yup.object().shape({
     .label("newPassword"),
   confirmPassword: yup
     .string()
+    .required("Confirm Password is Required")
     .oneOf([yup.ref("newPassword"), null], "Passwords must match"),
 });
 
