@@ -50,17 +50,6 @@ function AuthRoute() {
               />
             );
           })}
-          <Route
-            exact
-            path="/"
-            render={() => {
-              return user.isLoggedIn ? (
-                <Redirect to="/feed" />
-              ) : (
-                <Redirect to="/" />
-              );
-            }}
-          />
           <Route component={NotFound} />
         </Switch>
       )}

@@ -9,12 +9,15 @@ import { EditProfileVS } from "../../../utils/validation";
 
 const EditProfileModal = ({ show, hide }) => {
   const initialValues = {
-    email: "",
+    firstname: "",
+    lastname: "",
+    phonenumber: "",
+    DOB: "",
   };
   const handleEditProfile = async (values, action) => {
     action.setSubmitting(false);
     hide();
-    toastMessage("Check your mail", "success");
+    toastMessage("Profile Updated Successfuly", "success");
   };
   return (
     <Modal
@@ -56,18 +59,79 @@ const EditProfileModal = ({ show, hide }) => {
               isSubmitting,
             }) => (
               <div className="mt-3">
+                <div className="d-flex align-items-center justify-content-between">
+                  <div className="position-relative me-2">
+                    <FloatingLabel
+                      controlId="floatingInput"
+                      label="First Name"
+                      className="mb-3"
+                    >
+                      <Form.Control
+                        type="text"
+                        placeholder="First Name"
+                        onChange={handleChange("firstname")}
+                        value={values.firstname}
+                        className="mb-4"
+                      />
+                    </FloatingLabel>
+                    <div className="error">
+                      {touched.firstname && errors.firstname
+                        ? errors.firstname
+                        : ""}
+                    </div>
+                  </div>
+                  <div className="position-relative">
+                    <FloatingLabel
+                      controlId="floatingInput"
+                      label="Last Name"
+                      className="mb-3"
+                    >
+                      <Form.Control
+                        type="text"
+                        placeholder="Last Name"
+                        onChange={handleChange("lastname")}
+                        value={values.lastname}
+                        className="mb-4"
+                      />
+                    </FloatingLabel>
+                    <div className="error">
+                      {touched.lastname && errors.lastname
+                        ? errors.lastname
+                        : ""}
+                    </div>
+                  </div>
+                </div>
                 <div className="position-relative">
-                  <FloatingLabel controlId="floatingEmail" label="Email">
+                  <FloatingLabel
+                    controlId="floatingPassword"
+                    label="Phone Number"
+                  >
                     <Form.Control
-                      type="email"
-                      placeholder="Email"
-                      onChange={handleChange("email")}
-                      value={values.email}
+                      type="phonenumber"
+                      placeholder="Phone Number"
+                      onChange={handleChange("phonenumber")}
+                      value={values.phoneumber}
                       className="mb-4"
                     />
                   </FloatingLabel>
                   <div className="error">
-                    {touched.email && errors.email ? errors.email : ""}
+                    {touched.phonenumber && errors.phonenumber
+                      ? errors.phonenumber
+                      : ""}
+                  </div>
+                </div>
+                <div className="position-relative">
+                  <FloatingLabel controlId="floatingPassword" label="DOB">
+                    <Form.Control
+                      type="date"
+                      placeholder="DOB"
+                      onChange={handleChange("DOB")}
+                      value={values.DOB}
+                      className="mb-4"
+                    />
+                  </FloatingLabel>
+                  <div className="error">
+                    {touched.DOB && errors.DOB ? errors.DOB : ""}
                   </div>
                 </div>
                 <button
@@ -77,7 +141,7 @@ const EditProfileModal = ({ show, hide }) => {
                   {isSubmitting ? (
                     <Spinner animation="grow" size="sm" />
                   ) : (
-                    <p className="mb-0 login-btn-txt-size">Reset</p>
+                    <p className="mb-0 login-btn-txt-size">Save</p>
                   )}
                 </button>
               </div>
