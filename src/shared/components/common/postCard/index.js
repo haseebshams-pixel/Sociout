@@ -8,6 +8,7 @@ import "./style.css";
 
 function PostCard({ item }) {
   const [like, setLike] = useState(false);
+  const [comment, setComment] = useState(false);
   return (
     <div className="card-container" data-aos="fade-up" data-aos-duration="650">
       <Card className="card-main-container">
@@ -47,7 +48,10 @@ function PostCard({ item }) {
               )}
               Like
             </button>
-            <button className="postCard-btn">
+            <button
+              className="postCard-btn"
+              onClick={() => setComment(!comment)}
+            >
               <FeatherIcon icon="message-square" />
               Comment
             </button>
@@ -56,26 +60,37 @@ function PostCard({ item }) {
               Share
             </button>
           </div>
-          <div className="d-flex align-items-center justify-content-between pt-3 pb-3">
-            <img
-              src={require("../../../../assets/images/test.png")}
-              width="36px"
-              height="36px"
-              className="postCard-cmntimage"
-              alt="profile-pic"
-            />
-            <div className="d-flex flex-row postCard-relative w-100">
-              <input
-                type="text"
-                className="w-100 ms-2 ps-2 pt-2 pb-2 postCard-cmnt"
-                placeholder="Add a comment..."
-              ></input>
-              <FeatherIcon icon="send" className="postCard-absolute" />
+          {comment && (
+            <div data-aos="zoom-in-down">
+              <div className="d-flex align-items-center justify-content-between pt-3 pb-3">
+                <img
+                  src={require("../../../../assets/images/profilePlaceholder.png")}
+                  width="36px"
+                  height="36px"
+                  className="postCard-cmntimage"
+                  alt="profile-pic"
+                />
+                <div className="d-flex flex-row postCard-relative w-100">
+                  <input
+                    type="text"
+                    className="w-100 ms-2 postCard-cmnt"
+                    placeholder="Add a comment..."
+                  ></input>
+                  <img
+                    src={require("../../../../assets/svg/send.svg").default}
+                    className="postCard-absolute"
+                    width="22"
+                  />
+                </div>
+              </div>
+              <div className="pb-1 comments-container">
+                <PostComment />
+                <PostComment />
+                <PostComment />
+                <PostComment />
+              </div>
             </div>
-          </div>
-          <div className="pb-1">
-            <PostComment />
-          </div>
+          )}
         </Card.Body>
       </Card>
     </div>

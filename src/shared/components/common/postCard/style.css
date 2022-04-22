@@ -37,6 +37,9 @@
   border: 1px solid gray;
   outline: 0;
   padding-right: 38px;
+  padding-top: 5px;
+  padding-bottom: 5px;
+  padding-left: 12px;
 }
 .postCard-relative {
   position: relative;
@@ -47,4 +50,23 @@
   top: 8px;
   right: 10px;
   cursor: pointer;
+}
+
+.comments-container {
+  max-height: 250px;
+  overflow: auto;
+}
+
+.comments-container::-webkit-scrollbar {
+  width: 5px;
+}
+
+.comments-container::-webkit-scrollbar-thumb {
+  background-color: #0c8ed3;
+  border-radius: 100px;
+}
+
+.comments-container::-webkit-scrollbar-track {
+  background-color: rgb(201, 199, 199);
+  border-radius: 100px;
 }
