@@ -1,0 +1,35 @@
+.confirm-btn {
+  background-color: #0c8ed3;
+  padding: 8px 8px;
+  text-align: center;
+  color: #ffffff !important;
+  font-size: 13px;
+  border: 0;
+  border: 1px solid #0c8ed3;
+}
+.confirm-btn:hover {
+  color: #0c8ed3 !important;
+  background-color: #ffffff;
+  border: 1px solid #0c8ed3;
+}
+.delete-btn {
+  background-color: #dc3545;
+  padding: 8px 8px;
+  text-align: center;
+  color: #ffffff !important;
+  font-size: 13px;
+  border: 0;
+  border: 1px solid #dc3545;
+}
+.delete-btn:hover {
+  color: #dc3545 !important;
+  background-color: #ffffff;
+  border: 1px solid #dc3545;
+}
+
+.nav-link {
+  color: black !important;
+}
+.nav-link:hover {
+  color: #0c8ed3 !important;
+}

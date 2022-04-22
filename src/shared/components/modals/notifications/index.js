@@ -2,6 +2,7 @@ import React from "react";
 import FeatherIcon from "feather-icons-react";
 import { Modal } from "react-bootstrap";
 import "./style.css";
+import NotificationText from "./notificationText";
 
 const NotificationsModal = ({ show, hide }) => {
   return (
@@ -27,42 +28,9 @@ const NotificationsModal = ({ show, hide }) => {
 
         <hr className="m-0 mb-3 mt-2" />
         <Modal.Body className="d-flex flex-column p-0 pb-3 notification-container overflow-auto">
-          <div className="d-flex justify-content-between ">
-            <span className="py-1">Hammad liked your post</span>
-            <span className="py-1 text-muted pe-2">just now</span>
-          </div>
-          <div className="d-flex justify-content-between">
-            <span className="py-1">Naveed liked your post</span>
-            <span className="py-1 text-muted pe-2">just now</span>
-          </div>
-          <div className="d-flex justify-content-between">
-            <span className="py-1">Abdullah commented on your post</span>
-            <span className="py-1 text-muted pe-2">just now</span>
-          </div>
-          <div className="d-flex justify-content-between">
-            <span className="py-1">Hammad liked your post</span>
-            <span className="py-1 text-muted pe-2">just now</span>
-          </div>
-          <div className="d-flex justify-content-between">
-            <span className="py-1">Naveed commented on your post</span>
-            <span className="py-1 text-muted pe-2">just now</span>
-          </div>
-          <div className="d-flex justify-content-between">
-            <span className="py-1">Hammad commented on your post</span>
-            <span className="py-1 text-muted pe-2">just now</span>
-          </div>
-          <div className="d-flex justify-content-between">
-            <span className="py-1">Abdullah liked your post</span>
-            <span className="py-1 text-muted pe-2">just now</span>
-          </div>
-          <div className="d-flex justify-content-between">
-            <span className="py-1">Haseeb commented on your post</span>
-            <span className="py-1 text-muted pe-2">just now</span>
-          </div>
-          <div className="d-flex justify-content-between">
-            <span className="py-1">Faiq commented on your post</span>
-            <span className="py-1 text-muted pe-2">just now</span>
-          </div>
+          <NotificationText text={"liked your post"} user={"Hammad"} />
+          <NotificationText text={"commented on your post"} user={"Naveed"} />
+          <NotificationText text={"sent you a friend request"} user={"Faiq"} />
         </Modal.Body>
       </div>
     </Modal>

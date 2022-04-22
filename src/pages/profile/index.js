@@ -9,6 +9,7 @@ import EditProfileModal from "../../shared/components/modals/editProfile";
 import "./style.css";
 import UploadProfilePhotoModal from "../../shared/components/modals/uploadProfilePhoto";
 import ChangePasswordModal from "../../shared/components/modals/changePassword";
+import FriendRequestCard from "../../shared/components/common/friendRequestCard";
 const Profile = () => {
   const [edit, setEdit] = useState(false);
   const [editPass, setEditPass] = useState(false);
@@ -75,7 +76,7 @@ const Profile = () => {
               <ul className="list-inline mb-0">
                 <li className="list-inline-item">
                   <h5 className="font-weight-bold mb-0 d-block text-font-family">
-                    0
+                    4
                   </h5>
                   <small className="text-muted">
                     {" "}
@@ -105,11 +106,23 @@ const Profile = () => {
                   </div>
                 </Tab>
                 <Tab eventKey="friends" title="Friends">
-                  <div className="d-flex flex-wrap mx-100 justify-content-center">
-                    <PersonCard />
-                    <PersonCard />
-                    <PersonCard />
-                  </div>
+                  <Tabs
+                    defaultActiveKey="allFriends"
+                    id="uncontrolled-tab-example"
+                  >
+                    <Tab eventKey="allFriends" title="All Friends">
+                      <div className="d-flex flex-wrap mx-100 justify-content-center mt-4">
+                        <PersonCard />
+                        <PersonCard />
+                        <PersonCard />
+                      </div>
+                    </Tab>
+                    <Tab eventKey="friendRequests" title="Friend Requests">
+                      <div className="d-flex flex-wrap mx-100 justify-content-center mt-4">
+                        <FriendRequestCard />
+                      </div>
+                    </Tab>
+                  </Tabs>
                 </Tab>
               </Tabs>
             </div>

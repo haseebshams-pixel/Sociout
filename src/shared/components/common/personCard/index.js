@@ -9,13 +9,13 @@ const PersonCard = () => {
   };
   return (
     <div
-      className="card personCard_card m-1"
+      className="card personCard_card m-1 "
       data-aos="fade-up"
       data-aos-duration="600"
       onClick={navigate}
     >
       <img
-        src={require("../../../../assets/images/profilePlaceholder.png")}
+        src={require("../../../../assets/images/test.png")}
         className=" p-3"
         width="200px"
         height="200px"
