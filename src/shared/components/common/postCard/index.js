@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import Card from "react-bootstrap/Card";
 import Carousel from "react-bootstrap/Carousel";
 import FeatherIcon from "feather-icons-react";
-import Post_Comment from "../postComment";
+import PostComment from "../postComment";
 
 import "./style.css";
 
@@ -62,6 +62,7 @@ function PostCard({ item }) {
               width="36px"
               height="36px"
               className="postCard-cmntimage"
+              alt="profile-pic"
             />
             <div className="d-flex flex-row postCard-relative w-100">
               <input
@@ -73,7 +74,7 @@ function PostCard({ item }) {
             </div>
           </div>
           <div className="pb-1">
-            <Post_Comment />
+            <PostComment />
           </div>
         </Card.Body>
       </Card>
