@@ -9,7 +9,6 @@ import { toastMessage } from "../toast";
 import { Formik } from "formik";
 import { LoginVS } from "../../../utils/validation";
 import { GoogleLogin } from "react-google-login";
-import axios from "axios";
 import "./style.css";
 import ResetPasswordModal from "../../modals/resetPassword";
 const LoginCard = () => {
@@ -21,17 +20,13 @@ const LoginCard = () => {
     password: "",
   };
   const handleLogIn = async (values, action) => {
-    const res = await axios
-      .get("https://jsonplaceholder.typicode.com/posts")
-      .then(() => {
-        let resp = {
-          isLoggedIn: true,
-        };
-        dispatch(setUser(resp));
-        action.setSubmitting(false);
-        history.push("/feed");
-        toastMessage("User Logged In Successfully", "success");
-      });
+    let resp = {
+      isLoggedIn: true,
+    };
+    dispatch(setUser(resp));
+    action.setSubmitting(false);
+    history.push("/feed");
+    toastMessage("User Logged In Successfully", "success");
   };
   const responseGoogle = async (response) => {
     console.log(response);

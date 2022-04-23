@@ -8,7 +8,6 @@ import { setUser } from "../../../redux/reducers/userSlice";
 import { toastMessage } from "../toast";
 import { Formik } from "formik";
 import { RegistrationVS } from "../../../utils/validation";
-import axios from "axios";
 
 import { GoogleLogin } from "react-google-login";
 const SignUpCard = () => {
@@ -24,17 +23,13 @@ const SignUpCard = () => {
     DOB: "",
   };
   const handleSignUp = async (values, action) => {
-    const res = await axios
-      .get("https://jsonplaceholder.typicode.com/posts")
-      .then(() => {
-        let resp = {
-          isLoggedIn: true,
-        };
-        dispatch(setUser(resp));
-        action.setSubmitting(false);
-        history.push("/feed");
-        toastMessage("User Registered Successfully", "success");
-      });
+    let resp = {
+      isLoggedIn: true,
+    };
+    dispatch(setUser(resp));
+    action.setSubmitting(false);
+    history.push("/feed");
+    toastMessage("User Registered Successfully", "success");
   };
   const responseGoogle = async (response) => {
     console.log(response);
