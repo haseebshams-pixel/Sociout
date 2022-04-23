@@ -8,8 +8,9 @@ import { setUser } from "../../../redux/reducers/userSlice";
 import { toastMessage } from "../toast";
 import { Formik } from "formik";
 import { RegistrationVS } from "../../../utils/validation";
-
 import { GoogleLogin } from "react-google-login";
+import FacebookLogin from "react-facebook-login/dist/facebook-login-render-props";
+import FeatherIcon from "feather-icons-react";
 const SignUpCard = () => {
   const history = useHistory();
   const dispatch = useDispatch();
@@ -45,6 +46,15 @@ const SignUpCard = () => {
     dispatch(setUser(resp));
     history.push("/feed");
     toastMessage("User Registered Successfully", "success");
+  };
+  const responseFacebook = (response) => {
+    console.log(response);
+    let resp = {
+      isLoggedIn: true,
+    };
+    dispatch(setUser(resp));
+    history.push("/feed");
+    toastMessage("User Logged In Successfully", "success");
   };
   return (
     <>
@@ -216,6 +226,21 @@ const SignUpCard = () => {
           onFailure={responseGoogle}
           cookiePolicy={"single_host_origin"}
           className="rounded"
+        />
+        <FacebookLogin
+          appId="514864707026991"
+          autoLoad={false}
+          fields="name,email,birthday,first_name,last_name"
+          callback={responseFacebook}
+          render={(renderProps) => (
+            <button
+              onClick={renderProps.onClick}
+              className="my-facebook-button-class mt-2 rounded d-flex align-items-center"
+            >
+              <FeatherIcon icon="facebook" className="me-3" />
+              Continue with Facebook
+            </button>
+          )}
         />
       </div>
     </>

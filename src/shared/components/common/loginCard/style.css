@@ -77,3 +77,18 @@
   text-decoration: underline !important;
   cursor: pointer;
 }
+
+.my-facebook-button-class {
+  height: 40px;
+  width: 100%;
+  background: #1877f2;
+  border: 0;
+  -webkit-box-sizing: border-box;
+  box-sizing: border-box;
+  color: #fff;
+  font-size: 14px;
+}
+
+.my-facebook-button-class:hover {
+  background-color: #166fe5;
+}

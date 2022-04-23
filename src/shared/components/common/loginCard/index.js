@@ -9,8 +9,10 @@ import { toastMessage } from "../toast";
 import { Formik } from "formik";
 import { LoginVS } from "../../../utils/validation";
 import { GoogleLogin } from "react-google-login";
+import FacebookLogin from "react-facebook-login/dist/facebook-login-render-props";
 import "./style.css";
 import ResetPasswordModal from "../../modals/resetPassword";
+import FeatherIcon from "feather-icons-react";
 const LoginCard = () => {
   const history = useHistory();
   const [reset, setReset] = useState(false);
@@ -36,6 +38,15 @@ const LoginCard = () => {
     //   lastname: response.profileObj.familyName,
     //   googleId: response.profileObj.googleId,
     // };
+    let resp = {
+      isLoggedIn: true,
+    };
+    dispatch(setUser(resp));
+    history.push("/feed");
+    toastMessage("User Logged In Successfully", "success");
+  };
+  const responseFacebook = (response) => {
+    console.log("Facebook", response);
     let resp = {
       isLoggedIn: true,
     };
@@ -132,6 +143,22 @@ const LoginCard = () => {
           cookiePolicy={"single_host_origin"}
           className="rounded"
         />
+        <FacebookLogin
+          appId="514864707026991"
+          autoLoad={false}
+          fields="name,email,birthday,first_name,last_name"
+          callback={responseFacebook}
+          render={(renderProps) => (
+            <button
+              onClick={renderProps.onClick}
+              className="my-facebook-button-class mt-2 rounded d-flex align-items-center"
+            >
+              <FeatherIcon icon="facebook" className="me-3" />
+              Continue with Facebook
+            </button>
+          )}
+        />
+        ,
       </div>
       <ResetPasswordModal show={reset} hide={closeModal} />
     </>
