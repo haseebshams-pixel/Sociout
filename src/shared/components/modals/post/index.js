@@ -1,9 +1,70 @@
-import React from "react";
+import React,{useState} from "react";
 import FeatherIcon from "feather-icons-react";
-import { Modal } from "react-bootstrap";
+import { Modal,Spinner } from "react-bootstrap";
+import { useSelector } from "react-redux";
+import { toastMessage } from "../../common/toast";
+import FileBase64 from 'react-file-base64';
+import axios from "axios";
 import "./style.css";
 
-const PostModal = ({ show, hide }) => {
+const PostModal = ({ show, hide,fetchPosts }) => {
+  const user = useSelector((state) => state.root.user);
+  const [textt, setText] = useState("");
+  const [photoss, setPhotos] = useState([]);
+  const [submitting, setSubmitting] = useState(false);
+  const createPost = async () => {
+    setSubmitting(true);
+    // let formData = new FormData();
+    // if (photos === null && text === "") {
+    //   setSubmitting(false);
+    //   toastMessage("Write Something", "error");
+    // } else {
+    //   if (photos != null) {
+    //     for (let i = 0; i < photos.length; i++) {
+    //       formData.append("photos", photos[i]);
+    //     }
+    //   }
+
+    //   formData.append("text", text);
+    const formData={
+      text:textt,
+      photos:photoss
+    }
+    console.log(formData);
+      axios
+        .post("posts/", formData, {
+          headers: {
+            // "Content-Type": "multipart/form-data",
+            "x-auth-token": user?.token,
+          },
+        })
+        .then((res) => {
+          if (res.statusText === "OK") {
+            setSubmitting(false);
+            setText("");
+            setPhotos([]);
+            fetchPosts();
+            hide();
+            toastMessage("Post posted Successfully", "success");
+          }
+        })
+        .catch((error) => {
+          console.log(error);
+          setSubmitting(false);
+          hide();
+          toastMessage("Failed to post post", "error");
+        });
+    
+  };
+  const onFileUpload=(e)=>{
+    let files = e.target.files;
+    let fileReader = new FileReader();
+    fileReader.readAsDataURL(files[0]);
+
+    fileReader.onload = (event) => {
+      setPhotos(event.target.result)
+    }
+  }
   return (
     <Modal
       show={show}
@@ -46,6 +107,7 @@ const PostModal = ({ show, hide }) => {
               className="form-control border-0"
               rows="5"
               placeholder="what do you want to talk about?"
+              onChange={(e) => setText(e.target.value)}
             ></textarea>
           </div>
           <div className="d-flex justify-content-between mt-4 align-items-center">
@@ -53,9 +115,19 @@ const PostModal = ({ show, hide }) => {
               <label htmlFor="file" role="button">
                 <FeatherIcon icon="camera" />
               </label>
-              <input type="file" name="file" role="button" id="file" />
+              <input type="file" name="file" role="button" id="file"  multiple
+                onChange={(e) => onFileUpload(e)}/>
+                
             </div>
-            <button className="post-modal-btn px-3 py-1">Post</button>
+            <label>{photoss?.length} files</label>
+            {/* <FileBase64
+          type="file"
+          multiple={true}
+          onDone={({ base64 }) => setPhotos(base64)}
+        /> */}
+            <button className="blog-modal-btn px-3 py-1" onClick={createPost}>
+              {submitting ? <Spinner animation="grow" size="sm" /> : "Post"}
+            </button>
           </div>
         </Modal.Body>
       </div>

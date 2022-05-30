@@ -1,4 +1,4 @@
-import React from "react";
+import React,{useState} from "react";
 import FeatherIcon from "feather-icons-react";
 import Form from "react-bootstrap/Form";
 import { Modal, Spinner } from "react-bootstrap";
@@ -6,16 +6,84 @@ import FloatingLabel from "react-bootstrap/FloatingLabel";
 import { toastMessage } from "../../common/toast";
 import { Formik } from "formik";
 import { ResetPasswordVS } from "../../../utils/validation";
+import axios from "axios";
 import "./style.css";
 
 const ResetPasswordModal = ({ show, hide }) => {
   const initialValues = {
     email: "",
+    otp:"",
+    newpassword:"",
   };
+  const [isEmail,setIsEmail]=useState(true);
+  const [isOtp,setIsOtp]=useState(false);
+  const [isPassword,setIsPassword]=useState(false);
+  // const handleResetPass = async (values, action) => {
+  //   action.setSubmitting(false);
+  //   hide();
+  //   toastMessage("Check your mail", "success");
+  // };
   const handleResetPass = async (values, action) => {
-    action.setSubmitting(false);
-    hide();
-    toastMessage("Check your mail", "success");
+   
+    axios
+      .post(`users/forgot_pass/${values.email}`)
+      .then((res) => {
+        if (res.statusText === "OK") {
+          action.setSubmitting(false);
+          toastMessage(res.data, "success");
+          setIsOtp(true);
+          setIsEmail(false);
+        } 
+      })
+      .catch((error) => {
+        console.log(error)
+        action.setSubmitting(false);
+        toastMessage(error.response.data, "error");
+      });
+    
+    
+  };
+  const handleOTP = async (values, action) => {
+    const data = {
+      email: values.email,
+      otp: values.otp,
+    };
+    axios
+      .post("users/verify-otp",data)
+      .then((res) => {
+        if (res.statusText === "OK") {
+          action.setSubmitting(false);
+          toastMessage(res.data, "success");
+          setIsPassword(true);
+          setIsEmail(false);
+          setIsOtp(false);
+        } 
+      })
+      .catch((error) => {
+        console.log(error)
+        action.setSubmitting(false);
+        toastMessage(error.response.data, "error");
+      });
+  };
+  const handlePassword = async (values, action) => {
+    const data = {
+      email: values.email,
+      password: values.newpassword,
+    };
+    axios
+      .put("users/set-pass",data)
+      .then((res) => {
+        if (res.statusText === "OK") {
+          action.setSubmitting(false);
+          toastMessage(res.data, "success");
+          hide();
+        } 
+      })
+      .catch((error) => {
+        console.log(error)
+        action.setSubmitting(false);
+        toastMessage(error.response.data, "error");
+      });
   };
   return (
     <Modal
@@ -44,7 +112,10 @@ const ResetPasswordModal = ({ show, hide }) => {
             initialValues={initialValues}
             onSubmit={(values, action) => {
               action.setSubmitting(true);
-              handleResetPass(values, action);
+              if(isEmail){handleResetPass(values, action);}
+              else if(isOtp){handleOTP(values, action)}
+              else if(isPassword){handlePassword(values, action)}
+              
             }}
             validationSchema={ResetPasswordVS}
           >
@@ -58,6 +129,7 @@ const ResetPasswordModal = ({ show, hide }) => {
             }) => (
               <div className="mt-3">
                 <div className="position-relative">
+                  {isEmail&&
                   <FloatingLabel controlId="floatingEmail" label="Email">
                     <Form.Control
                       type="email"
@@ -66,7 +138,27 @@ const ResetPasswordModal = ({ show, hide }) => {
                       value={values.email}
                       className="mb-4"
                     />
-                  </FloatingLabel>
+                  </FloatingLabel>}
+                  {isOtp&&
+                  <FloatingLabel controlId="floatingOTP" label="OTP">
+                    <Form.Control
+                      type="text"
+                      placeholder="OTP"
+                      onChange={handleChange("otp")}
+                      value={values.otp}
+                      className="mb-4"
+                    />
+                  </FloatingLabel>}
+                  {isPassword&&
+                  <FloatingLabel controlId="floatingPassword" label="New Password">
+                    <Form.Control
+                      type="password"
+                      placeholder="New Password"
+                      onChange={handleChange("newpassword")}
+                      value={values.newpassword}
+                      className="mb-4"
+                    />
+                  </FloatingLabel>}
                   <div className="error">
                     {touched.email && errors.email ? errors.email : ""}
                   </div>

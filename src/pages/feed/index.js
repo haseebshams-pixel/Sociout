@@ -19,8 +19,17 @@ const Feed = () => {
 
   const fetchPosts = async () => {
     setLoading(true);
-    const res = await axios.get("https://jsonplaceholder.typicode.com/posts");
-    setPosts(res.data);
+    axios
+      .get("posts/")
+      .then((res) => {
+        if (res.statusText === "OK") {
+          setPosts(res.data);
+          setLoading(false);
+        }
+      })
+      .catch((error) => {
+        console.log(error);
+      });
     setLoading(false);
   };
   useEffect(() => {
@@ -50,6 +59,7 @@ const Feed = () => {
                   hideModal={hideModal}
                   open={open}
                   txt="start a post"
+                  fetchPosts={fetchPosts}
                 />
                 <hr className="w-100" />
               </>
@@ -58,7 +68,7 @@ const Feed = () => {
               <Spinner animation="grow" size="xl" />
             ) : (
               currentPosts?.map((item, index) => {
-                return <PostCard item={item} key={index} />;
+                return <PostCard item={item} key={index}  fetchPosts={fetchPosts} />;
               })
             )}
             <Pagination
