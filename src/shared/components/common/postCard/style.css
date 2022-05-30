@@ -13,6 +13,9 @@
   object-fit: contain;
   width: 100%;
 }
+.post-card-subtitle {
+  margin-left: 7px;
+}
 
 .postCard-btn {
   align-items: center;

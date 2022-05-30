@@ -5,7 +5,6 @@ import Header from "../../shared/components/common/header";
 import Footer from "../../shared/components/common/footer";
 import CreateCard from "../../shared/components/common/createCard";
 import PostCard from "../../shared/components/common/postCard";
-import Pagination from "../../shared/components/common/pagination";
 import { Spinner } from "react-bootstrap";
 const Feed = () => {
   const { user } = useSelector((state) => state.root);
@@ -14,16 +13,15 @@ const Feed = () => {
   const hideModal = () => setOpen(false);
   const [loading, setLoading] = useState(false);
   const [posts, setPosts] = useState([]);
-  const [currentPage, setCurrentPage] = useState(1);
-  const [postsPerPage] = useState(6);
+  const [skip, setSkip] = useState(0);
 
   const fetchPosts = async () => {
     setLoading(true);
     axios
-      .get("posts/")
+      .get(`posts/skiping/${skip}`)
       .then((res) => {
         if (res.statusText === "OK") {
-          setPosts(res.data);
+          setPosts([...posts, ...res.data]);
           setLoading(false);
         }
       })
@@ -34,16 +32,22 @@ const Feed = () => {
   };
   useEffect(() => {
     fetchPosts();
-  }, []);
+  }, [skip]);
 
-  // Get current posts
-  const indexOfLastPost = currentPage * postsPerPage;
-  const indexOfFirstPost = indexOfLastPost - postsPerPage;
-  const currentPosts = posts.slice(indexOfFirstPost, indexOfLastPost);
+  const scrollToEnd = () => {
+    setSkip(posts.length);
+  };
+  const resetSkip = () => {
+    setSkip(0);
+  };
 
-  // Change page
-  const paginate = (pageNumber) => {
-    setCurrentPage(pageNumber);
+  window.onscroll = function () {
+    if (
+      window.innerHeight + document.documentElement.scrollTop ===
+      document.documentElement.offsetHeight
+    ) {
+      scrollToEnd();
+    }
   };
 
   return (
@@ -59,23 +63,18 @@ const Feed = () => {
                   hideModal={hideModal}
                   open={open}
                   txt="start a post"
-                  fetchPosts={fetchPosts}
                 />
                 <hr className="w-100" />
               </>
             )}
+
             {loading ? (
               <Spinner animation="grow" size="xl" />
             ) : (
-              currentPosts?.map((item, index) => {
-                return <PostCard item={item} key={index}  fetchPosts={fetchPosts} />;
+              posts?.map((item, index) => {
+                return <PostCard item={item} key={index} />;
               })
             )}
-            <Pagination
-              postsPerPage={postsPerPage}
-              totalPosts={posts.length}
-              paginate={paginate}
-            />
           </div>
         </div>
       </div>

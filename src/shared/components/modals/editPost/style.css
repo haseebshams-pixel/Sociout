@@ -1,0 +1,10 @@
+.edit-image {
+  width: 150px;
+  padding: 5px;
+}
+.cross-icon {
+  position: absolute;
+  right: -4px;
+  top: -4px;
+  cursor: pointer;
+}

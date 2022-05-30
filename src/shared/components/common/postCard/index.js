@@ -1,46 +1,130 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import axios from "axios";
+import moment from "moment";
+import { useSelector } from "react-redux";
 import Card from "react-bootstrap/Card";
 import Carousel from "react-bootstrap/Carousel";
 import FeatherIcon from "feather-icons-react";
 import PostComment from "../postComment";
+import { toastMessage } from "../toast";
 
 import "./style.css";
+import EditPostModal from "../../modals/editPost";
 
 function PostCard({ item }) {
+  const { user } = useSelector((state) => state.root);
   const [like, setLike] = useState(false);
   const [comment, setComment] = useState(false);
+  const [postUser, setPostUser] = useState(null);
+  const [isEditable, setIsEditable] = useState(false);
+  const [open, setOpen] = useState(false);
+  const openModal = () => {
+    setOpen(true);
+  };
+  const closeModal = () => {
+    setOpen(false);
+  };
+  const onDelete = async () => {
+    axios
+      .delete(`posts/${item?._id}`, {
+        headers: {
+          "x-auth-token": user?.token,
+        },
+      })
+      .then((res) => {
+        if (res.statusText === "OK") {
+          toastMessage("Deleted Successfuly", "success");
+          window.location.reload();
+        }
+      })
+      .catch((error) => {
+        toastMessage(error.response.data, "error");
+        console.log(error);
+      });
+  };
+  const fetchUser = async () => {
+    setPostUser(null);
+    setIsEditable(false);
+    axios
+      .get(`users/${item.postedBy}`)
+      .then((res) => {
+        if (res.statusText === "OK") {
+          setPostUser(res.data);
+          if (res.data.id == user?.user?.id) {
+            setIsEditable(true);
+          }
+        }
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  };
+
+  useEffect(() => {
+    fetchUser();
+  }, []);
   return (
-    <div className="card-container" data-aos="fade-up" data-aos-duration="650">
+    <div
+      className="card-container w-100"
+      data-aos="fade-up"
+      data-aos-duration="650"
+    >
       <Card className="card-main-container">
         <Card.Body>
           <div className="d-flex align-items-center justify-content-between mb-3">
-            <Card.Title className="d-flex align-items-center m-0">
+            <div className="d-flex">
               <img
                 src={require("../../../../assets/images/profilePlaceholder.png")}
                 className="profile-pic"
                 alt="profile-pic"
               />
-              <span className="ms-2">Haseeb Shams</span>
-            </Card.Title>
-            <Card.Subtitle className="text-muted">just now</Card.Subtitle>
+              <div>
+                <Card.Title className="d-flex align-items-center m-0">
+                  <span className="ms-2">
+                    {user?.user?.id === item?.postedBy
+                      ? user?.user?.firstname + " " + user?.user?.lastname
+                      : postUser?.firstname + " " + postUser?.lastname}
+                  </span>
+                </Card.Title>
+                <Card.Subtitle className="text-muted post-card-subtitle">
+                  {moment(item?.date).fromNow()}
+                </Card.Subtitle>
+              </div>
+            </div>
+            {user?.user?.id === item?.postedBy && (
+              <div className="d-flex">
+                <FeatherIcon
+                  icon="edit-2"
+                  size="20"
+                  role="button"
+                  onClick={openModal}
+                />
+                <FeatherIcon
+                  icon="trash"
+                  size="20"
+                  className="ms-2"
+                  role="button"
+                  onClick={onDelete}
+                />
+              </div>
+            )}
           </div>
-          <Card.Text>{item?.body}</Card.Text>
-          <Carousel className="carosal">
-            <Carousel.Item>
-              <img
-                className="carosal-image"
-                src={require("../../../../assets/images/test.png")}
-                alt="First slide"
-              />
-            </Carousel.Item>
-            <Carousel.Item>
-              <img
-                className="carosal-image"
-                src={require("../../../../assets/images/test2.png")}
-                alt="Second slide"
-              />
-            </Carousel.Item>
-          </Carousel>
+          <Card.Text>{item?.text}</Card.Text>
+          {item?.images.length > 0 && (
+            <Carousel className="carosal">
+              {item?.images?.map((picture, index) => {
+                return (
+                  <Carousel.Item key={index}>
+                    <img
+                      className="carosal-image"
+                      src={picture}
+                      alt="First slide"
+                    />
+                  </Carousel.Item>
+                );
+              })}
+            </Carousel>
+          )}
           <div className="d-flex align-items-center justify-content-between">
             <span>0 Likes</span>
             <span>0 comments</span>
@@ -101,6 +185,7 @@ function PostCard({ item }) {
           )}
         </Card.Body>
       </Card>
+      <EditPostModal show={open} hide={closeModal} item={item} />
     </div>
   );
 }

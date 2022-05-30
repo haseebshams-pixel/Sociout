@@ -9,10 +9,10 @@
 
 .image {
   height: 30px;
-  width: 30px;
+  width: 75px;
   display: flex;
   align-items: center;
-  justify-content: center;
+  justify-content: space-between;
 }
 .image > input {
   display: none;

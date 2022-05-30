@@ -41,14 +41,13 @@ const LoginCard = () => {
           action.setSubmitting(false);
           history.push("/feed");
           toastMessage("User Logged In Successfully", "success");
-        } 
+        }
       })
       .catch((error) => {
-        console.log(error)
+        console.log(error);
         action.setSubmitting(false);
         toastMessage(error.response.data, "error");
       });
-    
   };
   const responseGoogle = async (response) => {
     console.log(response);
@@ -71,16 +70,16 @@ const LoginCard = () => {
           dispatch(setUser(resp));
           history.push("/feed");
           toastMessage("User Logged In Successfully", "success");
-        } 
+        }
       })
       .catch((error) => {
-        console.log(error)
+        console.log(error);
         toastMessage(error.response.data, "error");
       });
   };
-  const Error=()=>{
+  const Error = () => {
     toastMessage("Something Went Wrong!", "error");
-  }
+  };
   const responseFacebook = (response) => {
     console.log("Facebook", response);
     const data = {
@@ -102,10 +101,10 @@ const LoginCard = () => {
           dispatch(setUser(resp));
           history.push("/feed");
           toastMessage("User Logged In Successfully", "success");
-        } 
+        }
       })
       .catch((error) => {
-        console.log(error)
+        console.log(error);
         toastMessage(error.response.data, "error");
       });
   };
@@ -197,7 +196,6 @@ const LoginCard = () => {
           onFailure={Error}
           cookiePolicy={"single_host_origin"}
           className="rounded"
-          
         />
         <FacebookLogin
           appId="514864707026991"

@@ -30,29 +30,29 @@ const SignUpCard = () => {
       lastname: values.lastName,
       email: values.email,
       password: values.password,
-      phonenumber:values.phoneNumber,
+      phonenumber: values.phoneNumber,
       DOB: values.DOB,
     };
     axios
-    .post("users/signup", data)
-    .then((res) => {
-      if (res.statusText === "OK") {
+      .post("users/signup", data)
+      .then((res) => {
+        if (res.statusText === "OK") {
+          action.setSubmitting(false);
+          let resp = {
+            isLoggedIn: true,
+            token: res.data.token,
+            user: res.data.user,
+          };
+          dispatch(setUser(resp));
+          history.push("/feed");
+          toastMessage("User Registered Successfully", "success");
+        }
+      })
+      .catch((error) => {
+        console.log(error);
         action.setSubmitting(false);
-        let resp = {
-          isLoggedIn: true,
-          token: res.data.token,
-          user: res.data.user,
-        };
-        dispatch(setUser(resp));
-        history.push("/feed");
-        toastMessage("User Registered Successfully", "success");
-      }
-    })
-    .catch((error) => {
-      console.log(error);
-      action.setSubmitting(false);
-      toastMessage(error.response.data, "error");
-    });
+        toastMessage(error.response.data, "error");
+      });
   };
   const responseGoogle = async (response) => {
     console.log(response);
@@ -75,16 +75,16 @@ const SignUpCard = () => {
           dispatch(setUser(resp));
           history.push("/feed");
           toastMessage("User Registered Successfully", "success");
-        } 
+        }
       })
       .catch((error) => {
-        console.log(error)
+        console.log(error);
         toastMessage(error.response.data, "error");
       });
   };
-  const Error=()=>{
+  const Error = () => {
     toastMessage("Something Went Wrong!", "error");
-  }
+  };
   const responseFacebook = (response) => {
     console.log("Facebook", response);
     const data = {
@@ -106,10 +106,10 @@ const SignUpCard = () => {
           dispatch(setUser(resp));
           history.push("/feed");
           toastMessage("User Registered Successfully", "success");
-        } 
+        }
       })
       .catch((error) => {
-        console.log(error)
+        console.log(error);
         toastMessage(error.response.data, "error");
       });
   };

@@ -1,30 +1,31 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import FeatherIcon from "feather-icons-react";
-import { Modal, Spinner } from "react-bootstrap";
+import { Spinner } from "react-bootstrap";
+import { Modal } from "react-bootstrap";
 import { useSelector } from "react-redux";
 import { toastMessage } from "../../common/toast";
 import axios from "axios";
 import "./style.css";
 
-const PostModal = ({ show, hide }) => {
+const EditPostModal = ({ show, hide, item }) => {
   const user = useSelector((state) => state.root.user);
-  const [textt, setText] = useState("");
-  const [photoss, setPhotos] = useState([]);
+  const [text, setText] = useState(item?.text);
+  const [photos, setPhotos] = useState(item?.images);
   const [photosCount, setPhotosCount] = useState(0);
   const [submitting, setSubmitting] = useState(false);
-  const createPost = async () => {
+  const editBlog = async () => {
     setSubmitting(true);
-    if (photoss.length === 0 && textt === "") {
+    if (photos.length === 0 && text === "") {
       setSubmitting(false);
       toastMessage("Write Something", "error");
     } else {
       const formData = {
-        text: textt,
-        photos: photoss,
+        text: text,
+        photos: photos,
+        postedBy: item.postedBy,
       };
-      console.log(formData);
       axios
-        .post("posts/", formData, {
+        .put(`posts/${item?._id}`, formData, {
           headers: {
             "x-auth-token": user?.token,
           },
@@ -32,24 +33,30 @@ const PostModal = ({ show, hide }) => {
         .then((res) => {
           if (res.statusText === "OK") {
             setSubmitting(false);
+            setPhotos(null);
             setText("");
-            setPhotos([]);
-            hide();
             window.location.reload();
-            setPhotosCount(0);
-            toastMessage("Post posted Successfully", "success");
+            hide();
+            toastMessage("Post updated Successfully", "success");
           }
         })
         .catch((error) => {
           console.log(error);
           setSubmitting(false);
           hide();
-          toastMessage("Failed to post post", "error");
+          toastMessage(error.response.data, "error");
         });
     }
   };
+
+  const removeImage = (val) => {
+    var filtered = photos.filter(function (value, index, arr) {
+      return value !== val;
+    });
+    setPhotos(filtered);
+  };
   const onFileUpload = (e) => {
-    let obj = [...photoss];
+    let obj = photos;
     let files = e.target.files;
     setPhotosCount(files.length);
     for (let i = 0; i < files.length; i++) {
@@ -62,6 +69,26 @@ const PostModal = ({ show, hide }) => {
     setPhotos(obj);
   };
 
+  const fetchCurrentPost = async () => {
+    //have to get latest post after editing so as to change states
+    axios
+      .get(`posts/${item._id}`)
+      .then((res) => {
+        if (res.statusText === "OK") {
+          console.log(res.data);
+          setPhotos(res?.data?.images);
+          setText(res?.data?.text);
+        }
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  };
+
+  useEffect(() => {
+    fetchCurrentPost();
+  }, []);
+
   return (
     <Modal
       show={show}
@@ -73,7 +100,7 @@ const PostModal = ({ show, hide }) => {
     >
       <div className="p-3">
         <div className="d-flex justify-content-between">
-          <h3 className="m-0">Create a post</h3>
+          <h3 className="m-0">Edit Blog</h3>
           <div className="close-icon-container" onClick={hide}>
             <FeatherIcon
               icon="x"
@@ -92,16 +119,34 @@ const PostModal = ({ show, hide }) => {
                 className="profile-pic"
                 alt="profile-pic"
               />
-              <b className="ms-2">Haseeb Shams</b>
+              <b className="ms-2">
+                {user?.user?.firstname} {user?.user?.lastname}
+              </b>
             </div>
           </div>
           <div className="pt-3">
             <textarea
               className="form-control border-0"
               rows="5"
+              value={text}
               placeholder="what do you want to talk about?"
               onChange={(e) => setText(e.target.value)}
             ></textarea>
+            <div className="d-flex flex-wrap mt-2">
+              {photos?.map((val, ind) => {
+                return (
+                  <div key={ind} className="position-relative">
+                    <img src={val} className="edit-image" alt="post-photo" />
+                    <FeatherIcon
+                      icon={"x-circle"}
+                      size="20"
+                      className="cross-icon"
+                      onClick={() => removeImage(val)}
+                    />
+                  </div>
+                );
+              })}
+            </div>
           </div>
           <div className="d-flex justify-content-between mt-4 align-items-center">
             <div className="image">
@@ -118,7 +163,7 @@ const PostModal = ({ show, hide }) => {
               />
               <label>{photosCount} files</label>
             </div>
-            <button className="post-modal-btn px-3 py-1" onClick={createPost}>
+            <button className="post-modal-btn px-3 py-1" onClick={editBlog}>
               {submitting ? <Spinner animation="grow" size="sm" /> : "Post"}
             </button>
           </div>
@@ -128,4 +173,4 @@ const PostModal = ({ show, hide }) => {
   );
 };
 
-export default PostModal;
+export default EditPostModal;

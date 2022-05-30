@@ -11,7 +11,6 @@ const CreateCard = ({
   open2,
   hideModal2,
   job,
-  fetchPosts
 }) => {
   return (
     <>
@@ -34,7 +33,7 @@ const CreateCard = ({
           <span className="create-card-span">{txt}</span>
         </div>
       </div>
-      <PostModal show={open} hide={hideModal} fetchPosts={fetchPosts} />
+      <PostModal show={open} hide={hideModal} />
       <CreateJobModal show={open2} hide={hideModal2} />
     </>
   );
