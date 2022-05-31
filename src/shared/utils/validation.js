@@ -53,6 +53,7 @@ const EditProfileVS = yup.object().shape({
     .required("Phone Number is Required")
     .label("phonenumber"),
   DOB: yup.string().required("Date of Birth is Required").label("DOB"),
+  bio: yup.string().notRequired().label("bio"),
 });
 
 const ResetPasswordVS = yup.object().shape({

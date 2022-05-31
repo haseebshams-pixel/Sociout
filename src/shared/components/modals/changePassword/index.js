@@ -5,18 +5,46 @@ import { Modal, Spinner } from "react-bootstrap";
 import FloatingLabel from "react-bootstrap/FloatingLabel";
 import { toastMessage } from "../../common/toast";
 import { Formik } from "formik";
+import axios from "axios";
+import { useDispatch } from "react-redux";
+import { setUser } from "../../../redux/reducers/userSlice";
 import { ChangePasswordVS } from "../../../utils/validation";
 
-const ChangePasswordModal = ({ show, hide }) => {
+const ChangePasswordModal = ({ show, hide, user }) => {
+  const dispatch = useDispatch();
   const initialValues = {
     oldPassword: "",
     newPassword: "",
     confirmPassword: "",
   };
   const handleChangePass = async (values, action) => {
-    action.setSubmitting(false);
-    hide();
-    toastMessage("Password Updated Successfully", "success");
+    const formData = {
+      oldpassword: values.oldPassword,
+      newpassword: values.newPassword,
+    };
+    axios
+      .put("users/change_password", formData, {
+        headers: {
+          "x-auth-token": user?.token,
+        },
+      })
+      .then((res) => {
+        if (res.statusText === "OK") {
+          let obj = {
+            ...user,
+            user: res.data,
+          };
+          action.setSubmitting(false);
+          dispatch(setUser(obj));
+          hide();
+          toastMessage("Password Updated Successfully", "success");
+        }
+      })
+      .catch((error) => {
+        console.log(error);
+        action.setSubmitting(false);
+        toastMessage(error.response.data, "error");
+      });
   };
   return (
     <Modal

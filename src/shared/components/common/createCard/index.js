@@ -1,6 +1,8 @@
 import React from "react";
 import PostModal from "../../modals/post";
 import CreateJobModal from "../../modals/createJob";
+
+import { useSelector } from "react-redux";
 import "./style.css";
 const CreateCard = ({
   openModal,
@@ -12,6 +14,7 @@ const CreateCard = ({
   hideModal2,
   job,
 }) => {
+  const user = useSelector((state) => state.root.user);
   return (
     <>
       <div
@@ -20,7 +23,11 @@ const CreateCard = ({
         data-aos-duration="550"
       >
         <img
-          src={require("../../../../assets/images/profilePlaceholder.png")}
+          src={
+            user?.user?.avatar
+              ? user?.user?.avatar
+              : require("../../../../assets/images/profilePlaceholder.png")
+          }
           className="profile-pic"
           alt="profile-pic"
         />

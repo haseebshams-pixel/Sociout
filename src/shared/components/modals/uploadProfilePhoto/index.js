@@ -1,17 +1,63 @@
 import React, { useState } from "react";
 import FeatherIcon from "feather-icons-react";
-import { Modal } from "react-bootstrap";
+import { Modal, Spinner } from "react-bootstrap";
+import { useDispatch } from "react-redux";
+import { setUser } from "../../../redux/reducers/userSlice";
+import { toastMessage } from "../../common/toast";
+import axios from "axios";
 import "./style.css";
 
-const UploadProfilePhotoModal = ({ show, hide }) => {
-  const [userPhoto, setUserPhoto] = useState(undefined);
+const UploadProfilePhotoModal = ({ show, hide, user }) => {
+  const [submitting, setSubmitting] = useState(false);
+  const dispatch = useDispatch();
+  const [userPhoto, setUserPhoto] = useState(user?.user?.avatar);
+  const [avatar, setAvatar] = useState(user?.user?.avatar);
   const handleFiles = (e) => {
     let file = e.target.files[0];
     const fileImage = URL.createObjectURL(file);
     setUserPhoto(fileImage);
+    onFileUpload(e);
   };
   const handleDelete = (e) => {
     setUserPhoto(undefined);
+    setAvatar(null);
+  };
+  const onFileUpload = (e) => {
+    let file = e.target.files[0];
+    let fileReader = new FileReader();
+    fileReader.readAsDataURL(file);
+    fileReader.onload = (event) => {
+      setAvatar(event.target.result);
+    };
+  };
+  const handleSubmit = async () => {
+    setSubmitting(true);
+    const formData = {
+      avatar: avatar,
+    };
+    axios
+      .put("users/change_profile", formData, {
+        headers: {
+          "x-auth-token": user?.token,
+        },
+      })
+      .then((res) => {
+        if (res.statusText === "OK") {
+          let obj = {
+            ...user,
+            user: res.data,
+          };
+          setSubmitting(false);
+          dispatch(setUser(obj));
+          hide();
+          toastMessage("User Photo Updated Successfully", "success");
+        }
+      })
+      .catch((error) => {
+        console.log(error);
+        setSubmitting(false);
+        toastMessage(error.response.data, "error");
+      });
   };
   return (
     <Modal
@@ -56,7 +102,15 @@ const UploadProfilePhotoModal = ({ show, hide }) => {
                 onChange={handleFiles}
               />
             </div>
-            <FeatherIcon icon="trash" role="button" onClick={handleDelete} />
+            <div>
+              <FeatherIcon icon="trash" role="button" onClick={handleDelete} />
+              <button
+                className="post-modal-btn px-3 py-1 ms-3"
+                onClick={handleSubmit}
+              >
+                {submitting ? <Spinner animation="grow" size="sm" /> : "Save"}
+              </button>
+            </div>
           </div>
         </Modal.Body>
       </div>

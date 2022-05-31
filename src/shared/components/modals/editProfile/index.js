@@ -1,23 +1,57 @@
 import React from "react";
 import FeatherIcon from "feather-icons-react";
 import Form from "react-bootstrap/Form";
+import axios from "axios";
+import { useDispatch } from "react-redux";
+import { setUser } from "../../../redux/reducers/userSlice";
 import { Modal, Spinner } from "react-bootstrap";
 import FloatingLabel from "react-bootstrap/FloatingLabel";
 import { toastMessage } from "../../common/toast";
 import { Formik } from "formik";
 import { EditProfileVS } from "../../../utils/validation";
 
-const EditProfileModal = ({ show, hide }) => {
+const EditProfileModal = ({ show, hide, user }) => {
+  const dispatch = useDispatch();
   const initialValues = {
-    firstname: "",
-    lastname: "",
-    phonenumber: "",
-    DOB: "",
+    firstname: user?.user?.firstname ? user?.user?.firstname : "",
+    lastname: user?.user?.lastname ? user?.user?.lastname : "",
+    phonenumber: user?.user?.phonenumber ? user?.user?.phonenumber : "",
+    DOB: user?.user?.DOB
+      ? new Date(user?.user?.DOB).toISOString().substr(0, 10)
+      : "",
+    bio: user?.user?.bio ? user?.user?.bio : "",
   };
   const handleEditProfile = async (values, action) => {
-    action.setSubmitting(false);
-    hide();
-    toastMessage("Profile Updated Successfuly", "success");
+    const formData = {
+      firstname: values.firstname,
+      lastname: values.lastname,
+      phonenumber: values.phonenumber,
+      DOB: values.DOB,
+      bio: values.bio,
+    };
+    axios
+      .put("users/edit", formData, {
+        headers: {
+          "x-auth-token": user?.token,
+        },
+      })
+      .then((res) => {
+        if (res.statusText === "OK") {
+          let obj = {
+            ...user,
+            user: res.data,
+          };
+          action.setSubmitting(false);
+          dispatch(setUser(obj));
+          hide();
+          toastMessage("Profile Updated Successfully", "success");
+        }
+      })
+      .catch((error) => {
+        console.log(error);
+        action.setSubmitting(false);
+        toastMessage(error.response.data, "error");
+      });
   };
   return (
     <Modal
@@ -109,7 +143,7 @@ const EditProfileModal = ({ show, hide }) => {
                       type="phonenumber"
                       placeholder="Phone Number"
                       onChange={handleChange("phonenumber")}
-                      value={values.phoneumber}
+                      value={values.phonenumber}
                       className="mb-4"
                     />
                   </FloatingLabel>
@@ -131,6 +165,18 @@ const EditProfileModal = ({ show, hide }) => {
                   </FloatingLabel>
                   <div className="error">
                     {touched.DOB && errors.DOB ? errors.DOB : ""}
+                  </div>
+                </div>
+                <div className="position-relative">
+                  <textarea
+                    className="form-control mb-4"
+                    rows="2"
+                    placeholder="Bio"
+                    onChange={handleChange("bio")}
+                    value={values.bio}
+                  ></textarea>
+                  <div className="error2">
+                    {touched.bio && errors.bio ? errors.bio : ""}
                   </div>
                 </div>
                 <button

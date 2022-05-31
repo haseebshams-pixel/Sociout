@@ -75,7 +75,6 @@ const EditPostModal = ({ show, hide, item }) => {
       .get(`posts/${item._id}`)
       .then((res) => {
         if (res.statusText === "OK") {
-          console.log(res.data);
           setPhotos(res?.data?.images);
           setText(res?.data?.text);
         }

@@ -46,7 +46,7 @@ function PostCard({ item }) {
     setPostUser(null);
     setIsEditable(false);
     axios
-      .get(`users/${item.postedBy}`)
+      .get(`users/${item?.postedBy}`)
       .then((res) => {
         if (res.statusText === "OK") {
           setPostUser(res.data);
@@ -74,7 +74,11 @@ function PostCard({ item }) {
           <div className="d-flex align-items-center justify-content-between mb-3">
             <div className="d-flex">
               <img
-                src={require("../../../../assets/images/profilePlaceholder.png")}
+                src={
+                  postUser?.avatar
+                    ? postUser?.avatar
+                    : require("../../../../assets/images/profilePlaceholder.png")
+                }
                 className="profile-pic"
                 alt="profile-pic"
               />

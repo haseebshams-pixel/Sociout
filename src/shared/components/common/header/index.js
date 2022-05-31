@@ -14,6 +14,11 @@ export default function Header() {
   const history = useHistory();
   const [offCanvas, setOffCanvas] = useState(false);
   const [notifications, setNotifications] = useState(false);
+  const navigate = (id) => {
+    history.push(`/profile/${id}`);
+    window.location.reload();
+  };
+
   const signOutPressHandler = () => {
     confirmAlert({
       message: "Are you sure you want to Sign Out?",
@@ -31,9 +36,6 @@ export default function Header() {
         },
       ],
     });
-  };
-  const navigate = () => {
-    history.push("/");
   };
   const openSideNav = () => setOffCanvas(true);
   const closeSideNav = () => setOffCanvas(false);
@@ -100,12 +102,17 @@ export default function Header() {
                     </li>
                     <li>
                       <Link
-                        to="/profile/1234567"
+                        onClick={() => navigate(user?.user?.id)}
+                        to="#"
                         className="d-flex flex-column align-items-center justify-content-center header-list-item"
                       >
                         <div className="profile-ctn">
                           <img
-                            src={require("../../../../assets/images/profilePlaceholder.png")}
+                            src={
+                              user?.user?.avatar
+                                ? user?.user?.avatar
+                                : require("../../../../assets/images/profilePlaceholder.png")
+                            }
                             className="profile-pic"
                             alt="profile-pic"
                           />

@@ -88,11 +88,17 @@ const PostModal = ({ show, hide }) => {
           <div className="d-flex align-items-center justify-content-between">
             <div className="d-flex align-items-center">
               <img
-                src={require("../../../../assets/images/profilePlaceholder.png")}
+                src={
+                  user?.user?.avatar
+                    ? user?.user?.avatar
+                    : require("../../../../assets/images/profilePlaceholder.png")
+                }
                 className="profile-pic"
                 alt="profile-pic"
               />
-              <b className="ms-2">Haseeb Shams</b>
+              <b className="ms-2">
+                {user?.user?.firstname} {user?.user?.lastname}
+              </b>
             </div>
           </div>
           <div className="pt-3">

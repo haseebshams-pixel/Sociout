@@ -1,14 +1,20 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import FeatherIcon from "feather-icons-react";
-
+import { useHistory } from "react-router-dom";
 import "./style.css";
 import NotificationsModal from "../../../modals/notifications";
 
 const SideNav = ({ offCanvas, closeSideNav, user }) => {
+  const history = useHistory();
   const [notifications, setNotifications] = useState(false);
   const openNotifications = () => {
     setNotifications(true);
+    closeSideNav();
+  };
+  const navigate = (id) => {
+    history.push(`/profile/${id}`);
+    window.location.reload();
     closeSideNav();
   };
   const closeNotifications = () => setNotifications(false);
@@ -82,8 +88,8 @@ const SideNav = ({ offCanvas, closeSideNav, user }) => {
                   <li>
                     <Link
                       className="d-flex flex-row align-items-center  header-list-item pb-3"
-                      to="/profile/12345"
-                      onClick={closeSideNav}
+                      to="#"
+                      onClick={() => navigate(user?.user?.id)}
                     >
                       <FeatherIcon icon="user" size="20" className="me-2" />
                       Profile
