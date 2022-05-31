@@ -99,7 +99,7 @@ const EditPostModal = ({ show, hide, item }) => {
     >
       <div className="p-3">
         <div className="d-flex justify-content-between">
-          <h3 className="m-0">Edit Blog</h3>
+          <h3 className="m-0">Edit Post</h3>
           <div className="close-icon-container" onClick={hide}>
             <FeatherIcon
               icon="x"

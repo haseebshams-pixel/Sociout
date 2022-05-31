@@ -10,11 +10,18 @@
 
 .search_iconinside {
   position: absolute;
-  right: 10px;
-  top: 13px;
+  right: 30px;
+  top: 12px;
   cursor: pointer;
 }
 
 .space {
   margin-top: 150px;
+}
+
+.select-tag {
+  height: 50px;
+  width: 100%;
+  cursor: pointer;
+  padding-left: 10px;
 }

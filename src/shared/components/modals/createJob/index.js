@@ -7,21 +7,70 @@ import { Formik } from "formik";
 import { Spinner } from "react-bootstrap";
 import Form from "react-bootstrap/Form";
 import FloatingLabel from "react-bootstrap/FloatingLabel";
+import { useSelector } from "react-redux";
 import { toastMessage } from "../../common/toast";
+import axios from "axios";
 
-const CreateJobModal = ({ show, hide }) => {
+const CreateJobModal = ({ show, hide, item, isEdit }) => {
+  const user = useSelector((state) => state.root.user);
   const initialValues = {
-    jobTitle: "",
-    companyName: "",
-    employmentType: "",
-    location: "",
-    contact: "",
-    description: "",
+    jobTitle: isEdit ? item?.title : "",
+    companyName: isEdit ? item?.companyName : "",
+    employmentType: isEdit ? item?.employmentType : "",
+    location: isEdit ? item?.location : "",
+    contact: isEdit ? item?.email : "",
+    description: isEdit ? item?.description : "",
   };
   const handleCreateJob = async (values, action) => {
-    action.setSubmitting(false);
-    hide();
-    toastMessage("Job Posted Successfully", "success");
+    const formData = {
+      title: values.jobTitle,
+      companyName: values.companyName,
+      employmentType: values.employmentType,
+      location: values.location,
+      email: values.contact,
+      description: values.description,
+    };
+    !isEdit
+      ? axios
+          .post("jobs/", formData, {
+            headers: {
+              "x-auth-token": user?.token,
+            },
+          })
+          .then((res) => {
+            if (res.statusText === "OK") {
+              action.setSubmitting(false);
+              hide();
+              window.location.reload();
+              toastMessage("Job Posted Successfully", "success");
+            }
+          })
+          .catch((error) => {
+            console.log(error);
+            action.setSubmitting(false);
+            hide();
+            toastMessage(error.response.data, "error");
+          })
+      : axios
+          .put(`jobs/${item._id}`, formData, {
+            headers: {
+              "x-auth-token": user?.token,
+            },
+          })
+          .then((res) => {
+            if (res.statusText === "OK") {
+              action.setSubmitting(false);
+              hide();
+              window.location.reload();
+              toastMessage("Job Post Updated Successfully", "success");
+            }
+          })
+          .catch((error) => {
+            console.log(error);
+            action.setSubmitting(false);
+            hide();
+            toastMessage(error.response.data, "error");
+          });
   };
 
   return (
@@ -34,7 +83,9 @@ const CreateJobModal = ({ show, hide }) => {
     >
       <div className="p-3">
         <div className="d-flex justify-content-between align-items-start">
-          <h5 className="m-0 w-75">Create Job Post</h5>
+          <h5 className="m-0 w-75">
+            {isEdit ? "Edit Job Post" : "Create Job Post"}
+          </h5>
           <div className="close-icon-container" onClick={hide}>
             <FeatherIcon
               icon="x"

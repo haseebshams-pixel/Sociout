@@ -16,7 +16,6 @@ function PostCard({ item }) {
   const [like, setLike] = useState(false);
   const [comment, setComment] = useState(false);
   const [postUser, setPostUser] = useState(null);
-  const [isEditable, setIsEditable] = useState(false);
   const [open, setOpen] = useState(false);
   const openModal = () => {
     setOpen(true);
@@ -44,15 +43,12 @@ function PostCard({ item }) {
   };
   const fetchUser = async () => {
     setPostUser(null);
-    setIsEditable(false);
+
     axios
       .get(`users/${item?.postedBy}`)
       .then((res) => {
         if (res.statusText === "OK") {
           setPostUser(res.data);
-          if (res.data.id == user?.user?.id) {
-            setIsEditable(true);
-          }
         }
       })
       .catch((error) => {

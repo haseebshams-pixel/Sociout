@@ -27,8 +27,8 @@ const Feed = () => {
       })
       .catch((error) => {
         console.log(error);
+        setLoading(false);
       });
-    setLoading(false);
   };
   useEffect(() => {
     fetchPosts();
@@ -36,9 +36,6 @@ const Feed = () => {
 
   const scrollToEnd = () => {
     setSkip(posts.length);
-  };
-  const resetSkip = () => {
-    setSkip(0);
   };
 
   window.onscroll = function () {
@@ -67,14 +64,10 @@ const Feed = () => {
                 <hr className="w-100" />
               </>
             )}
-
-            {loading ? (
-              <Spinner animation="grow" size="xl" />
-            ) : (
-              posts?.map((item, index) => {
-                return <PostCard item={item} key={index} />;
-              })
-            )}
+            {posts?.map((item, index) => {
+              return <PostCard item={item} key={index} />;
+            })}
+            {loading && <Spinner animation="grow" size="xl" />}
           </div>
         </div>
       </div>
