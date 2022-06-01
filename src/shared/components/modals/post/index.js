@@ -16,7 +16,7 @@ const PostModal = ({ show, hide }) => {
     setSubmitting(true);
     if (photoss.length === 0 && textt === "") {
       setSubmitting(false);
-      toastMessage("Write Something", "error");
+      toastMessage("Write Something!", "error");
     } else {
       const formData = {
         text: textt,

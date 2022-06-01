@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import moment from "moment";
 import { useSelector } from "react-redux";
+import { Spinner } from "react-bootstrap";
 import Card from "react-bootstrap/Card";
 import Carousel from "react-bootstrap/Carousel";
 import FeatherIcon from "feather-icons-react";
@@ -15,8 +16,12 @@ function PostCard({ item }) {
   const { user } = useSelector((state) => state.root);
   const [like, setLike] = useState(false);
   const [allLikes, setAllLikes] = useState([]);
+  const [allComments, setAllComments] = useState([]);
+  const [commentApiToggler, setCommentApiToggler] = useState(false);
   const [comment, setComment] = useState(false);
+  const [commentText, setCommentText] = useState("");
   const [postUser, setPostUser] = useState(null);
+  const [loader, setLoader] = useState(false);
   const [open, setOpen] = useState(false);
   const openModal = () => {
     setOpen(true);
@@ -125,15 +130,60 @@ function PostCard({ item }) {
         console.log(error);
       });
   };
+  const commentOnPost = async () => {
+    if (commentText === "") {
+      toastMessage("Write Something!", "error");
+    } else {
+      setLoader(true);
+      let obj = {
+        post: item._id,
+        text: commentText,
+      };
+      axios
+        .post(`comments/`, obj, {
+          headers: {
+            "x-auth-token": user?.token,
+          },
+        })
+        .then((res) => {
+          if (res.statusText === "OK") {
+            setCommentText("");
+            setCommentApiToggler(!commentApiToggler);
+            setLoader(false);
+            toastMessage("Comment Added!", "success");
+          }
+        })
+        .catch((error) => {
+          toastMessage(error.response.data, "error");
+          setLoader(false);
+          console.log(error);
+        });
+    }
+  };
+
+  const fetchAllComments = async () => {
+    axios
+      .get(`comments/${item?._id}`)
+      .then((res) => {
+        if (res.statusText === "OK") {
+          setAllComments(res.data);
+        }
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  };
 
   useEffect(() => {
     fetchUser();
-    getLikeStatus();
   }, []);
   useEffect(() => {
     fetchAllLikes();
     getLikeStatus();
   }, [like]);
+  useEffect(() => {
+    fetchAllComments();
+  }, [commentApiToggler]);
   return (
     <div
       className="card-container w-100"
@@ -205,7 +255,9 @@ function PostCard({ item }) {
               {allLikes?.likedBy?.length} Like
               {allLikes?.likedBy?.length > 1 && "s"}
             </span>
-            <span>0 comments</span>
+            <span>
+              {allComments?.length} comment{allComments?.length > 1 && "s"}
+            </span>
           </div>
           <hr className="mt-2 mb-3" />
           {user?.isLoggedIn && (
@@ -238,7 +290,11 @@ function PostCard({ item }) {
             <div data-aos="zoom-in-down">
               <div className="d-flex align-items-center justify-content-between pt-3 pb-3">
                 <img
-                  src={require("../../../../assets/images/profilePlaceholder.png")}
+                  src={
+                    user?.user?.avatar
+                      ? user?.user?.avatar
+                      : require("../../../../assets/images/profilePlaceholder.png")
+                  }
                   width="36px"
                   height="36px"
                   className="postCard-cmntimage"
@@ -247,22 +303,40 @@ function PostCard({ item }) {
                 <div className="d-flex flex-row postCard-relative w-100">
                   <input
                     type="text"
+                    onChange={(e) => setCommentText(e.target.value)}
                     className="w-100 ms-2 postCard-cmnt"
                     placeholder="Add a comment..."
+                    value={commentText}
                   ></input>
-                  <img
-                    src={require("../../../../assets/svg/send.svg").default}
-                    className="postCard-absolute"
-                    width="22"
-                    alt="icon"
-                  />
+                  <div className="d-flex justify-content-center align-items-center">
+                    {loader ? (
+                      <Spinner
+                        animation="grow"
+                        size="sm"
+                        className="postCard-absolute"
+                      />
+                    ) : (
+                      <img
+                        src={require("../../../../assets/svg/send.svg").default}
+                        className="postCard-absolute"
+                        width="22"
+                        alt="icon"
+                        onClick={commentOnPost}
+                      />
+                    )}
+                  </div>
                 </div>
               </div>
               <div className="pb-1 comments-container">
-                <PostComment />
-                <PostComment />
-                <PostComment />
-                <PostComment />
+                {allComments?.map((item, index) => {
+                  return (
+                    <PostComment
+                      item={item}
+                      key={index}
+                      fetchAllComments={fetchAllComments}
+                    />
+                  );
+                })}
               </div>
             </div>
           )}
