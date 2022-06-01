@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import FeatherIcon from "feather-icons-react";
 import { useDispatch, useSelector } from "react-redux";
+import axios from "axios";
 import { resetUser } from "../../../redux/reducers/userSlice";
 import { confirmAlert } from "react-confirm-alert"; // Import
 import "react-confirm-alert/src/react-confirm-alert.css"; // Import css
@@ -11,14 +12,17 @@ import "./style.css";
 import NotificationsModal from "../../modals/notifications";
 
 export default function Header() {
+  const user = useSelector((state) => state.root.user);
   const history = useHistory();
   const [offCanvas, setOffCanvas] = useState(false);
   const [notifications, setNotifications] = useState(false);
+  const [loader, setLoader] = useState(false);
+  const [listNotify, setListNotify] = useState(null);
+  const dispatch = useDispatch();
   const navigate = (id) => {
     history.push(`/profile/${id}`);
     window.location.reload();
   };
-
   const signOutPressHandler = () => {
     confirmAlert({
       message: "Are you sure you want to Sign Out?",
@@ -39,10 +43,28 @@ export default function Header() {
   };
   const openSideNav = () => setOffCanvas(true);
   const closeSideNav = () => setOffCanvas(false);
-  const openNotifications = () => setNotifications(true);
+  const openNotifications = () => {
+    setListNotify(null);
+    setLoader(true);
+    setNotifications(true);
+    axios
+      .get("notifications/", {
+        headers: {
+          "x-auth-token": user?.token,
+        },
+      })
+      .then((res) => {
+        if (res.statusText === "OK") {
+          setListNotify(res.data);
+        }
+        setLoader(false);
+      })
+      .catch((error) => {
+        console.log(error);
+        setLoader(false);
+      });
+  };
   const closeNotifications = () => setNotifications(false);
-  const dispatch = useDispatch();
-  const user = useSelector((state) => state.root.user);
   return (
     <div>
       <header className="header py-1">
@@ -151,7 +173,12 @@ export default function Header() {
       </header>
       <div className="empty-header" />
       <SideNav offCanvas={offCanvas} closeSideNav={closeSideNav} user={user} />
-      <NotificationsModal show={notifications} hide={closeNotifications} />
+      <NotificationsModal
+        show={notifications}
+        hide={closeNotifications}
+        listNotify={listNotify}
+        loader={loader}
+      />
     </div>
   );
 }

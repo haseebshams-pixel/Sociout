@@ -1,10 +1,10 @@
 import React from "react";
 import FeatherIcon from "feather-icons-react";
-import { Modal } from "react-bootstrap";
+import { Modal, NavItem, Spinner } from "react-bootstrap";
 import "./style.css";
 import NotificationText from "./notificationText";
 
-const NotificationsModal = ({ show, hide }) => {
+const NotificationsModal = ({ show, hide, listNotify, loader }) => {
   return (
     <Modal
       show={show}
@@ -27,11 +27,17 @@ const NotificationsModal = ({ show, hide }) => {
         </div>
 
         <hr className="m-0 mb-3 mt-2" />
-        <Modal.Body className="d-flex flex-column p-0 pb-3 notification-container overflow-auto">
-          <NotificationText text={"liked your post"} user={"Hammad"} />
-          <NotificationText text={"commented on your post"} user={"Naveed"} />
-          <NotificationText text={"sent you a friend request"} user={"Faiq"} />
-        </Modal.Body>
+        {loader ? (
+          <div className="d-flex justify-content-center">
+            <Spinner animation="grow" size="lg" />
+          </div>
+        ) : (
+          <Modal.Body className="d-flex flex-column p-0 pb-3 notification-container overflow-auto">
+            {listNotify?.map((item, index) => {
+              return <NotificationText item={item} key={index} />;
+            })}
+          </Modal.Body>
+        )}
       </div>
     </Modal>
   );

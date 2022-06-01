@@ -31,7 +31,6 @@ const LoginCard = () => {
       .post("users/signin", data)
       .then((res) => {
         if (res.statusText === "OK") {
-          console.log("data", res.data.user);
           let resp = {
             isLoggedIn: true,
             token: res.data.token,

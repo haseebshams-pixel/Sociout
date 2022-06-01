@@ -1,12 +1,15 @@
 import React from "react";
+import moment from "moment";
 
-const NotificationText = (props) => {
+const NotificationText = ({ item }) => {
   return (
     <div className="d-flex justify-content-between ">
       <span className="py-1">
-        <b>{props.user}</b> {props.text}
+        <b>{item?.sender}</b> {item?.text}
       </span>
-      <span className="py-1 text-muted pe-2">just now</span>
+      <span className="py-1 text-muted pe-2">
+        {moment(item?.date).fromNow()}
+      </span>
     </div>
   );
 };
