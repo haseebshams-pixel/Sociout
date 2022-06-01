@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
+import axios from "axios";
 import FeatherIcon from "feather-icons-react";
 import { useHistory } from "react-router-dom";
 import "./style.css";
@@ -7,10 +8,30 @@ import NotificationsModal from "../../../modals/notifications";
 
 const SideNav = ({ offCanvas, closeSideNav, user }) => {
   const history = useHistory();
+  const [loader, setLoader] = useState(false);
+  const [listNotify, setListNotify] = useState(null);
   const [notifications, setNotifications] = useState(false);
   const openNotifications = () => {
+    setListNotify(null);
+    setLoader(true);
     setNotifications(true);
     closeSideNav();
+    axios
+      .get("notifications/", {
+        headers: {
+          "x-auth-token": user?.token,
+        },
+      })
+      .then((res) => {
+        if (res.statusText === "OK") {
+          setListNotify(res.data);
+        }
+        setLoader(false);
+      })
+      .catch((error) => {
+        console.log(error);
+        setLoader(false);
+      });
   };
   const navigate = (id) => {
     history.push(`/profile/${id}`);
@@ -111,7 +132,12 @@ const SideNav = ({ offCanvas, closeSideNav, user }) => {
           </div>
         </div>
       </div>
-      <NotificationsModal show={notifications} hide={closeNotifications} />
+      <NotificationsModal
+        show={notifications}
+        hide={closeNotifications}
+        listNotify={listNotify}
+        loader={loader}
+      />
     </>
   );
 };

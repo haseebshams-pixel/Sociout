@@ -154,10 +154,20 @@ export default function Header() {
               )}
               {!user?.isLoggedIn && (
                 <>
-                  <button onClick={navigate} className="header-signout-btn">
+                  <button
+                    onClick={() => {
+                      history.push("/");
+                    }}
+                    className="header-signout-btn"
+                  >
                     Sign up
                   </button>
-                  <button onClick={navigate} className="header-signout-btn">
+                  <button
+                    onClick={() => {
+                      history.push("/");
+                    }}
+                    className="header-signout-btn"
+                  >
                     Log in
                   </button>
                 </>

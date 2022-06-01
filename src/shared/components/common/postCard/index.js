@@ -14,6 +14,7 @@ import EditPostModal from "../../modals/editPost";
 function PostCard({ item }) {
   const { user } = useSelector((state) => state.root);
   const [like, setLike] = useState(false);
+  const [allLikes, setAllLikes] = useState([]);
   const [comment, setComment] = useState(false);
   const [postUser, setPostUser] = useState(null);
   const [open, setOpen] = useState(false);
@@ -56,9 +57,83 @@ function PostCard({ item }) {
       });
   };
 
+  const fetchAllLikes = async () => {
+    axios
+      .get(`likes/${item?._id}`)
+      .then((res) => {
+        if (res.statusText === "OK") {
+          setAllLikes(res.data);
+        }
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  };
+
+  const likePost = async () => {
+    let obj = {
+      id: item._id,
+    };
+    axios
+      .post(`likes/like`, obj, {
+        headers: {
+          "x-auth-token": user?.token,
+        },
+      })
+      .then((res) => {
+        if (res.statusText === "OK") {
+          setLike(true);
+          toastMessage("Liked Post!", "success");
+        }
+      })
+      .catch((error) => {
+        toastMessage(error.response.data, "error");
+        console.log(error);
+      });
+  };
+  const disLikePost = async () => {
+    axios
+      .get(`likes/unlike/${item._id}`, {
+        headers: {
+          "x-auth-token": user?.token,
+        },
+      })
+      .then((res) => {
+        if (res.statusText === "OK") {
+          setLike(false);
+        }
+      })
+      .catch((error) => {
+        toastMessage(error.response.data, "error");
+        console.log(error);
+      });
+  };
+
+  const getLikeStatus = async () => {
+    axios
+      .get(`likes/check/${item._id}`, {
+        headers: {
+          "x-auth-token": user.token,
+        },
+      })
+      .then((res) => {
+        if (res.statusText === "OK") {
+          setLike(res.data.state);
+        }
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  };
+
   useEffect(() => {
     fetchUser();
+    getLikeStatus();
   }, []);
+  useEffect(() => {
+    fetchAllLikes();
+    getLikeStatus();
+  }, [like]);
   return (
     <div
       className="card-container w-100"
@@ -126,31 +201,39 @@ function PostCard({ item }) {
             </Carousel>
           )}
           <div className="d-flex align-items-center justify-content-between">
-            <span>0 Likes</span>
+            <span>
+              {allLikes?.likedBy?.length} Like
+              {allLikes?.likedBy?.length > 1 && "s"}
+            </span>
             <span>0 comments</span>
           </div>
           <hr className="mt-2 mb-3" />
-          <div className="d-flex align-items-center justify-content-between">
-            <button className="postCard-btn" onClick={() => setLike(!like)}>
-              {!like ? (
-                <FeatherIcon icon="heart" />
-              ) : (
-                <FeatherIcon icon="heart" fill="red" />
-              )}
-              Like
-            </button>
-            <button
-              className="postCard-btn"
-              onClick={() => setComment(!comment)}
-            >
-              <FeatherIcon icon="message-square" />
-              Comment
-            </button>
-            <button className="postCard-btn">
-              <FeatherIcon icon="share" />
-              Share
-            </button>
-          </div>
+          {user?.isLoggedIn && (
+            <div className="d-flex align-items-center justify-content-between">
+              <button
+                className="postCard-btn"
+                onClick={!like ? likePost : disLikePost}
+              >
+                {!like ? (
+                  <FeatherIcon icon="heart" />
+                ) : (
+                  <FeatherIcon icon="heart" fill="red" />
+                )}
+                Like
+              </button>
+              <button
+                className="postCard-btn"
+                onClick={() => setComment(!comment)}
+              >
+                <FeatherIcon icon="message-square" />
+                Comment
+              </button>
+              <button className="postCard-btn">
+                <FeatherIcon icon="share" />
+                Share
+              </button>
+            </div>
+          )}
           {comment && (
             <div data-aos="zoom-in-down">
               <div className="d-flex align-items-center justify-content-between pt-3 pb-3">
