@@ -35,7 +35,7 @@ const PersonCard = ({ item }) => {
             ? currentUser?.avatar
             : require("../../../../assets/images/profilePlaceholder.png")
         }
-        className=" p-3"
+        className="p-3 person-card-img"
         width="200px"
         height="200px"
         alt="profile"

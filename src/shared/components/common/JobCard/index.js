@@ -25,7 +25,6 @@ const JobCard = ({ item }) => {
   const closeModal2 = () => {
     setOpen2(false);
   };
-
   const onDelete = async () => {
     axios
       .delete(`jobs/${item?._id}`, {
