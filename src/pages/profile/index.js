@@ -14,6 +14,7 @@ import UploadProfilePhotoModal from "../../shared/components/modals/uploadProfil
 import ChangePasswordModal from "../../shared/components/modals/changePassword";
 import FriendRequestCard from "../../shared/components/common/friendRequestCard";
 import { toastMessage } from "../../shared/components/common/toast";
+import SharePostCard from "../../shared/components/common/sharePostCard";
 
 const Profile = (props) => {
   const user = useSelector((state) => state.root.user);
@@ -25,7 +26,6 @@ const Profile = (props) => {
   const [friends, setFriends] = useState([]);
   const [loading, setLoading] = useState(false);
   const [pendingRequests, setPendingRequests] = useState([]);
-  const [friendStatus, setFriendStatus] = useState("");
   const [requested, setRequested] = useState(false);
   const [pending, setPending] = useState(false);
 
@@ -71,7 +71,6 @@ const Profile = (props) => {
       })
       .then((res) => {
         if (res.statusText === "OK") {
-          setFriendStatus(res.data.state);
           if (res.data.state === "friend") {
             setFriend(true);
             setRequested(false);
@@ -361,7 +360,11 @@ const Profile = (props) => {
                               data-aos-duration="500"
                               key={key}
                             >
-                              <PostCard item={item} />
+                              {item?.isShared ? (
+                                <SharePostCard item={item} key={key} />
+                              ) : (
+                                <PostCard item={item} key={key} />
+                              )}
                             </div>
                           );
                         })

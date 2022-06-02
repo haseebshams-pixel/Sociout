@@ -4,15 +4,12 @@ import moment from "moment";
 import { useSelector } from "react-redux";
 import { Spinner } from "react-bootstrap";
 import Card from "react-bootstrap/Card";
-import Carousel from "react-bootstrap/Carousel";
 import FeatherIcon from "feather-icons-react";
 import PostComment from "../postComment";
 import { toastMessage } from "../toast";
+import PostCard from "../postCard";
 
-import "./style.css";
-import EditPostModal from "../../modals/editPost";
-
-function PostCard({ item }) {
+function SharePostCard({ item }) {
   const { user } = useSelector((state) => state.root);
   const [like, setLike] = useState(false);
   const [allLikes, setAllLikes] = useState([]);
@@ -22,16 +19,10 @@ function PostCard({ item }) {
   const [commentText, setCommentText] = useState("");
   const [postUser, setPostUser] = useState(null);
   const [loader, setLoader] = useState(false);
-  const [open, setOpen] = useState(false);
-  const openModal = () => {
-    setOpen(true);
-  };
-  const closeModal = () => {
-    setOpen(false);
-  };
+
   const onDelete = async () => {
     axios
-      .delete(`posts/${item?._id}`, {
+      .delete(`posts/share/${item?._id}`, {
         headers: {
           "x-auth-token": user?.token,
         },
@@ -49,9 +40,8 @@ function PostCard({ item }) {
   };
   const fetchUser = async () => {
     setPostUser(null);
-
     axios
-      .get(`users/${item?.postedBy}`)
+      .get(`users/${item?.sharedBy}`)
       .then((res) => {
         if (res.statusText === "OK") {
           setPostUser(res.data);
@@ -64,7 +54,7 @@ function PostCard({ item }) {
 
   const fetchAllLikes = async () => {
     axios
-      .get(`likes/${item?.isShared ? item?.postId : item?._id}`)
+      .get(`likes/${item?._id}`)
       .then((res) => {
         if (res.statusText === "OK") {
           setAllLikes(res.data);
@@ -77,7 +67,7 @@ function PostCard({ item }) {
 
   const likePost = async () => {
     let obj = {
-      id: item?.isShared ? item?.postId : item?._id,
+      id: item._id,
     };
     axios
       .post(`likes/like`, obj, {
@@ -98,7 +88,7 @@ function PostCard({ item }) {
   };
   const disLikePost = async () => {
     axios
-      .get(`likes/unlike/${item?.isShared ? item?.postId : item?._id}`, {
+      .get(`likes/unlike/${item._id}`, {
         headers: {
           "x-auth-token": user?.token,
         },
@@ -116,7 +106,7 @@ function PostCard({ item }) {
 
   const getLikeStatus = async () => {
     axios
-      .get(`likes/check/${item?.isShared ? item?.postId : item?._id}`, {
+      .get(`likes/check/${item._id}`, {
         headers: {
           "x-auth-token": user.token,
         },
@@ -136,7 +126,7 @@ function PostCard({ item }) {
     } else {
       setLoader(true);
       let obj = {
-        post: item?.isShared ? item?.postId : item?._id,
+        post: item._id,
         text: commentText,
       };
       axios
@@ -163,7 +153,7 @@ function PostCard({ item }) {
 
   const fetchAllComments = async () => {
     axios
-      .get(`comments/${item?.isShared ? item?.postId : item?._id}`)
+      .get(`comments/${item?._id}`)
       .then((res) => {
         if (res.statusText === "OK") {
           setAllComments(res.data);
@@ -173,27 +163,7 @@ function PostCard({ item }) {
         console.log(error);
       });
   };
-  const sharePost = async () => {
-    const formData = {
-      id: item?.isShared ? item?.postId : item?._id,
-    };
-    axios
-      .post("posts/share", formData, {
-        headers: {
-          "x-auth-token": user?.token,
-        },
-      })
-      .then((res) => {
-        if (res.statusText === "OK") {
-          window.location.reload();
-          toastMessage("Post Shared Successfully", "success");
-        }
-      })
-      .catch((error) => {
-        console.log(error);
-        toastMessage(error.response.data, "error");
-      });
-  };
+
   useEffect(() => {
     fetchUser();
   }, []);
@@ -226,26 +196,18 @@ function PostCard({ item }) {
               <div>
                 <Card.Title className="d-flex align-items-center m-0">
                   <span className="ms-2">
-                    {user?.user?.id === item?.postedBy
+                    {user?.user?.id === item?.sharedBy
                       ? user?.user?.firstname + " " + user?.user?.lastname
                       : postUser?.firstname + " " + postUser?.lastname}
                   </span>
                 </Card.Title>
                 <Card.Subtitle className="text-muted post-card-subtitle">
-                  {moment(
-                    item?.isShared ? item?.oldDate : item?.date
-                  ).fromNow()}
+                  {moment(item?.shareDate).fromNow()}
                 </Card.Subtitle>
               </div>
             </div>
-            {user?.user?.id === item?.postedBy && !item?.isShared && (
+            {user?.user?.id === item?.sharedBy && (
               <div className="d-flex">
-                <FeatherIcon
-                  icon="edit-2"
-                  size="20"
-                  role="button"
-                  onClick={openModal}
-                />
                 <FeatherIcon
                   icon="trash"
                   size="20"
@@ -256,22 +218,8 @@ function PostCard({ item }) {
               </div>
             )}
           </div>
-          <Card.Text>{item?.text}</Card.Text>
-          {item?.images.length > 0 && (
-            <Carousel className="carosal">
-              {item?.images?.map((picture, index) => {
-                return (
-                  <Carousel.Item key={index}>
-                    <img
-                      className="carosal-image"
-                      src={picture}
-                      alt="First slide"
-                    />
-                  </Carousel.Item>
-                );
-              })}
-            </Carousel>
-          )}
+          <PostCard item={item} />
+
           <div className="d-flex align-items-center justify-content-between">
             <span>
               {allLikes?.likedBy?.length} Like
@@ -301,10 +249,6 @@ function PostCard({ item }) {
               >
                 <FeatherIcon icon="message-square" />
                 Comment
-              </button>
-              <button className="postCard-btn" onClick={sharePost}>
-                <FeatherIcon icon="share" />
-                Share
               </button>
             </div>
           )}
@@ -364,9 +308,8 @@ function PostCard({ item }) {
           )}
         </Card.Body>
       </Card>
-      <EditPostModal show={open} hide={closeModal} item={item} />
     </div>
   );
 }
 
-export default PostCard;
+export default SharePostCard;

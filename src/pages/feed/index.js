@@ -6,6 +6,7 @@ import Footer from "../../shared/components/common/footer";
 import CreateCard from "../../shared/components/common/createCard";
 import PostCard from "../../shared/components/common/postCard";
 import { Spinner } from "react-bootstrap";
+import SharePostCard from "../../shared/components/common/sharePostCard";
 const Feed = () => {
   const { user } = useSelector((state) => state.root);
   const [open, setOpen] = useState(false);
@@ -65,7 +66,11 @@ const Feed = () => {
               </>
             )}
             {posts?.map((item, index) => {
-              return <PostCard item={item} key={index} />;
+              return item?.isShared ? (
+                <SharePostCard item={item} key={index} />
+              ) : (
+                <PostCard item={item} key={index} />
+              );
             })}
             {loading && <Spinner animation="grow" size="xl" />}
           </div>
