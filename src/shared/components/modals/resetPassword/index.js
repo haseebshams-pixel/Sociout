@@ -58,24 +58,31 @@ const ResetPasswordModal = ({ show, hide }) => {
       });
   };
   const handlePassword = async (values, action) => {
-    const data = {
-      email: values.email,
-      password: values.newpassword,
-    };
-    axios
-      .put("users/set-pass", data)
-      .then((res) => {
-        if (res.statusText === "OK") {
+    if (values.password === "") {
+      toastMessage("Please Provide Password!", "error");
+    } else {
+      const data = {
+        email: values.email,
+        password: values.newpassword,
+      };
+      axios
+        .put("users/set-pass", data)
+        .then((res) => {
+          if (res.statusText === "OK") {
+            action.setSubmitting(false);
+            toastMessage(res.data, "success");
+            setIsPassword(false);
+            setIsEmail(true);
+            setIsOtp(false);
+            hide();
+          }
+        })
+        .catch((error) => {
+          console.log(error);
           action.setSubmitting(false);
-          toastMessage(res.data, "success");
-          hide();
-        }
-      })
-      .catch((error) => {
-        console.log(error);
-        action.setSubmitting(false);
-        toastMessage(error.response.data, "error");
-      });
+          toastMessage(error.response.data, "error");
+        });
+    }
   };
   return (
     <Modal

@@ -204,6 +204,7 @@ function PostCard({ item }) {
   useEffect(() => {
     fetchAllComments();
   }, [commentApiToggler]);
+
   return (
     <div
       className="card-container w-100"
