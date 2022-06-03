@@ -7,6 +7,7 @@ import Card from "react-bootstrap/Card";
 import Carousel from "react-bootstrap/Carousel";
 import FeatherIcon from "feather-icons-react";
 import PostComment from "../postComment";
+import { useHistory } from "react-router-dom";
 import { toastMessage } from "../toast";
 
 import "./style.css";
@@ -14,6 +15,7 @@ import EditPostModal from "../../modals/editPost";
 
 function PostCard({ item }) {
   const { user } = useSelector((state) => state.root);
+  const history = useHistory();
   const [like, setLike] = useState(false);
   const [allLikes, setAllLikes] = useState([]);
   const [allComments, setAllComments] = useState([]);
@@ -28,6 +30,9 @@ function PostCard({ item }) {
   };
   const closeModal = () => {
     setOpen(false);
+  };
+  const navigate = (id) => {
+    history.push(`/profile/${id}`);
   };
   const onDelete = async () => {
     axios
@@ -223,9 +228,15 @@ function PostCard({ item }) {
                 }
                 className="profile-pic"
                 alt="profile-pic"
+                role="button"
+                onClick={() => navigate(item.postedBy)}
               />
               <div>
-                <Card.Title className="d-flex align-items-center m-0">
+                <Card.Title
+                  className="d-flex align-items-center m-0"
+                  role="button"
+                  onClick={() => navigate(item.postedBy)}
+                >
                   <span className="ms-2">
                     {user?.user?.id === item?.postedBy
                       ? user?.user?.firstname + " " + user?.user?.lastname

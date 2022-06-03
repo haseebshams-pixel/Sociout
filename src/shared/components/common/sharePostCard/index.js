@@ -6,11 +6,13 @@ import { Spinner } from "react-bootstrap";
 import Card from "react-bootstrap/Card";
 import FeatherIcon from "feather-icons-react";
 import PostComment from "../postComment";
+import { useHistory } from "react-router-dom";
 import { toastMessage } from "../toast";
 import PostCard from "../postCard";
 
 function SharePostCard({ item }) {
   const { user } = useSelector((state) => state.root);
+  const history = useHistory();
   const [like, setLike] = useState(false);
   const [allLikes, setAllLikes] = useState([]);
   const [allComments, setAllComments] = useState([]);
@@ -19,7 +21,9 @@ function SharePostCard({ item }) {
   const [commentText, setCommentText] = useState("");
   const [postUser, setPostUser] = useState(null);
   const [loader, setLoader] = useState(false);
-
+  const navigate = (id) => {
+    history.push(`/profile/${id}`);
+  };
   const onDelete = async () => {
     axios
       .delete(`posts/share/${item?._id}`, {
@@ -192,9 +196,15 @@ function SharePostCard({ item }) {
                 }
                 className="profile-pic"
                 alt="profile-pic"
+                role="button"
+                onClick={() => navigate(item.sharedBy)}
               />
               <div>
-                <Card.Title className="d-flex align-items-center m-0">
+                <Card.Title
+                  className="d-flex align-items-center m-0"
+                  role="button"
+                  onClick={() => navigate(item.sharedBy)}
+                >
                   <span className="ms-2">
                     {user?.user?.id === item?.sharedBy
                       ? user?.user?.firstname + " " + user?.user?.lastname
