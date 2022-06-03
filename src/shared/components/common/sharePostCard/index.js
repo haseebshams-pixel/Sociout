@@ -247,9 +247,9 @@ function SharePostCard({ item }) {
                 onClick={!like ? likePost : disLikePost}
               >
                 {!like ? (
-                  <FeatherIcon icon="heart" />
+                  <FeatherIcon icon="heart" className="me-1" />
                 ) : (
-                  <FeatherIcon icon="heart" fill="red" />
+                  <FeatherIcon icon="heart" fill="red" className="me-1" />
                 )}
                 Like
               </button>
@@ -257,7 +257,7 @@ function SharePostCard({ item }) {
                 className="postCard-btn"
                 onClick={() => setComment(!comment)}
               >
-                <FeatherIcon icon="message-square" />
+                <FeatherIcon icon="message-square" className="me-1" />
                 Comment
               </button>
             </div>
