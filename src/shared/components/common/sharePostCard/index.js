@@ -202,7 +202,7 @@ function SharePostCard({ item }) {
                   </span>
                 </Card.Title>
                 <Card.Subtitle className="text-muted post-card-subtitle">
-                  {moment(item?.shareDate).fromNow()}
+                  {moment(item?.date).fromNow()}
                 </Card.Subtitle>
               </div>
             </div>
