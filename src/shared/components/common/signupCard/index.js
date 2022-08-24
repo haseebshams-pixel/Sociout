@@ -12,6 +12,7 @@ import { GoogleLogin } from "react-google-login";
 import FacebookLogin from "react-facebook-login/dist/facebook-login-render-props";
 import axios from "axios";
 import FeatherIcon from "feather-icons-react";
+import { socket, initSocket } from "../../../services/socket.service";
 const SignUpCard = () => {
   const history = useHistory();
   const dispatch = useDispatch();
@@ -45,6 +46,7 @@ const SignUpCard = () => {
           };
           dispatch(setUser(resp));
           history.push("/feed");
+          //initSocket();
           toastMessage("User Registered Successfully", "success");
         }
       })
@@ -74,6 +76,7 @@ const SignUpCard = () => {
           };
           dispatch(setUser(resp));
           history.push("/feed");
+          //initSocket();
           toastMessage("User Registered Successfully", "success");
         }
       })
@@ -105,6 +108,7 @@ const SignUpCard = () => {
           };
           dispatch(setUser(resp));
           history.push("/feed");
+          //initSocket();
           toastMessage("User Registered Successfully", "success");
         }
       })

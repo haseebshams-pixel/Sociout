@@ -15,9 +15,11 @@ import ChangePasswordModal from "../../shared/components/modals/changePassword";
 import FriendRequestCard from "../../shared/components/common/friendRequestCard";
 import { toastMessage } from "../../shared/components/common/toast";
 import SharePostCard from "../../shared/components/common/sharePostCard";
+import { useHistory } from "react-router";
 
 const Profile = (props) => {
   const user = useSelector((state) => state.root.user);
+  const history = useHistory();
   const [edit, setEdit] = useState(false);
   const [editPass, setEditPass] = useState(false);
   const [uploadPhoto, setUploadPhoto] = useState(false);
@@ -204,6 +206,25 @@ const Profile = (props) => {
         console.log(error);
       });
   };
+  const startConversation = async () => {
+    let obj = {
+      user2: props.match.params.id,
+    };
+    axios
+      .post(`users/start_conversation`, obj, {
+        headers: {
+          "x-auth-token": user.token,
+        },
+      })
+      .then((res) => {
+        if (res.statusText === "OK") {
+          history.push("/chat", { state: res?.data });
+        }
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  };
   useEffect(() => {
     axios
       .get(`users/${props.match.params.id}`)
@@ -275,13 +296,22 @@ const Profile = (props) => {
                   </a>
                 </div>
               ) : friend ? (
-                <a
-                  role="button"
-                  className="btn btn-outline-danger btn-sm btn-block text-font-family d-flex align-items-center"
-                  onClick={() => unfriend()}
-                >
-                  Unfriend
-                </a>
+                <div className="d-flex">
+                  <a
+                    role="button"
+                    className="btn btn-outline-danger btn-sm btn-block text-font-family d-flex align-items-center"
+                    onClick={unfriend}
+                  >
+                    Unfriend
+                  </a>
+                  <a
+                    role="button"
+                    className="btn btn-outline-primary btn-sm btn-block text-font-family d-flex align-items-center ms-2"
+                    onClick={startConversation}
+                  >
+                    Message
+                  </a>
+                </div>
               ) : requested ? (
                 <a
                   role="button"

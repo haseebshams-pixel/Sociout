@@ -3,6 +3,7 @@ import Feed from "../../pages/feed";
 import Profile from "../../pages/profile";
 import Search from "../../pages/search";
 import Jobs from "../../pages/jobs";
+import Chat from "../../pages/chat";
 
 let allPublicRoute = [
   {
@@ -36,6 +37,11 @@ let logedInRoute = [
     path: "/search",
     component: Search,
     name: "Search",
+  },
+  {
+    path: "/chat",
+    component: Chat,
+    name: "Chat",
   },
 ];
 export { allPublicRoute, logedInRoute };

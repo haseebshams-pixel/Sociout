@@ -113,6 +113,15 @@ export default function Header() {
                     <li role="button">
                       <Link
                         className="d-flex flex-column align-items-center justify-content-center header-list-item"
+                        to="/chat"
+                      >
+                        <FeatherIcon icon="message-circle" size="20" />
+                        <small className="font-weight-light">Chat</small>
+                      </Link>
+                    </li>
+                    <li role="button">
+                      <Link
+                        className="d-flex flex-column align-items-center justify-content-center header-list-item"
                         to="#"
                         onClick={openNotifications}
                       >

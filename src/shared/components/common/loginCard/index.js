@@ -14,6 +14,7 @@ import axios from "axios";
 import "./style.css";
 import ResetPasswordModal from "../../modals/resetPassword";
 import FeatherIcon from "feather-icons-react";
+import { socket, initSocket } from "../../../services/socket.service";
 const LoginCard = () => {
   const history = useHistory();
   const [reset, setReset] = useState(false);
@@ -39,6 +40,8 @@ const LoginCard = () => {
           dispatch(setUser(resp));
           action.setSubmitting(false);
           history.push("/feed");
+          //initSocket();
+          //socket.emit("addUser", { username: userInput });
           toastMessage("User Logged In Successfully", "success");
         }
       })
@@ -67,6 +70,7 @@ const LoginCard = () => {
             user: res.data.user,
           };
           dispatch(setUser(resp));
+          //initSocket();
           history.push("/feed");
           toastMessage("User Logged In Successfully", "success");
         }
@@ -99,6 +103,7 @@ const LoginCard = () => {
           };
           dispatch(setUser(resp));
           history.push("/feed");
+          //initSocket();
           toastMessage("User Logged In Successfully", "success");
         }
       })

@@ -119,6 +119,19 @@ const SideNav = ({ offCanvas, closeSideNav, user }) => {
                   <li>
                     <Link
                       className="d-flex flex-row align-items-center  header-list-item pb-3"
+                      to="/chat"
+                    >
+                      <FeatherIcon
+                        icon="message-circle"
+                        size="20"
+                        className="me-2"
+                      />
+                      Chat
+                    </Link>
+                  </li>
+                  <li>
+                    <Link
+                      className="d-flex flex-row align-items-center  header-list-item pb-3"
                       to="#"
                       onClick={openNotifications}
                     >

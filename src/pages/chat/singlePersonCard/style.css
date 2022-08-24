@@ -1,0 +1,13 @@
+.singlePersonCard-mainContainer {
+  height: 80px;
+  cursor: pointer;
+  background: #f8f6f6;
+}
+
+.singlePersonCard-mainContainer:hover {
+  background-color: #d2d2d2;
+}
+
+.bg-selected {
+  background-color: #d2d2d2;
+}
