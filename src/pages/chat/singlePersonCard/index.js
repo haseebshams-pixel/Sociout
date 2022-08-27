@@ -6,6 +6,7 @@ const PersonCard = ({
   item,
   setSelectedConversation,
   selectedConversation,
+  fetchAllConversationMessages,
 }) => {
   const { user } = useSelector((state) => state.root);
   return (
@@ -13,7 +14,10 @@ const PersonCard = ({
       className={`d-flex justify-content-between mt-2 pt-2 pb-2 ps-2 pe-2 singlePersonCard-mainContainer align-items-center rounded ${
         selectedConversation?._id === item?._id ? "bg-selected" : ""
       }`}
-      onClick={() => setSelectedConversation(item)}
+      onClick={() => {
+        setSelectedConversation(item);
+        fetchAllConversationMessages(item?._id);
+      }}
     >
       <div className="postCard-cmntimage">
         <img

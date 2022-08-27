@@ -40,8 +40,7 @@ const LoginCard = () => {
           dispatch(setUser(resp));
           action.setSubmitting(false);
           history.push("/feed");
-          //initSocket();
-          //socket.emit("addUser", { username: userInput });
+          initSocket();
           toastMessage("User Logged In Successfully", "success");
         }
       })
@@ -70,7 +69,7 @@ const LoginCard = () => {
             user: res.data.user,
           };
           dispatch(setUser(resp));
-          //initSocket();
+          initSocket();
           history.push("/feed");
           toastMessage("User Logged In Successfully", "success");
         }
@@ -103,7 +102,7 @@ const LoginCard = () => {
           };
           dispatch(setUser(resp));
           history.push("/feed");
-          //initSocket();
+          initSocket();
           toastMessage("User Logged In Successfully", "success");
         }
       })

@@ -9,6 +9,7 @@ import FeatherIcon from "feather-icons-react";
 import PostComment from "../postComment";
 import { useHistory } from "react-router-dom";
 import { toastMessage } from "../toast";
+import { toast } from "react-toastify";
 
 import "./style.css";
 import EditPostModal from "../../modals/editPost";
@@ -35,22 +36,28 @@ function PostCard({ item }) {
     history.push(`/profile/${id}`);
   };
   const onDelete = async () => {
-    axios
-      .delete(`posts/${item?._id}`, {
-        headers: {
-          "x-auth-token": user?.token,
-        },
-      })
-      .then((res) => {
-        if (res.statusText === "OK") {
-          toastMessage("Deleted Successfuly", "success");
-          window.location.reload();
-        }
-      })
-      .catch((error) => {
-        toastMessage(error.response.data, "error");
-        console.log(error);
-      });
+    toast.promise(
+      axios
+        .delete(`posts/${item?._id}`, {
+          headers: {
+            "x-auth-token": user?.token,
+          },
+        })
+        .then((res) => {
+          if (res.statusText === "OK") {
+            window.location.reload();
+          }
+        })
+        .catch((error) => {
+          toastMessage(error.response.data, "error");
+          console.log(error);
+        }),
+      {
+        pending: "Pending",
+        success: "Deleted Successfuly! 🤯",
+        error: "Rejected 🤯",
+      }
+    );
   };
   const fetchUser = async () => {
     setPostUser(null);
@@ -84,39 +91,50 @@ function PostCard({ item }) {
     let obj = {
       id: item?.isShared ? item?.postId : item?._id,
     };
-    axios
-      .post(`likes/like`, obj, {
-        headers: {
-          "x-auth-token": user?.token,
-        },
-      })
-      .then((res) => {
-        if (res.statusText === "OK") {
-          setLike(true);
-          toastMessage("Liked Post!", "success");
-        }
-      })
-      .catch((error) => {
-        toastMessage(error.response.data, "error");
-        console.log(error);
-      });
+    toast.promise(
+      axios
+        .post(`likes/like`, obj, {
+          headers: {
+            "x-auth-token": user?.token,
+          },
+        })
+        .then((res) => {
+          if (res.statusText === "OK") {
+            setLike(true);
+          }
+        })
+        .catch((error) => {
+          console.log(error);
+        }),
+      {
+        pending: "Pending",
+        success: "Liked Post! 👌",
+        error: "Rejected 🤯",
+      }
+    );
   };
   const disLikePost = async () => {
-    axios
-      .get(`likes/unlike/${item?.isShared ? item?.postId : item?._id}`, {
-        headers: {
-          "x-auth-token": user?.token,
-        },
-      })
-      .then((res) => {
-        if (res.statusText === "OK") {
-          setLike(false);
-        }
-      })
-      .catch((error) => {
-        toastMessage(error.response.data, "error");
-        console.log(error);
-      });
+    toast.promise(
+      axios
+        .get(`likes/unlike/${item?.isShared ? item?.postId : item?._id}`, {
+          headers: {
+            "x-auth-token": user?.token,
+          },
+        })
+        .then((res) => {
+          if (res.statusText === "OK") {
+            setLike(false);
+          }
+        })
+        .catch((error) => {
+          console.log(error);
+        }),
+      {
+        pending: "Pending",
+        success: "Post disliked! 🤯",
+        error: "Rejected 🤯",
+      }
+    );
   };
 
   const getLikeStatus = async () => {
@@ -182,22 +200,27 @@ function PostCard({ item }) {
     const formData = {
       id: item?.isShared ? item?.postId : item?._id,
     };
-    axios
-      .post("posts/share", formData, {
-        headers: {
-          "x-auth-token": user?.token,
-        },
-      })
-      .then((res) => {
-        if (res.statusText === "OK") {
-          window.location.reload();
-          toastMessage("Post Shared Successfully", "success");
-        }
-      })
-      .catch((error) => {
-        console.log(error);
-        toastMessage(error.response.data, "error");
-      });
+    toast.promise(
+      axios
+        .post("posts/share", formData, {
+          headers: {
+            "x-auth-token": user?.token,
+          },
+        })
+        .then((res) => {
+          if (res.statusText === "OK") {
+            window.location.reload();
+          }
+        })
+        .catch((error) => {
+          console.log(error);
+        }),
+      {
+        pending: "Pending",
+        success: "Post Shared Successfully 👌",
+        error: "Rejected 🤯",
+      }
+    );
   };
   useEffect(() => {
     fetchUser();

@@ -10,6 +10,7 @@ import SideNav from "./sideNav";
 import { useHistory } from "react-router-dom";
 import "./style.css";
 import NotificationsModal from "../../modals/notifications";
+import { socket } from "../../../services/socket.service";
 
 export default function Header() {
   const user = useSelector((state) => state.root.user);
@@ -33,6 +34,9 @@ export default function Header() {
           onClick: () => {
             history.push("/");
             dispatch(resetUser());
+            socket.emit("removeUser", {
+              userId: user?.user?.id,
+            });
           },
         },
         {

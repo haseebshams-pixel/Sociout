@@ -9,6 +9,7 @@ import PostComment from "../postComment";
 import { useHistory } from "react-router-dom";
 import { toastMessage } from "../toast";
 import PostCard from "../postCard";
+import { toast } from "react-toastify";
 
 function SharePostCard({ item }) {
   const { user } = useSelector((state) => state.root);
@@ -25,22 +26,28 @@ function SharePostCard({ item }) {
     history.push(`/profile/${id}`);
   };
   const onDelete = async () => {
-    axios
-      .delete(`posts/share/${item?._id}`, {
-        headers: {
-          "x-auth-token": user?.token,
-        },
-      })
-      .then((res) => {
-        if (res.statusText === "OK") {
-          toastMessage("Deleted Successfuly", "success");
-          window.location.reload();
-        }
-      })
-      .catch((error) => {
-        toastMessage(error.response.data, "error");
-        console.log(error);
-      });
+    toast.promise(
+      axios
+        .delete(`posts/share/${item?._id}`, {
+          headers: {
+            "x-auth-token": user?.token,
+          },
+        })
+        .then((res) => {
+          if (res.statusText === "OK") {
+            window.location.reload();
+          }
+        })
+        .catch((error) => {
+          toastMessage(error.response.data, "error");
+          console.log(error);
+        }),
+      {
+        pending: "Pending",
+        success: "Deleted Successfuly! 🤯",
+        error: "Rejected 🤯",
+      }
+    );
   };
   const fetchUser = async () => {
     setPostUser(null);
@@ -73,39 +80,52 @@ function SharePostCard({ item }) {
     let obj = {
       id: item._id,
     };
-    axios
-      .post(`likes/like`, obj, {
-        headers: {
-          "x-auth-token": user?.token,
-        },
-      })
-      .then((res) => {
-        if (res.statusText === "OK") {
-          setLike(true);
-          toastMessage("Liked Post!", "success");
-        }
-      })
-      .catch((error) => {
-        toastMessage(error.response.data, "error");
-        console.log(error);
-      });
+    toast.promise(
+      axios
+        .post(`likes/like`, obj, {
+          headers: {
+            "x-auth-token": user?.token,
+          },
+        })
+        .then((res) => {
+          if (res.statusText === "OK") {
+            setLike(true);
+          }
+        })
+        .catch((error) => {
+          toastMessage(error.response.data, "error");
+          console.log(error);
+        }),
+      {
+        pending: "Pending",
+        success: "Liked Post! 👌",
+        error: "Rejected 🤯",
+      }
+    );
   };
   const disLikePost = async () => {
-    axios
-      .get(`likes/unlike/${item._id}`, {
-        headers: {
-          "x-auth-token": user?.token,
-        },
-      })
-      .then((res) => {
-        if (res.statusText === "OK") {
-          setLike(false);
-        }
-      })
-      .catch((error) => {
-        toastMessage(error.response.data, "error");
-        console.log(error);
-      });
+    toast.promise(
+      axios
+        .get(`likes/unlike/${item._id}`, {
+          headers: {
+            "x-auth-token": user?.token,
+          },
+        })
+        .then((res) => {
+          if (res.statusText === "OK") {
+            setLike(false);
+          }
+        })
+        .catch((error) => {
+          toastMessage(error.response.data, "error");
+          console.log(error);
+        }),
+      {
+        pending: "Pending",
+        success: "Post disliked! 🤯",
+        error: "Rejected 🤯",
+      }
+    );
   };
 
   const getLikeStatus = async () => {

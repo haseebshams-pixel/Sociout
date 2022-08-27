@@ -8,6 +8,8 @@ import Message from "./message";
 import { socket } from "../../shared/services/socket.service";
 import { useLocation } from "react-router";
 import PersonCard from "./singlePersonCard";
+import { Spinner } from "react-bootstrap";
+import FeatherIcon from "feather-icons-react";
 
 const Chat = () => {
   const { user } = useSelector((state) => state.root);
@@ -16,12 +18,14 @@ const Chat = () => {
   const [selectedConversation, setSelectedConversation] = useState(
     location?.state ? location?.state?.state : null
   );
+  const [msgs, setMsgs] = useState([]);
   window.history.replaceState({}, document.title);
-  console.log("location", selectedConversation);
-
+  const [loader, setLoader] = useState(false);
+  const [chatLoader, setChatLoader] = useState(false);
   const fetchAllConversations = async () => {
+    setLoader(true);
     axios
-      .get(`users/getAllConversations`, {
+      .get(`chat/getAllConversations`, {
         headers: {
           "x-auth-token": user.token,
         },
@@ -30,20 +34,37 @@ const Chat = () => {
         if (res.statusText === "OK") {
           setAllConversations(res?.data?.conversations);
         }
+        setLoader(false);
       })
       .catch((error) => {
         console.log(error);
+        setLoader(false);
+      });
+  };
+
+  const fetchAllConversationMessages = async (id) => {
+    setChatLoader(true);
+    axios
+      .get(`chat/getConversationChat/${id}`, {
+        headers: {
+          "x-auth-token": user.token,
+        },
+      })
+      .then((res) => {
+        if (res.statusText === "OK") {
+          setMsgs(res?.data);
+        }
+        setChatLoader(false);
+      })
+      .catch((error) => {
+        console.log(error);
+        setChatLoader(false);
       });
   };
 
   useEffect(() => {
-    socket.on("get-message", ({ message }) => {
-      alert(message);
-    });
-  }, [socket]);
-
-  useEffect(() => {
     fetchAllConversations();
+    socket.emit("addUser", { userId: user?.user?.id });
   }, []);
 
   return (
@@ -52,19 +73,42 @@ const Chat = () => {
       <div className="container " data-aos="fade-up" data-aos-duration="350">
         <div className="row d-flex justify-content-center">
           <div className="col-3 chat-container">
-            {allConversations?.map((item, key) => {
-              return (
-                <PersonCard
-                  item={item}
-                  key={key}
-                  setSelectedConversation={setSelectedConversation}
-                  selectedConversation={selectedConversation}
-                />
-              );
-            })}
+            {loader ? (
+              <div className="d-flex justify-content-center mt-3">
+                <Spinner animation="grow" size="lg" />
+              </div>
+            ) : allConversations?.length > 0 ? (
+              allConversations?.map((item, key) => {
+                return (
+                  <PersonCard
+                    item={item}
+                    key={key}
+                    setSelectedConversation={setSelectedConversation}
+                    selectedConversation={selectedConversation}
+                    fetchAllConversationMessages={fetchAllConversationMessages}
+                  />
+                );
+              })
+            ) : (
+              <p>No Conversation Found!</p>
+            )}
           </div>
-          <div className="col-8 chat-container ms-2">
-            {selectedConversation && <Message />}
+          <div className="col-8 chat-container ms-2 position-relative">
+            {selectedConversation ? (
+              <Message
+                selectedConversation={selectedConversation}
+                msgs={msgs}
+                loader={chatLoader}
+                setMsgs={setMsgs}
+              />
+            ) : (
+              <div className="position-absolute chat-message-container">
+                <h4 style={{ color: "#919191" }}>
+                  <FeatherIcon icon="message-circle" size="25" /> Select a
+                  Conversation
+                </h4>
+              </div>
+            )}
           </div>
         </div>
       </div>
