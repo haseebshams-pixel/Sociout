@@ -1,28 +1,28 @@
 import React, { useState, useEffect, useRef } from "react";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 import { Spinner } from "react-bootstrap";
 import "./style.css";
 import { socket } from "../../../shared/services/socket.service";
+import { setChat } from "../../../shared/redux/reducers/chatSlice";
 
 const Message = ({ selectedConversation, loader, msgs, setMsgs }) => {
   const { user } = useSelector((state) => state.root);
   const messagesEndRef = useRef(null);
-
   const [message, setMessage] = useState("");
-
+  let msgArr = [...msgs];
   const handleMessage = () => {
     if (message != "") {
-      let temp = [...msgs];
-      temp.push({
+      let msgObj = {
         sender: user?.user?.id,
         reciever:
           user?.user?.id != selectedConversation?.user1?._id
             ? selectedConversation?.user1?._id
             : selectedConversation?.user2?._id,
         text: message,
-        conversationId: selectedConversation._id,
-      });
-      setMsgs(temp);
+        conversationId: selectedConversation.conversationId,
+      };
+      msgArr.push(msgObj);
+      setMsgs(msgArr);
       setMessage("");
       socket.emit("send-message", {
         sender: user?.user?.id,
@@ -31,7 +31,7 @@ const Message = ({ selectedConversation, loader, msgs, setMsgs }) => {
             ? selectedConversation?.user1?._id
             : selectedConversation?.user2?._id,
         text: message,
-        conversationId: selectedConversation._id,
+        conversationId: selectedConversation.conversId,
       });
     }
   };
@@ -44,19 +44,11 @@ const Message = ({ selectedConversation, loader, msgs, setMsgs }) => {
     }
   }, [msgs]);
 
+  //Socket listening to msgs
   socket.on("get-message", (msgObj) => {
-    let temp = msgs;
-    temp.push(msgObj);
-    setMsgs(temp);
+    msgArr.push(msgObj);
+    setMsgs([...msgArr]);
   });
-  //  useEffect(() => {
-  //   socket.on("get-message", (msgObj) => {
-  //     let temp = msgs;
-  //     temp.push(msgObj);
-  //     setMsgs(temp);
-  //     console.log("here", temp);
-  //   });
-  // }, [socket]);
 
   return (
     <>
@@ -66,7 +58,7 @@ const Message = ({ selectedConversation, loader, msgs, setMsgs }) => {
             <Spinner animation="grow" size="lg" />
           </div>
         ) : (
-          msgs.map((item, key) => {
+          msgArr.map((item, key) => {
             return (
               <div
                 className={`d-flex ${
@@ -81,7 +73,6 @@ const Message = ({ selectedConversation, loader, msgs, setMsgs }) => {
             );
           })
         )}
-
         <div ref={messagesEndRef} />
       </div>
       <div className="position-relative">

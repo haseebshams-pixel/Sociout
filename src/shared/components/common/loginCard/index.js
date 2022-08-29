@@ -5,6 +5,7 @@ import FloatingLabel from "react-bootstrap/FloatingLabel";
 import { useHistory } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { setUser } from "../../../redux/reducers/userSlice";
+import { setChat } from "../../../redux/reducers/chatSlice";
 import { toastMessage } from "../toast";
 import { Formik } from "formik";
 import { LoginVS } from "../../../utils/validation";
@@ -38,10 +39,27 @@ const LoginCard = () => {
             user: res.data.user,
           };
           dispatch(setUser(resp));
-          action.setSubmitting(false);
-          history.push("/feed");
-          initSocket();
-          toastMessage("User Logged In Successfully", "success");
+          axios
+            .get(`chat/getAllConversations`, {
+              headers: {
+                "x-auth-token": res.data.token,
+              },
+            })
+            .then((res) => {
+              if (res.statusText === "OK") {
+                let allChats = {
+                  conversations: res?.data[0]?.Conversations,
+                };
+                dispatch(setChat(allChats));
+                initSocket();
+                history.push("/feed");
+                toastMessage("User Logged In Successfully", "success");
+                //setAllConversations(res?.data[0]?.Conversations);
+              }
+            })
+            .catch((error) => {
+              console.log(error);
+            });
         }
       })
       .catch((error) => {
@@ -60,7 +78,7 @@ const LoginCard = () => {
     };
     axios
       .post("users/google_auth", data)
-      .then((res) => {
+      .then(async (res) => {
         if (res.statusText === "OK") {
           console.log("data", res.data.user);
           let resp = {
@@ -69,9 +87,27 @@ const LoginCard = () => {
             user: res.data.user,
           };
           dispatch(setUser(resp));
-          initSocket();
-          history.push("/feed");
-          toastMessage("User Logged In Successfully", "success");
+          axios
+            .get(`chat/getAllConversations`, {
+              headers: {
+                "x-auth-token": res.data.token,
+              },
+            })
+            .then((res) => {
+              if (res.statusText === "OK") {
+                let allChats = {
+                  conversations: res?.data[0]?.Conversations,
+                };
+                dispatch(setChat(allChats));
+                initSocket();
+                history.push("/feed");
+                toastMessage("User Logged In Successfully", "success");
+                //setAllConversations(res?.data[0]?.Conversations);
+              }
+            })
+            .catch((error) => {
+              console.log(error);
+            });
         }
       })
       .catch((error) => {
@@ -100,10 +136,28 @@ const LoginCard = () => {
             token: res.data.token,
             user: res.data.user,
           };
-          dispatch(setUser(resp));
-          history.push("/feed");
-          initSocket();
-          toastMessage("User Logged In Successfully", "success");
+
+          axios
+            .get(`chat/getAllConversations`, {
+              headers: {
+                "x-auth-token": res.data.token,
+              },
+            })
+            .then((res) => {
+              if (res.statusText === "OK") {
+                let allChats = {
+                  conversations: res?.data[0]?.Conversations,
+                };
+                dispatch(setChat(allChats));
+                initSocket();
+                dispatch(setUser(resp));
+                toastMessage("User Logged In Successfully", "success");
+                //setAllConversations(res?.data[0]?.Conversations);
+              }
+            })
+            .catch((error) => {
+              console.log(error);
+            });
         }
       })
       .catch((error) => {

@@ -6,6 +6,7 @@ const PersonCard = ({
   item,
   setSelectedConversation,
   selectedConversation,
+  setMsgs,
   fetchAllConversationMessages,
 }) => {
   const { user } = useSelector((state) => state.root);
@@ -16,7 +17,7 @@ const PersonCard = ({
       }`}
       onClick={() => {
         setSelectedConversation(item);
-        fetchAllConversationMessages(item?._id);
+        fetchAllConversationMessages(item._id);
       }}
     >
       <div className="postCard-cmntimage">

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 import axios from "axios";
 import { Spinner } from "react-bootstrap";
 import Header from "../../shared/components/common/header";
@@ -16,9 +16,12 @@ import FriendRequestCard from "../../shared/components/common/friendRequestCard"
 import { toastMessage } from "../../shared/components/common/toast";
 import SharePostCard from "../../shared/components/common/sharePostCard";
 import { useHistory } from "react-router";
+import { setChat } from "../../shared/redux/reducers/chatSlice";
 
 const Profile = (props) => {
   const user = useSelector((state) => state.root.user);
+  const chat = useSelector((state) => state.root.chat);
+  const dispatch = useDispatch();
   const history = useHistory();
   const [edit, setEdit] = useState(false);
   const [editPass, setEditPass] = useState(false);
@@ -218,7 +221,19 @@ const Profile = (props) => {
       })
       .then((res) => {
         if (res.statusText === "OK") {
-          history.push("/chat", { state: res?.data });
+          let resp = {
+            conversId: res?.data?._id,
+            msgs: [],
+            user1: res?.data?.user1,
+            user2: res?.data?.user2,
+          };
+          let temp = chat?.conversations;
+          temp.push(resp);
+          let newchat = {
+            conversations: temp,
+          };
+          dispatch(setChat(newchat));
+          history.push("/chat", { state: resp });
         }
       })
       .catch((error) => {
