@@ -73,7 +73,8 @@ const LoginCard = () => {
         toastMessage(error.response.data, "error");
       });
   };
-  const Error = () => {
+  const Error = (error) => {
+    console.log("Error", error);
     toastMessage("Something Went Wrong!", "error");
   };
   const responseFacebook = (response) => {
@@ -187,11 +188,11 @@ const LoginCard = () => {
           clientId="325395712191-d421cqk40ijkvqukrbkemtil316tuj8i.apps.googleusercontent.com"
           buttonText="Continue with Google"
           onSuccess={responseGoogle}
-          onFailure={Error}
+          onFailure={(error) => Error(error)}
           cookiePolicy={"single_host_origin"}
           className="rounded"
         />
-        <FacebookLogin
+        {/* <FacebookLogin
           appId="514864707026991"
           autoLoad={false}
           fields="name,email,birthday,first_name,last_name"
@@ -206,7 +207,7 @@ const LoginCard = () => {
               Continue with Facebook
             </button>
           )}
-        />
+        /> */}
         ,
       </div>
       <ResetPasswordModal show={reset} hide={closeModal} />
