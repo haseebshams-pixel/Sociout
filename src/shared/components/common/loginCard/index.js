@@ -207,7 +207,6 @@ const LoginCard = () => {
             </button>
           )}
         />
-        ,
       </div>
       <ResetPasswordModal show={reset} hide={closeModal} />
     </>
