@@ -191,7 +191,7 @@ const LoginCard = () => {
           cookiePolicy={"single_host_origin"}
           className="rounded"
         />
-        {/* <FacebookLogin
+        <FacebookLogin
           appId="514864707026991"
           autoLoad={false}
           fields="name,email,birthday,first_name,last_name"
@@ -206,7 +206,7 @@ const LoginCard = () => {
               Continue with Facebook
             </button>
           )}
-        /> */}
+        />
         ,
       </div>
       <ResetPasswordModal show={reset} hide={closeModal} />
