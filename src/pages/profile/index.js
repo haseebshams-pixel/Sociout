@@ -233,7 +233,7 @@ const Profile = (props) => {
             conversations: temp,
           };
           dispatch(setChat(newchat));
-          history.push("/chat", { state: resp });
+          history.push("/chat", { state: res?.data });
         }
       })
       .catch((error) => {
