@@ -31,7 +31,7 @@ const Message = ({ selectedConversation, loader, msgs, setMsgs }) => {
             ? selectedConversation?.user1?._id
             : selectedConversation?.user2?._id,
         text: message,
-        conversationId: selectedConversation.conversId,
+        conversationId: selectedConversation._id,
       });
     }
   };
