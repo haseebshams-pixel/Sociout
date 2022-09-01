@@ -10,47 +10,18 @@ import { useLocation } from "react-router";
 import PersonCard from "./singlePersonCard";
 import { Spinner } from "react-bootstrap";
 import FeatherIcon from "feather-icons-react";
-import { setChat } from "../../shared/redux/reducers/chatSlice";
 
 const Chat = () => {
   const { user, chat } = useSelector((state) => state.root);
   const dispatch = useDispatch();
   const location = useLocation();
-  const [allConversations, setAllConversations] = useState([]);
+  const [allConversations, setAllConversations] = useState(chat?.conversations);
   const [selectedConversation, setSelectedConversation] = useState(
-    location?.state ? location?.state?.state : null
+    location?.state ? location?.state?.chat : null
   );
-  const [msgs, setMsgs] = useState([
-    {
-      sender: "6306207f59045723f3df4995",
-      receiver: "630620a859045723f3df49a9",
-      text: "GG Boix",
-      conversationId: "6306403e06edd90c6422d0f7",
-    },
-  ]);
+  const [msgs, setMsgs] = useState([]);
   window.history.replaceState({}, document.title);
-  const [loader, setLoader] = useState(false);
   const [chatLoader, setChatLoader] = useState(false);
-  const fetchAllConversations = async () => {
-    setLoader(true);
-    axios
-      .get(`chat/getAllConversations`, {
-        headers: {
-          "x-auth-token": user.token,
-        },
-      })
-      .then((res) => {
-        if (res.statusText === "OK") {
-          setAllConversations(res?.data?.conversations);
-        }
-        setLoader(false);
-      })
-      .catch((error) => {
-        console.log(error);
-        setLoader(false);
-      });
-  };
-
   const fetchAllConversationMessages = async (id) => {
     setChatLoader(true);
     axios
@@ -72,7 +43,7 @@ const Chat = () => {
   };
 
   useEffect(() => {
-    fetchAllConversations();
+    // fetchAllConversations();
     initSocket();
     socket.emit("addUser", { userId: user?.user?.id });
   }, []);
@@ -83,11 +54,7 @@ const Chat = () => {
       <div className="container " data-aos="fade-up" data-aos-duration="350">
         <div className="row d-flex justify-content-center">
           <div className="col-3 chat-container">
-            {loader ? (
-              <div className="d-flex justify-content-center mt-3">
-                <Spinner animation="grow" size="lg" />
-              </div>
-            ) : allConversations?.length > 0 ? (
+            {allConversations?.length > 0 ? (
               allConversations?.map((item, key) => {
                 return (
                   <PersonCard

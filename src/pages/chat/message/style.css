@@ -17,15 +17,50 @@
   cursor: pointer;
 }
 .receiver-msg {
+  position: relative;
   background: #0c8ed3;
-  padding: 5px;
+  padding: 10px;
   max-width: 150px;
   display: flex;
   flex-wrap: wrap;
   border-radius: 2px;
   color: white;
   width: fit-content;
-  margin: 0;
-  margin-top: 10px;
-  margin-bottom: 10px;
+  margin: 10px;
+}
+.receiver-msg:before {
+  content: "";
+  position: absolute;
+  width: 0px;
+  height: 0px;
+  border: 10px solid;
+  border-color: transparent #0c8ed3 transparent transparent;
+  left: -20px;
+  top: 10px;
+}
+
+.sender-msg {
+  position: relative;
+  background: #0c8ed3;
+  padding: 10px;
+  max-width: 150px;
+  display: flex;
+  flex-wrap: wrap;
+  border-top-left-radius: 2px;
+  border-top-right-radius: 2px;
+  border-bottom-left-radius: 2px;
+  color: white;
+  width: fit-content;
+  margin: 10px;
+}
+
+.sender-msg:before {
+  content: "";
+  position: absolute;
+  width: 0px;
+  height: 0px;
+  border: 10px solid;
+  border-color: transparent transparent transparent #0c8ed3;
+  right: -20px;
+  top: 13px;
 }

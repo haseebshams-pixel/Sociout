@@ -225,8 +225,7 @@ const Profile = (props) => {
       .then((res) => {
         if (res.statusText === "OK") {
           let resp = {
-            conversId: res?.data?._id,
-            msgs: [],
+            _id: res?.data?._id,
             user1: res?.data?.user1,
             user2: res?.data?.user2,
           };
@@ -236,7 +235,7 @@ const Profile = (props) => {
             conversations: temp,
           };
           dispatch(setChat(newchat));
-          history.push("/chat", { state: res?.data });
+          history.push("/chat", { chat: res?.data });
         }
       })
       .catch((error) => {

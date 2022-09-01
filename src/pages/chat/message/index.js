@@ -68,7 +68,15 @@ const Message = ({ selectedConversation, loader, msgs, setMsgs }) => {
                 }`}
                 key={key}
               >
-                <p className="receiver-msg">{item.text}</p>
+                <p
+                  className={`${
+                    item.sender === user?.user?.id
+                      ? "sender-msg"
+                      : "receiver-msg"
+                  } `}
+                >
+                  {item.text}
+                </p>
               </div>
             );
           })

@@ -30,15 +30,29 @@ const LoginCard = () => {
     };
     axios
       .post("users/signin", data)
-      .then((res) => {
+      .then(async (res) => {
         if (res.statusText === "OK") {
           let resp = {
             isLoggedIn: true,
             token: res.data.token,
             user: res.data.user,
           };
-          dispatch(setUser(resp));
-          toastMessage("User Logged In Successfully", "success");
+          axios
+            .get(`chat/getAllConversations`, {
+              headers: {
+                "x-auth-token": res.data.token,
+              },
+            })
+            .then((res2) => {
+              if (res2.statusText === "OK") {
+                dispatch(setUser(resp));
+                dispatch(setChat({ conversations: res2?.data?.conversations }));
+                toastMessage("User Logged In Successfully", "success");
+              }
+            })
+            .catch((error) => {
+              console.log(error);
+            });
         }
       })
       .catch((error) => {
@@ -57,15 +71,29 @@ const LoginCard = () => {
     };
     axios
       .post("users/google_auth", data)
-      .then((res) => {
+      .then(async (res) => {
         if (res.statusText === "OK") {
           let resp = {
             isLoggedIn: true,
             token: res.data.token,
             user: res.data.user,
           };
-          dispatch(setUser(resp));
-          toastMessage("User Logged In Successfully", "success");
+          axios
+            .get(`chat/getAllConversations`, {
+              headers: {
+                "x-auth-token": res.data.token,
+              },
+            })
+            .then((res2) => {
+              if (res2.statusText === "OK") {
+                dispatch(setUser(resp));
+                dispatch(setChat({ conversations: res2?.data?.conversations }));
+                toastMessage("User Logged In Successfully", "success");
+              }
+            })
+            .catch((error) => {
+              console.log(error);
+            });
         }
       })
       .catch((error) => {
@@ -86,15 +114,29 @@ const LoginCard = () => {
     };
     axios
       .post("users/facebook_auth", data)
-      .then((res) => {
+      .then(async (res) => {
         if (res.statusText === "OK") {
           let resp = {
             isLoggedIn: true,
             token: res.data.token,
             user: res.data.user,
           };
-          dispatch(setUser(resp));
-          toastMessage("User Logged In Successfully", "success");
+          axios
+            .get(`chat/getAllConversations`, {
+              headers: {
+                "x-auth-token": res.data.token,
+              },
+            })
+            .then((res2) => {
+              if (res2.statusText === "OK") {
+                dispatch(setUser(resp));
+                dispatch(setChat({ conversations: res2?.data?.conversations }));
+                toastMessage("User Logged In Successfully", "success");
+              }
+            })
+            .catch((error) => {
+              console.log(error);
+            });
         }
       })
       .catch((error) => {
