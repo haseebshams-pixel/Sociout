@@ -17,6 +17,7 @@ import { toastMessage } from "../../shared/components/common/toast";
 import SharePostCard from "../../shared/components/common/sharePostCard";
 import { useHistory } from "react-router";
 import { setChat } from "../../shared/redux/reducers/chatSlice";
+import ProfileLoader from "../../shared/components/loaders/profileLoader";
 
 const Profile = (props) => {
   const user = useSelector((state) => state.root.user);
@@ -30,6 +31,7 @@ const Profile = (props) => {
   const [posts, setPosts] = useState([]);
   const [friends, setFriends] = useState([]);
   const [loading, setLoading] = useState(false);
+  const [profileLoader, setProfileLoader] = useState(false);
   const [pendingRequests, setPendingRequests] = useState([]);
   const [requested, setRequested] = useState(false);
   const [pending, setPending] = useState(false);
@@ -101,6 +103,7 @@ const Profile = (props) => {
   };
   const getFriends = async () => {
     setLoading(true);
+    setFriends([]);
     axios
       .get(`friends/user/${props.match.params.id}`)
       .then((res) => {
@@ -241,21 +244,24 @@ const Profile = (props) => {
       });
   };
   useEffect(() => {
+    setProfileLoader(true);
     axios
       .get(`users/${props.match.params.id}`)
       .then((res) => {
         if (res.statusText === "OK") {
           setCurrentUser(res.data);
         }
+        setProfileLoader(false);
       })
       .catch((error) => {
+        setProfileLoader(false);
         console.log(error);
       });
     getPost();
     getFriends();
     getPendingRequests();
     getFriendShipStatus();
-  }, []);
+  }, [props.match.params.id]);
   return (
     <>
       <Header />
@@ -264,32 +270,44 @@ const Profile = (props) => {
           <div className="bg-white rounded overflow-hidden">
             <div className="px-4 pt-0 pb-4 cover">
               <div className="media align-items-end profile-head">
-                <div className="profile mr-3">
-                  <img
-                    src={
-                      currentUser?.id === user.user.id
-                        ? user?.user?.avatar
-                          ? `${user?.user?.avatar}`
-                          : require("../../assets/images/profilePlaceholder.png")
-                        : currentUser?.avatar
-                        ? `${currentUser.avatar}`
-                        : require("../../assets/images/profilePlaceholder.png")
-                    }
-                    alt="profilePic"
-                    width="130"
-                    className="rounded mb-2 img-thumbnail main-profile-pic"
-                    onClick={openModal2}
-                    role="button"
-                  />
-                </div>
-                <div className="media-body profile-title-container text-white">
-                  <h4 className="mt-0 text-font-family">
-                    {" "}
-                    {user?.user?.id === currentUser?.id
-                      ? user?.user?.firstname + " " + user?.user?.lastname
-                      : currentUser?.firstname + " " + currentUser?.lastname}
-                  </h4>
-                </div>
+                {profileLoader ? (
+                  <ProfileLoader />
+                ) : (
+                  <>
+                    <div className="profile mr-3">
+                      <img
+                        src={
+                          currentUser?.id === user.user.id
+                            ? user?.user?.avatar
+                              ? `${user?.user?.avatar}`
+                              : require("../../assets/images/profilePlaceholder.png")
+                            : currentUser?.avatar
+                            ? `${currentUser.avatar}`
+                            : require("../../assets/images/profilePlaceholder.png")
+                        }
+                        alt="profilePic"
+                        width="130"
+                        className="rounded mb-2 img-thumbnail main-profile-pic"
+                        onClick={() => {
+                          if (currentUser?.id === user.user.id) {
+                            openModal2();
+                          }
+                        }}
+                        role="button"
+                      />
+                    </div>
+                    <div className="media-body profile-title-container text-white">
+                      <h4 className="mt-0 text-font-family">
+                        {" "}
+                        {user?.user?.id === currentUser?.id
+                          ? user?.user?.firstname + " " + user?.user?.lastname
+                          : currentUser?.firstname +
+                            " " +
+                            currentUser?.lastname}
+                      </h4>
+                    </div>
+                  </>
+                )}
               </div>
             </div>
             <div className="bg-light p-4 d-flex justify-content-between text-center">

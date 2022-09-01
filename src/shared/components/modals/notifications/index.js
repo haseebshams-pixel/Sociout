@@ -33,9 +33,11 @@ const NotificationsModal = ({ show, hide, listNotify, loader }) => {
           </div>
         ) : (
           <Modal.Body className="d-flex flex-column p-0 pb-3 notification-container overflow-auto">
-            {listNotify?.map((item, index) => {
-              return <NotificationText item={item} key={index} />;
-            })}
+            {listNotify?.length > 0
+              ? listNotify?.map((item, index) => {
+                  return <NotificationText item={item} key={index} />;
+                })
+              : "No Notifications found❗"}
           </Modal.Body>
         )}
       </div>

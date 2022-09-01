@@ -1,7 +1,13 @@
 .personCard_card {
   box-shadow: 0 4px 12px rgb(0 0 0 / 15%);
   cursor: pointer;
+  max-width: 205px;
 }
 .person-card-img {
   object-fit: contain;
+}
+.person-card-title {
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  overflow: hidden;
 }

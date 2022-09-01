@@ -10,6 +10,7 @@ import { useHistory } from "react-router-dom";
 import { toastMessage } from "../toast";
 import PostCard from "../postCard";
 import { toast } from "react-toastify";
+import PostUserLoader from "../../loaders/postUserLoader";
 
 function SharePostCard({ item }) {
   const { user } = useSelector((state) => state.root);
@@ -21,6 +22,7 @@ function SharePostCard({ item }) {
   const [comment, setComment] = useState(false);
   const [commentText, setCommentText] = useState("");
   const [postUser, setPostUser] = useState(null);
+  const [userLoader, setUserLoader] = useState(false);
   const [loader, setLoader] = useState(false);
   const navigate = (id) => {
     history.push(`/profile/${id}`);
@@ -51,15 +53,18 @@ function SharePostCard({ item }) {
   };
   const fetchUser = async () => {
     setPostUser(null);
+    setUserLoader(true);
     axios
       .get(`users/${item?.sharedBy}`)
       .then((res) => {
         if (res.statusText === "OK") {
           setPostUser(res.data);
         }
+        setUserLoader(false);
       })
       .catch((error) => {
         console.log(error);
+        setUserLoader(false);
       });
   };
 
@@ -208,35 +213,41 @@ function SharePostCard({ item }) {
         <Card.Body>
           <div className="d-flex align-items-center justify-content-between mb-3">
             <div className="d-flex">
-              <img
-                src={
-                  postUser?.avatar
-                    ? postUser?.avatar
-                    : require("../../../../assets/images/profilePlaceholder.png")
-                }
-                className="profile-pic"
-                alt="profile-pic"
-                role="button"
-                onClick={() => navigate(item.sharedBy)}
-              />
-              <div>
-                <Card.Title
-                  className="d-flex align-items-center m-0"
-                  role="button"
-                  onClick={() => navigate(item.sharedBy)}
-                >
-                  <span className="ms-2">
-                    {user?.user?.id === item?.sharedBy
-                      ? user?.user?.firstname + " " + user?.user?.lastname
-                      : postUser?.firstname + " " + postUser?.lastname}
-                  </span>
-                </Card.Title>
-                <Card.Subtitle className="text-muted post-card-subtitle">
-                  {moment(item?.date).fromNow()}
-                </Card.Subtitle>
-              </div>
+              {userLoader ? (
+                <PostUserLoader />
+              ) : (
+                <>
+                  <img
+                    src={
+                      postUser?.avatar
+                        ? postUser?.avatar
+                        : require("../../../../assets/images/profilePlaceholder.png")
+                    }
+                    className="profile-pic"
+                    alt="profile-pic"
+                    role="button"
+                    onClick={() => navigate(item.sharedBy)}
+                  />
+                  <div>
+                    <Card.Title
+                      className="d-flex align-items-center m-0"
+                      role="button"
+                      onClick={() => navigate(item.sharedBy)}
+                    >
+                      <span className="ms-2">
+                        {user?.user?.id === item?.sharedBy
+                          ? user?.user?.firstname + " " + user?.user?.lastname
+                          : postUser?.firstname + " " + postUser?.lastname}
+                      </span>
+                    </Card.Title>
+                    <Card.Subtitle className="text-muted post-card-subtitle">
+                      {moment(item?.date).fromNow()}
+                    </Card.Subtitle>
+                  </div>
+                </>
+              )}
             </div>
-            {user?.user?.id === item?.sharedBy && (
+            {!userLoader && user?.user?.id === item?.sharedBy && (
               <div className="d-flex">
                 <FeatherIcon
                   icon="trash"

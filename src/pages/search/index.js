@@ -1,55 +1,72 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import PersonCard from "../../shared/components/common/personCard";
 import JobCard from "../../shared/components/common/JobCard";
 import Footer from "../../shared/components/common/footer";
 import Header from "../../shared/components/common/header";
 import { Spinner } from "react-bootstrap";
+import useDebounce from "../../shared/utils/useDebounce";
 import axios from "axios";
 import "./style.css";
 
 const Search = () => {
   const [search, setSearch] = useState("");
+  const [value, setValue] = useState("");
   const [results1, setResults1] = useState([]);
   const [results2, setResults2] = useState([]);
   const [loading, setLoading] = useState(false);
   const [searchType, setSearchType] = useState("person");
+  const GetSearchResults = () => {
+    setLoading(true);
+    let formData = {
+      name: search,
+    };
+    searchType === "person"
+      ? axios
+          .post("search", formData)
+          .then((res) => {
+            if (res.statusText === "OK") {
+              setResults1(res.data);
+              setLoading(false);
+            }
+          })
+          .catch((error) => {
+            console.log(error);
+            setLoading(false);
+          })
+      : axios
+          .post("search/jobs", formData)
+          .then((res) => {
+            if (res.statusText === "OK") {
+              setResults2(res.data);
+              setLoading(false);
+            }
+          })
+          .catch((error) => {
+            console.log(error);
+            setLoading(false);
+          });
+  };
   const handleChange = (e) => {
     setResults1([]);
     setResults2([]);
+    setLoading(true);
+    setSearch(e.target.value);
     if (e.key === "Enter") {
-      setLoading(true);
-      setSearch(e.target.value);
-      let formData = {
-        name: e.target.value,
-      };
-
-      searchType === "person"
-        ? axios
-            .post("search", formData)
-            .then((res) => {
-              if (res.statusText === "OK") {
-                setResults1(res.data);
-                setLoading(false);
-              }
-            })
-            .catch((error) => {
-              console.log(error);
-              setLoading(false);
-            })
-        : axios
-            .post("search/jobs", formData)
-            .then((res) => {
-              if (res.statusText === "OK") {
-                setResults2(res.data);
-                setLoading(false);
-              }
-            })
-            .catch((error) => {
-              console.log(error);
-              setLoading(false);
-            });
+      GetSearchResults();
     }
   };
+  useEffect(() => {
+    GetSearchResults();
+  }, [searchType, value]);
+
+  useDebounce(
+    () => {
+      setValue(search);
+    },
+    [search],
+    800
+  );
+
   return (
     <>
       <Header />
@@ -64,6 +81,7 @@ const Search = () => {
             className="w-100 mb-4 ps-3 pt-2 pb-2 pe-5 rounded search_inputag"
             placeholder="Search..."
             onKeyPress={(e) => handleChange(e)}
+            onChange={(e) => handleChange(e)}
           ></input>
           <span className="search_iconinside">
             <img
@@ -86,21 +104,27 @@ const Search = () => {
           </select>
         </div>
 
-        <div className="d-flex flex-wrap mx-100 justify-content-center">
-          {loading ? (
-            <div className="d-flex justify-content-center">
-              <Spinner animation="grow" size="xl" />
-            </div>
-          ) : searchType === "person" ? (
-            results1.map((item, index) => {
-              return <PersonCard key={index} item={item} />;
-            })
-          ) : (
-            results2.map((item, index) => {
-              return <JobCard key={index} item={item} />;
-            })
-          )}
-        </div>
+        {loading ? (
+          <div className="d-flex justify-content-center">
+            <Spinner animation="grow" size="xl" />
+          </div>
+        ) : searchType === "person" ? (
+          <div className="d-flex flex-wrap mx-100 justify-content-start">
+            {results1.length > 0
+              ? results1.map((item, index) => {
+                  return <PersonCard key={index} item={item} />;
+                })
+              : "No User found❗"}
+          </div>
+        ) : (
+          <div className="d-flex flex-wrap mx-100 justify-content-start">
+            {results2.length > 0
+              ? results2.map((item, index) => {
+                  return <JobCard key={index} item={item} />;
+                })
+              : "No Jobs found❗"}
+          </div>
+        )}
       </div>
       <div className="space" />
       <Footer />

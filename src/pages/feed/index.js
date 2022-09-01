@@ -14,6 +14,7 @@ const Feed = () => {
   const hideModal = () => setOpen(false);
   const [loading, setLoading] = useState(false);
   const [posts, setPosts] = useState([]);
+  const [newPostLength, setNewPostLength] = useState(0);
   const [skip, setSkip] = useState(0);
 
   const fetchPosts = async () => {
@@ -24,6 +25,7 @@ const Feed = () => {
         if (res.statusText === "OK") {
           setPosts([...posts, ...res.data]);
           setLoading(false);
+          setNewPostLength(res?.data.length);
         }
       })
       .catch((error) => {
@@ -65,14 +67,24 @@ const Feed = () => {
                 <hr className="w-100" />
               </>
             )}
-            {posts?.map((item, index) => {
-              return item?.isShared ? (
-                <SharePostCard item={item} key={index} />
-              ) : (
-                <PostCard item={item} key={index} />
-              );
-            })}
-            {loading && <Spinner animation="grow" size="xl" />}
+
+            {posts?.length > 0 && (
+              <>
+                {posts?.map((item, index) => {
+                  return item?.isShared ? (
+                    <SharePostCard item={item} key={index} />
+                  ) : (
+                    <PostCard item={item} key={index} />
+                  );
+                })}
+                {newPostLength == 0 && "Looks like we have reached end❗"}
+              </>
+            )}
+            {loading ? (
+              <Spinner animation="grow" size="xl" />
+            ) : (
+              posts?.length < 1 && "No Post found"
+            )}
           </div>
         </div>
       </div>

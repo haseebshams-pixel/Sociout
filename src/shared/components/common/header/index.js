@@ -22,7 +22,6 @@ export default function Header() {
   const dispatch = useDispatch();
   const navigate = (id) => {
     history.push(`/profile/${id}`);
-    window.location.reload();
   };
   const signOutPressHandler = () => {
     confirmAlert({

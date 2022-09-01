@@ -13,6 +13,8 @@ import { toast } from "react-toastify";
 
 import "./style.css";
 import EditPostModal from "../../modals/editPost";
+import PostUserLoader from "../../loaders/postUserLoader";
+import PostContentLoader from "../../loaders/postContentLoader";
 
 function PostCard({ item }) {
   const { user } = useSelector((state) => state.root);
@@ -25,6 +27,7 @@ function PostCard({ item }) {
   const [commentText, setCommentText] = useState("");
   const [postUser, setPostUser] = useState(null);
   const [loader, setLoader] = useState(false);
+  const [userLoader, setUserLoader] = useState(false);
   const [open, setOpen] = useState(false);
   const openModal = () => {
     setOpen(true);
@@ -61,16 +64,18 @@ function PostCard({ item }) {
   };
   const fetchUser = async () => {
     setPostUser(null);
-
+    setUserLoader(true);
     axios
       .get(`users/${item?.postedBy}`)
       .then((res) => {
         if (res.statusText === "OK") {
           setPostUser(res.data);
         }
+        setUserLoader(false);
       })
       .catch((error) => {
         console.log(error);
+        setUserLoader(false);
       });
   };
 
@@ -91,6 +96,7 @@ function PostCard({ item }) {
     let obj = {
       id: item?.isShared ? item?.postId : item?._id,
     };
+    setLike(true);
     toast.promise(
       axios
         .post(`likes/like`, obj, {
@@ -114,6 +120,7 @@ function PostCard({ item }) {
     );
   };
   const disLikePost = async () => {
+    setLike(false);
     toast.promise(
       axios
         .get(`likes/unlike/${item?.isShared ? item?.postId : item?._id}`, {
@@ -243,70 +250,85 @@ function PostCard({ item }) {
         <Card.Body>
           <div className="d-flex align-items-center justify-content-between mb-3">
             <div className="d-flex">
-              <img
-                src={
-                  postUser?.avatar
-                    ? postUser?.avatar
-                    : require("../../../../assets/images/profilePlaceholder.png")
-                }
-                className="profile-pic"
-                alt="profile-pic"
-                role="button"
-                onClick={() => navigate(item.postedBy)}
-              />
-              <div>
-                <Card.Title
-                  className="d-flex align-items-center m-0"
-                  role="button"
-                  onClick={() => navigate(item.postedBy)}
-                >
-                  <span className="ms-2">
-                    {user?.user?.id === item?.postedBy
-                      ? user?.user?.firstname + " " + user?.user?.lastname
-                      : postUser?.firstname + " " + postUser?.lastname}
-                  </span>
-                </Card.Title>
-                <Card.Subtitle className="text-muted post-card-subtitle">
-                  {moment(
-                    item?.isShared ? item?.oldDate : item?.date
-                  ).fromNow()}
-                </Card.Subtitle>
-              </div>
+              {userLoader ? (
+                <PostUserLoader />
+              ) : (
+                <>
+                  <img
+                    src={
+                      postUser?.avatar
+                        ? postUser?.avatar
+                        : require("../../../../assets/images/profilePlaceholder.png")
+                    }
+                    className="profile-pic"
+                    alt="profile-pic"
+                    role="button"
+                    onClick={() => navigate(item.postedBy)}
+                  />
+                  <div>
+                    <Card.Title
+                      className="d-flex align-items-center m-0"
+                      role="button"
+                      onClick={() => navigate(item.postedBy)}
+                    >
+                      <span className="ms-2">
+                        {user?.user?.id === item?.postedBy
+                          ? user?.user?.firstname + " " + user?.user?.lastname
+                          : postUser?.firstname + " " + postUser?.lastname}
+                      </span>
+                    </Card.Title>
+                    <Card.Subtitle className="text-muted post-card-subtitle">
+                      {moment(
+                        item?.isShared ? item?.oldDate : item?.date
+                      ).fromNow()}
+                    </Card.Subtitle>
+                  </div>
+                </>
+              )}
             </div>
-            {user?.user?.id === item?.postedBy && !item?.isShared && (
-              <div className="d-flex">
-                <FeatherIcon
-                  icon="edit-2"
-                  size="20"
-                  role="button"
-                  onClick={openModal}
-                />
-                <FeatherIcon
-                  icon="trash"
-                  size="20"
-                  className="ms-2"
-                  role="button"
-                  onClick={onDelete}
-                />
-              </div>
-            )}
+            {!userLoader &&
+              user?.user?.id === item?.postedBy &&
+              !item?.isShared && (
+                <div className="d-flex">
+                  <FeatherIcon
+                    icon="edit-2"
+                    size="20"
+                    role="button"
+                    onClick={openModal}
+                  />
+                  <FeatherIcon
+                    icon="trash"
+                    size="20"
+                    className="ms-2"
+                    role="button"
+                    onClick={onDelete}
+                  />
+                </div>
+              )}
           </div>
-          <Card.Text>{item?.text}</Card.Text>
-          {item?.images.length > 0 && (
-            <Carousel className="carosal">
-              {item?.images?.map((picture, index) => {
-                return (
-                  <Carousel.Item key={index}>
-                    <img
-                      className="carosal-image"
-                      src={picture}
-                      alt="First slide"
-                    />
-                  </Carousel.Item>
-                );
-              })}
-            </Carousel>
+          {userLoader ? (
+            <PostContentLoader />
+          ) : (
+            <>
+              <Card.Text>{item?.text}</Card.Text>
+              {item?.images.length > 0 && (
+                <Carousel className="carosal">
+                  {item?.images?.map((picture, index) => {
+                    return (
+                      <Carousel.Item key={index}>
+                        <img
+                          className="carosal-image"
+                          src={picture}
+                          alt="First slide"
+                        />
+                      </Carousel.Item>
+                    );
+                  })}
+                </Carousel>
+              )}
+            </>
           )}
+
           <div className="d-flex align-items-center justify-content-between">
             <span>
               {allLikes?.likedBy?.length} Like

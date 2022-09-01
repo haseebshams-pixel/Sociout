@@ -35,7 +35,6 @@ const SideNav = ({ offCanvas, closeSideNav, user }) => {
   };
   const navigate = (id) => {
     history.push(`/profile/${id}`);
-    window.location.reload();
     closeSideNav();
   };
   const closeNotifications = () => setNotifications(false);
