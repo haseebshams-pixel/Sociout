@@ -35,14 +35,16 @@ const Message = ({ selectedConversation, loader, msgs, setMsgs }) => {
       });
     }
   };
-  const scrollToBottom = () => {
-    messagesEndRef.current.scrollIntoView({ behavior: "smooth" });
-  };
+  // const scrollToBottom = () => {
+  //   messagesEndRef.current.scrollIntoView({ behavior: "smooth" });
+  // };
   useEffect(() => {
-    if (msgs.length > 5) {
-      scrollToBottom();
-    }
-  }, [msgs]);
+    // if (msgs.length > 5) {
+    //   scrollToBottom();
+    // }
+    let scroll_to_bottom = document.getElementById("inbmain");
+    scroll_to_bottom.scrollTop = scroll_to_bottom.scrollHeight;
+  });
 
   //Socket listening to msgs
   socket.on("get-message", (msgObj) => {
@@ -52,7 +54,7 @@ const Message = ({ selectedConversation, loader, msgs, setMsgs }) => {
 
   return (
     <>
-      <div className="allmessages-container">
+      <div id="inbmain" className="allmessages-container">
         {loader ? (
           <div className="d-flex justify-content-center mt-3">
             <Spinner animation="grow" size="lg" />
