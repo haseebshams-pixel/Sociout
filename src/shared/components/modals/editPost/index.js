@@ -69,25 +69,6 @@ const EditPostModal = ({ show, hide, item }) => {
     setPhotos(obj);
   };
 
-  const fetchCurrentPost = async () => {
-    //have to get latest post after editing so as to change states
-    axios
-      .get(`posts/${item._id}`)
-      .then((res) => {
-        if (res.statusText === "OK") {
-          setPhotos(res?.data?.images);
-          setText(res?.data?.text);
-        }
-      })
-      .catch((error) => {
-        console.log(error);
-      });
-  };
-
-  useEffect(() => {
-    fetchCurrentPost();
-  }, []);
-
   return (
     <Modal
       show={show}
@@ -114,7 +95,11 @@ const EditPostModal = ({ show, hide, item }) => {
           <div className="d-flex align-items-center justify-content-between">
             <div className="d-flex align-items-center">
               <img
-                src={require("../../../../assets/images/profilePlaceholder.png")}
+                src={
+                  user?.user?.avatar
+                    ? user?.user?.avatar
+                    : require("../../../../assets/images/profilePlaceholder.png")
+                }
                 className="profile-pic"
                 alt="profile-pic"
               />

@@ -71,7 +71,7 @@ const Feed = () => {
             {posts?.length > 0 && (
               <>
                 {posts?.map((item, index) => {
-                  return item?.isShared ? (
+                  return item?.PostObject[0]?.isShared ? (
                     <SharePostCard item={item} key={index} />
                   ) : (
                     <PostCard item={item} key={index} />

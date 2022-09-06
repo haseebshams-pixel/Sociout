@@ -7,7 +7,13 @@ import moment from "moment";
 import { toastMessage } from "../toast";
 import "./style.css";
 import CommentUserLoader from "../../loaders/commentUserLoader";
-const PostComment = ({ item, fetchAllComments }) => {
+const PostComment = ({
+  item,
+  setAllComments,
+  allComments,
+  setCommentCount,
+  commentCount,
+}) => {
   const { user } = useSelector((state) => state.root);
   const history = useHistory();
   const [commentUser, setCommentUser] = useState(null);
@@ -40,8 +46,12 @@ const PostComment = ({ item, fetchAllComments }) => {
       })
       .then((res) => {
         if (res.statusText === "OK") {
-          fetchAllComments();
           toastMessage("Deleted Successfuly", "success");
+          var filteredArr = allComments.filter((itm) => {
+            return itm?._id != item?._id;
+          });
+          setAllComments(filteredArr);
+          setCommentCount(commentCount - 1);
         }
       })
       .catch((error) => {

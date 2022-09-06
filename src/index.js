@@ -8,7 +8,7 @@ import App from "./App";
 import axios from "axios";
 
 axios.defaults.baseURL = "https://sociout-dev.herokuapp.com/api/";
-
+// axios.defaults.baseURL = "http://localhost:8000/api/";
 ReactDOM.render(
   <React.StrictMode>
     <Provider store={store}>

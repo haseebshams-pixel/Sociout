@@ -20,9 +20,9 @@ function PostCard({ item }) {
   const { user } = useSelector((state) => state.root);
   const history = useHistory();
   const [like, setLike] = useState(false);
-  const [allLikes, setAllLikes] = useState([]);
   const [allComments, setAllComments] = useState([]);
-  const [commentApiToggler, setCommentApiToggler] = useState(false);
+  const [likeCount, setLikeCount] = useState(0);
+  const [commentCount, setCommentCount] = useState(0);
   const [comment, setComment] = useState(false);
   const [commentText, setCommentText] = useState("");
   const [postUser, setPostUser] = useState(null);
@@ -41,7 +41,7 @@ function PostCard({ item }) {
   const onDelete = async () => {
     toast.promise(
       axios
-        .delete(`posts/${item?._id}`, {
+        .delete(`posts/${item?.PostObject[0]?._id}`, {
           headers: {
             "x-auth-token": user?.token,
           },
@@ -66,7 +66,7 @@ function PostCard({ item }) {
     setPostUser(null);
     setUserLoader(true);
     axios
-      .get(`users/${item?.postedBy}`)
+      .get(`users/${item?.PostObject[0]?.postedBy}`)
       .then((res) => {
         if (res.statusText === "OK") {
           setPostUser(res.data);
@@ -79,24 +79,14 @@ function PostCard({ item }) {
       });
   };
 
-  const fetchAllLikes = async () => {
-    axios
-      .get(`likes/${item?.isShared ? item?.postId : item?._id}`)
-      .then((res) => {
-        if (res.statusText === "OK") {
-          setAllLikes(res.data);
-        }
-      })
-      .catch((error) => {
-        console.log(error);
-      });
-  };
-
   const likePost = async () => {
     let obj = {
-      id: item?.isShared ? item?.postId : item?._id,
+      id: item?.PostObject[0]?.isShared
+        ? item?.PostObject[0]?.postId
+        : item?.PostObject[0]?._id,
     };
     setLike(true);
+    setLikeCount(likeCount + 1);
     toast.promise(
       axios
         .post(`likes/like`, obj, {
@@ -110,6 +100,8 @@ function PostCard({ item }) {
           }
         })
         .catch((error) => {
+          setLike(false);
+          setLikeCount(likeCount - 1);
           console.log(error);
         }),
       {
@@ -121,13 +113,22 @@ function PostCard({ item }) {
   };
   const disLikePost = async () => {
     setLike(false);
+    setLike(false);
+    setLikeCount(likeCount - 1);
     toast.promise(
       axios
-        .get(`likes/unlike/${item?.isShared ? item?.postId : item?._id}`, {
-          headers: {
-            "x-auth-token": user?.token,
-          },
-        })
+        .get(
+          `likes/unlike/${
+            item?.PostObject[0]?.isShared
+              ? item?.PostObject[0]?.postId
+              : item?.PostObject[0]?._id
+          }`,
+          {
+            headers: {
+              "x-auth-token": user?.token,
+            },
+          }
+        )
         .then((res) => {
           if (res.statusText === "OK") {
             setLike(false);
@@ -135,6 +136,8 @@ function PostCard({ item }) {
         })
         .catch((error) => {
           console.log(error);
+          setLike(true);
+          setLikeCount(likeCount + 1);
         }),
       {
         pending: "Pending",
@@ -144,29 +147,15 @@ function PostCard({ item }) {
     );
   };
 
-  const getLikeStatus = async () => {
-    axios
-      .get(`likes/check/${item?.isShared ? item?.postId : item?._id}`, {
-        headers: {
-          "x-auth-token": user.token,
-        },
-      })
-      .then((res) => {
-        if (res.statusText === "OK") {
-          setLike(res.data.state);
-        }
-      })
-      .catch((error) => {
-        console.log(error);
-      });
-  };
   const commentOnPost = async () => {
     if (commentText === "") {
       toastMessage("Write Something!", "error");
     } else {
       setLoader(true);
       let obj = {
-        post: item?.isShared ? item?.postId : item?._id,
+        post: item?.PostObject[0]?.isShared
+          ? item?.PostObject[0]?.postId
+          : item?.PostObject[0]?._id,
         text: commentText,
       };
       axios
@@ -178,34 +167,27 @@ function PostCard({ item }) {
         .then((res) => {
           if (res.statusText === "OK") {
             setCommentText("");
-            setCommentApiToggler(!commentApiToggler);
-            setLoader(false);
+            setAllComments((p) => {
+              return p.concat(res?.data);
+            });
+            setCommentCount(commentCount + 1);
             toastMessage("Comment Added!", "success");
           }
+          setLoader(false);
         })
         .catch((error) => {
-          toastMessage(error.response.data, "error");
+          toastMessage("Error", "error");
           setLoader(false);
           console.log(error);
         });
     }
   };
 
-  const fetchAllComments = async () => {
-    axios
-      .get(`comments/${item?.isShared ? item?.postId : item?._id}`)
-      .then((res) => {
-        if (res.statusText === "OK") {
-          setAllComments(res.data);
-        }
-      })
-      .catch((error) => {
-        console.log(error);
-      });
-  };
   const sharePost = async () => {
     const formData = {
-      id: item?.isShared ? item?.postId : item?._id,
+      id: item?.PostObject[0]?.isShared
+        ? item?.PostObject[0]?.postId
+        : item?.PostObject[0]?._id,
     };
     toast.promise(
       axios
@@ -229,16 +211,38 @@ function PostCard({ item }) {
       }
     );
   };
+
+  const postActions = async () => {
+    var filterArray = [];
+    if (item?.PostObject[0]?.isShared) {
+      setLikeCount(item?.PostObject[0]?.shareLikedBy[0]?.likedBy?.length);
+      filterArray = item?.PostObject[0]?.shareLikedBy[0]?.likedBy?.filter(
+        (id) => {
+          return id == user?.user?.id;
+        }
+      );
+      if (filterArray.length > 0) {
+        setLike(true);
+      }
+      setCommentCount(item?.PostObject[0]?.shareComments?.length);
+      setAllComments(item?.PostObject[0]?.shareComments);
+    } else {
+      setLikeCount(item?.likedBy?.length);
+      filterArray = item?.likedBy.filter((id) => {
+        return id == user?.user?.id;
+      });
+      if (filterArray.length > 0) {
+        setLike(true);
+      }
+      setCommentCount(item?.CommentObject?.length);
+      setAllComments(item?.CommentObject);
+    }
+  };
+
   useEffect(() => {
     fetchUser();
+    postActions();
   }, []);
-  useEffect(() => {
-    fetchAllLikes();
-    getLikeStatus();
-  }, [like]);
-  useEffect(() => {
-    fetchAllComments();
-  }, [commentApiToggler]);
 
   return (
     <div
@@ -263,23 +267,25 @@ function PostCard({ item }) {
                     className="profile-pic"
                     alt="profile-pic"
                     role="button"
-                    onClick={() => navigate(item.postedBy)}
+                    onClick={() => navigate(item?.PostObject[0]?.postedBy)}
                   />
                   <div>
                     <Card.Title
                       className="d-flex align-items-center m-0"
                       role="button"
-                      onClick={() => navigate(item.postedBy)}
+                      onClick={() => navigate(item?.PostObject[0]?.postedBy)}
                     >
                       <span className="ms-2">
-                        {user?.user?.id === item?.postedBy
+                        {user?.user?.id === item?.PostObject[0]?.postedBy
                           ? user?.user?.firstname + " " + user?.user?.lastname
                           : postUser?.firstname + " " + postUser?.lastname}
                       </span>
                     </Card.Title>
                     <Card.Subtitle className="text-muted post-card-subtitle">
                       {moment(
-                        item?.isShared ? item?.oldDate : item?.date
+                        item?.PostObject[0]?.isShared
+                          ? item?.PostObject[0]?.oldDate
+                          : item?.PostObject[0]?.date
                       ).fromNow()}
                     </Card.Subtitle>
                   </div>
@@ -287,8 +293,8 @@ function PostCard({ item }) {
               )}
             </div>
             {!userLoader &&
-              user?.user?.id === item?.postedBy &&
-              !item?.isShared && (
+              user?.user?.id === item?.PostObject[0]?.postedBy &&
+              !item?.PostObject[0]?.isShared && (
                 <div className="d-flex">
                   <FeatherIcon
                     icon="edit-2"
@@ -310,10 +316,10 @@ function PostCard({ item }) {
             <PostContentLoader />
           ) : (
             <>
-              <Card.Text>{item?.text}</Card.Text>
-              {item?.images.length > 0 && (
+              <Card.Text>{item?.PostObject[0]?.text}</Card.Text>
+              {item?.PostObject[0]?.images.length > 0 && (
                 <Carousel className="carosal">
-                  {item?.images?.map((picture, index) => {
+                  {item?.PostObject[0]?.images?.map((picture, index) => {
                     return (
                       <Carousel.Item key={index}>
                         <img
@@ -331,11 +337,12 @@ function PostCard({ item }) {
 
           <div className="d-flex align-items-center justify-content-between">
             <span>
-              {allLikes?.likedBy?.length} Like
-              {allLikes?.likedBy?.length > 1 && "s"}
+              {likeCount} Like
+              {likeCount > 1 || (likeCount == 0 && "s")}
             </span>
             <span>
-              {allComments?.length} comment{allComments?.length > 1 && "s"}
+              {commentCount} Comment
+              {commentCount > 1 || (commentCount == 0 && "s")}
             </span>
           </div>
           <hr className="mt-2 mb-3" />
@@ -412,7 +419,10 @@ function PostCard({ item }) {
                     <PostComment
                       item={item}
                       key={index}
-                      fetchAllComments={fetchAllComments}
+                      allComments={allComments}
+                      setCommentCount={setCommentCount}
+                      commentCount={commentCount}
+                      setAllComments={setAllComments}
                     />
                   );
                 })}
@@ -421,7 +431,7 @@ function PostCard({ item }) {
           )}
         </Card.Body>
       </Card>
-      <EditPostModal show={open} hide={closeModal} item={item} />
+      <EditPostModal show={open} hide={closeModal} item={item?.PostObject[0]} />
     </div>
   );
 }
