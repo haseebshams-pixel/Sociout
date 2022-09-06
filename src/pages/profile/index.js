@@ -422,7 +422,7 @@ const Profile = (props) => {
                               data-aos-duration="500"
                               key={key}
                             >
-                              {item?.isShared ? (
+                              {item?.PostObject[0]?.isShared ? (
                                 <SharePostCard item={item} key={key} />
                               ) : (
                                 <PostCard item={item} key={key} />
