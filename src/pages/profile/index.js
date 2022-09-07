@@ -31,6 +31,7 @@ const Profile = (props) => {
   const [posts, setPosts] = useState([]);
   const [friends, setFriends] = useState([]);
   const [loading, setLoading] = useState(false);
+  const [loading2, setLoading2] = useState(false);
   const [profileLoader, setProfileLoader] = useState(false);
   const [pendingRequests, setPendingRequests] = useState([]);
   const [requested, setRequested] = useState(false);
@@ -62,11 +63,12 @@ const Profile = (props) => {
       .then((res) => {
         if (res.statusText === "OK") {
           setPosts(res.data);
-          setLoading(false);
         }
+        setLoading(false);
       })
       .catch((error) => {
         console.log(error);
+        setLoading(false);
       });
   };
   const getFriendShipStatus = async () => {
@@ -102,23 +104,23 @@ const Profile = (props) => {
       });
   };
   const getFriends = async () => {
-    setLoading(true);
+    setLoading2(true);
     setFriends([]);
     axios
       .get(`friends/user/${props.match.params.id}`)
       .then((res) => {
         if (res.statusText === "OK") {
           setFriends(res.data);
-          setLoading(false);
         }
+        setLoading2(false);
       })
       .catch((error) => {
         console.log(error);
-        setLoading(false);
+        setLoading2(false);
       });
   };
   const getPendingRequests = async () => {
-    setLoading(true);
+    setLoading2(true);
     axios
       .get(`friends/pending`, {
         headers: {
@@ -128,12 +130,12 @@ const Profile = (props) => {
       .then((res) => {
         if (res.statusText === "OK") {
           setPendingRequests(res.data);
-          setLoading(false);
         }
+        setLoading2(false);
       })
       .catch((error) => {
         console.log(error);
-        setLoading(false);
+        setLoading2(false);
       });
   };
   const unfriend = async () => {
@@ -244,6 +246,7 @@ const Profile = (props) => {
   };
   useEffect(() => {
     setProfileLoader(true);
+    setLoading(true);
     axios
       .get(`users/${props.match.params.id}`)
       .then((res) => {
@@ -441,13 +444,13 @@ const Profile = (props) => {
                   >
                     <Tab eventKey="allFriends" title="All Friends">
                       <div className="d-flex flex-wrap mx-100 justify-content-center mt-4">
-                        {loading ? (
+                        {loading2 ? (
                           <div className="d-flex justify-content-center">
                             <Spinner animation="grow" size="xl" />
                           </div>
                         ) : (
                           friends.map((item, key) => {
-                            return <PersonCard item={item} key={key} />;
+                            return <PersonCard item={item?._id} key={key} />;
                           })
                         )}
                       </div>
@@ -459,7 +462,7 @@ const Profile = (props) => {
                         onClick={getPendingRequests}
                       >
                         <div className="d-flex flex-wrap mx-100 justify-content-center mt-4">
-                          {loading ? (
+                          {loading2 ? (
                             <div className="d-flex justify-content-center">
                               <Spinner animation="grow" size="xl" />
                             </div>
@@ -467,7 +470,7 @@ const Profile = (props) => {
                             pendingRequests.map((item, key) => {
                               return (
                                 <FriendRequestCard
-                                  item={item}
+                                  item={item?._id}
                                   key={key}
                                   acceptRequest={acceptRequest}
                                   rejectRequest={rejectRequest}
