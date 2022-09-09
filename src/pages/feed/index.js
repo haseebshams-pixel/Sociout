@@ -7,6 +7,8 @@ import CreateCard from "../../shared/components/common/createCard";
 import PostCard from "../../shared/components/common/postCard";
 import { Spinner } from "react-bootstrap";
 import SharePostCard from "../../shared/components/common/sharePostCard";
+import Animation from "../../shared/components/common/animation";
+import { NotFoundAnim } from "../../assets/index";
 const Feed = () => {
   const { user } = useSelector((state) => state.root);
   const [open, setOpen] = useState(false);
@@ -83,13 +85,15 @@ const Feed = () => {
             {loading ? (
               <Spinner animation="grow" size="xl" />
             ) : (
-              posts?.length < 1 && "No Post found"
+              posts?.length < 1 && (
+                <Animation Pic={NotFoundAnim} Message="No Posts Found" />
+              )
             )}
           </div>
         </div>
       </div>
 
-      <div className="space" />
+      {posts?.length > 0 && <div className="space" />}
       <Footer />
     </>
   );

@@ -24,3 +24,7 @@
 .profile-title-container {
   margin-bottom: 70px;
 }
+
+.user-posts-container {
+  min-height: 420px;
+}

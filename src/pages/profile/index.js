@@ -18,6 +18,8 @@ import SharePostCard from "../../shared/components/common/sharePostCard";
 import { useHistory } from "react-router";
 import { setChat } from "../../shared/redux/reducers/chatSlice";
 import ProfileLoader from "../../shared/components/loaders/profileLoader";
+import Animation from "../../shared/components/common/animation";
+import { NotFoundAnim } from "../../assets/index";
 
 const Profile = (props) => {
   const user = useSelector((state) => state.root.user);
@@ -219,7 +221,7 @@ const Profile = (props) => {
       user2: props.match.params.id,
     };
     axios
-      .post(`users/start_conversation`, obj, {
+      .post(`chat/start_conversation`, obj, {
         headers: {
           "x-auth-token": user.token,
         },
@@ -342,7 +344,7 @@ const Profile = (props) => {
                   <a
                     role="button"
                     className="btn btn-outline-primary btn-sm btn-block text-font-family d-flex align-items-center ms-2"
-                    onClick={startConversation}
+                    onClick={() => startConversation()}
                   >
                     Message
                   </a>
@@ -411,13 +413,13 @@ const Profile = (props) => {
                 className="mb-3"
               >
                 <Tab eventKey="posts" title="Posts">
-                  <div className="row d-flex justify-content-center">
+                  <div className="row d-flex justify-content-center user-posts-container">
                     <div className="col-lg-7">
                       {loading ? (
                         <div className="d-flex justify-content-center">
                           <Spinner animation="grow" size="xl" />
                         </div>
-                      ) : (
+                      ) : posts?.length > 0 ? (
                         posts.map((item, key) => {
                           return (
                             <div
@@ -433,55 +435,72 @@ const Profile = (props) => {
                             </div>
                           );
                         })
+                      ) : (
+                        <Animation
+                          Pic={NotFoundAnim}
+                          Message="No User Posts Found"
+                        />
                       )}
                     </div>
                   </div>
                 </Tab>
                 <Tab eventKey="friends" title="Friends">
-                  <Tabs
-                    defaultActiveKey="allFriends"
-                    id="uncontrolled-tab-example"
-                  >
-                    <Tab eventKey="allFriends" title="All Friends">
-                      <div className="d-flex flex-wrap mx-100 justify-content-center mt-4">
-                        {loading2 ? (
-                          <div className="d-flex justify-content-center">
-                            <Spinner animation="grow" size="xl" />
-                          </div>
-                        ) : (
-                          friends.map((item, key) => {
-                            return <PersonCard item={item?._id} key={key} />;
-                          })
-                        )}
-                      </div>
-                    </Tab>
-                    {user?.user?.id === currentUser?.id && (
-                      <Tab
-                        eventKey="friendRequests"
-                        title="Friend Requests"
-                        onClick={getPendingRequests}
-                      >
-                        <div className="d-flex flex-wrap mx-100 justify-content-center mt-4">
+                  <div className="user-posts-container">
+                    <Tabs
+                      defaultActiveKey="allFriends"
+                      id="uncontrolled-tab-example"
+                    >
+                      <Tab eventKey="allFriends" title="All Friends">
+                        <div className="d-flex flex-wrap mx-100 justify-content-center mt-4 ">
                           {loading2 ? (
                             <div className="d-flex justify-content-center">
                               <Spinner animation="grow" size="xl" />
                             </div>
-                          ) : (
-                            pendingRequests.map((item, key) => {
-                              return (
-                                <FriendRequestCard
-                                  item={item?._id}
-                                  key={key}
-                                  acceptRequest={acceptRequest}
-                                  rejectRequest={rejectRequest}
-                                />
-                              );
+                          ) : friends?.length > 0 ? (
+                            friends.map((item, key) => {
+                              return <PersonCard item={item?._id} key={key} />;
                             })
+                          ) : (
+                            <Animation
+                              Pic={NotFoundAnim}
+                              Message="No Friends Found"
+                            />
                           )}
                         </div>
                       </Tab>
-                    )}
-                  </Tabs>
+                      {user?.user?.id === currentUser?.id && (
+                        <Tab
+                          eventKey="friendRequests"
+                          title="Friend Requests"
+                          onClick={getPendingRequests}
+                        >
+                          <div className="d-flex flex-wrap mx-100 justify-content-center mt-4">
+                            {loading2 ? (
+                              <div className="d-flex justify-content-center">
+                                <Spinner animation="grow" size="xl" />
+                              </div>
+                            ) : pendingRequests?.length > 0 ? (
+                              pendingRequests.map((item, key) => {
+                                return (
+                                  <FriendRequestCard
+                                    item={item?._id}
+                                    key={key}
+                                    acceptRequest={acceptRequest}
+                                    rejectRequest={rejectRequest}
+                                  />
+                                );
+                              })
+                            ) : (
+                              <Animation
+                                Pic={NotFoundAnim}
+                                Message="No Friend Requests Found"
+                              />
+                            )}
+                          </div>
+                        </Tab>
+                      )}
+                    </Tabs>
+                  </div>
                 </Tab>
               </Tabs>
             </div>
