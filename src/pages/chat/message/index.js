@@ -4,10 +4,12 @@ import { Spinner } from "react-bootstrap";
 import "./style.css";
 import { socket } from "../../../shared/services/socket.service";
 import { setChat } from "../../../shared/redux/reducers/chatSlice";
+import { NoChatsAnim } from "../../../assets";
+import Animation from "../../../shared/components/common/animation";
 
 const Message = ({ selectedConversation, loader, msgs, setMsgs }) => {
   const { user } = useSelector((state) => state.root);
-  const messagesEndRef = useRef(null);
+
   const [message, setMessage] = useState("");
   let msgArr = [...msgs];
   const handleMessage = () => {
@@ -35,13 +37,8 @@ const Message = ({ selectedConversation, loader, msgs, setMsgs }) => {
       });
     }
   };
-  // const scrollToBottom = () => {
-  //   messagesEndRef.current.scrollIntoView({ behavior: "smooth" });
-  // };
+
   useEffect(() => {
-    // if (msgs.length > 5) {
-    //   scrollToBottom();
-    // }
     let scroll_to_bottom = document.getElementById("inbmain");
     scroll_to_bottom.scrollTop = scroll_to_bottom.scrollHeight;
   });
@@ -54,12 +51,19 @@ const Message = ({ selectedConversation, loader, msgs, setMsgs }) => {
 
   return (
     <>
-      <div id="inbmain" className="allmessages-container">
+      <div
+        id="inbmain"
+        className={`${
+          msgArr?.length > 0
+            ? "allmessages-container"
+            : "allmessages-container2"
+        } position-relative`}
+      >
         {loader ? (
           <div className="d-flex justify-content-center mt-3">
             <Spinner animation="grow" size="lg" />
           </div>
-        ) : (
+        ) : msgArr?.length > 0 ? (
           msgArr.map((item, key) => {
             return (
               <div
@@ -82,8 +86,9 @@ const Message = ({ selectedConversation, loader, msgs, setMsgs }) => {
               </div>
             );
           })
+        ) : (
+          <Animation Pic={NoChatsAnim} ischat />
         )}
-        <div ref={messagesEndRef} />
       </div>
       <div className="position-relative">
         <input

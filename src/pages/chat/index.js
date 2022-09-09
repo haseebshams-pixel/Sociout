@@ -10,6 +10,8 @@ import { useLocation } from "react-router";
 import PersonCard from "./singlePersonCard";
 import { Spinner } from "react-bootstrap";
 import FeatherIcon from "feather-icons-react";
+import Animation from "../../shared/components/common/animation";
+import { NoConversationsAnim } from "../../assets/index";
 
 const Chat = () => {
   const { user, chat } = useSelector((state) => state.root);
@@ -68,7 +70,11 @@ const Chat = () => {
                 );
               })
             ) : (
-              <p>No Conversation Found!</p>
+              <Animation
+                Pic={NoConversationsAnim}
+                Message="No Conversations Found"
+                isConvs
+              />
             )}
           </div>
           <div className="col-8 chat-container ms-2 position-relative">

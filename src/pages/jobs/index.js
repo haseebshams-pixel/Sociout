@@ -6,7 +6,8 @@ import Footer from "../../shared/components/common/footer";
 import Header from "../../shared/components/common/header";
 import JobCard from "../../shared/components/common/JobCard";
 import { Spinner } from "react-bootstrap";
-
+import Animation from "../../shared/components/common/animation";
+import { NotFoundAnim } from "../../assets/index";
 const Jobs = () => {
   const { user } = useSelector((state) => state.root);
   const [open, setOpen] = useState(false);
@@ -66,10 +67,16 @@ const Jobs = () => {
           })}
         </div>
         <div className="d-flex  align-items-center justify-content-center">
-          {loading && <Spinner animation="grow" size="xl" />}
+          {loading ? (
+            <Spinner animation="grow" size="xl" />
+          ) : (
+            jobs?.length < 1 && (
+              <Animation Pic={NotFoundAnim} Message="No Jobs Found" />
+            )
+          )}
         </div>
       </div>
-      <div className="space" />
+      {jobs?.length > 0 && <div className="space" />}
       <Footer />
     </>
   );

@@ -5,6 +5,8 @@ import Footer from "../../shared/components/common/footer";
 import Header from "../../shared/components/common/header";
 import { Spinner } from "react-bootstrap";
 import useDebounce from "../../shared/utils/useDebounce";
+import Animation from "../../shared/components/common/animation";
+import { NotFoundAnim } from "../../assets/index";
 import axios from "axios";
 import "./style.css";
 
@@ -109,21 +111,33 @@ const Search = () => {
             <Spinner animation="grow" size="xl" />
           </div>
         ) : searchType === "person" ? (
-          <div className="d-flex flex-wrap mx-100 justify-content-start">
-            {results1.length > 0
-              ? results1.map((item, index) => {
+          <>
+            <div className="d-flex flex-wrap mx-100 justify-content-start">
+              {results1?.length > 0 &&
+                results1.map((item, index) => {
                   return <PersonCard key={index} item={item} />;
-                })
-              : "No User found❗"}
-          </div>
+                })}
+            </div>
+            <div className="d-flex flex-wrap mx-100 justify-content-center">
+              {results1?.length == 0 && (
+                <Animation Pic={NotFoundAnim} Message="No Users Found" />
+              )}
+            </div>
+          </>
         ) : (
-          <div className="d-flex flex-wrap mx-100 justify-content-start">
-            {results2.length > 0
-              ? results2.map((item, index) => {
+          <>
+            <div className="d-flex flex-wrap mx-100 justify-content-start">
+              {results2.length > 0 &&
+                results2.map((item, index) => {
                   return <JobCard key={index} item={item} />;
-                })
-              : "No Jobs found❗"}
-          </div>
+                })}
+            </div>
+            <div className="d-flex flex-wrap mx-100 justify-content-center">
+              {results2?.length == 0 && (
+                <Animation Pic={NotFoundAnim} Message="No Jobs Found" />
+              )}
+            </div>
+          </>
         )}
       </div>
       <div className="space" />
