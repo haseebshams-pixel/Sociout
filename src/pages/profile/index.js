@@ -34,6 +34,8 @@ const Profile = (props) => {
   const [friends, setFriends] = useState([]);
   const [loading, setLoading] = useState(false);
   const [loading2, setLoading2] = useState(false);
+  const [loading3, setLoading3] = useState(false);
+  const [loading4, setLoading4] = useState(false);
   const [profileLoader, setProfileLoader] = useState(false);
   const [pendingRequests, setPendingRequests] = useState([]);
   const [requested, setRequested] = useState(false);
@@ -141,6 +143,7 @@ const Profile = (props) => {
       });
   };
   const unfriend = async () => {
+    setLoading3(true);
     axios
       .get(`friends/remove/${props.match.params.id}`, {
         headers: {
@@ -157,9 +160,13 @@ const Profile = (props) => {
       })
       .catch((error) => {
         console.log(error);
+      })
+      .finally(() => {
+        setLoading3(false);
       });
   };
   const sendRequest = async () => {
+    setLoading3(true);
     axios
       .get(`friends/request/${props.match.params.id}`, {
         headers: {
@@ -176,9 +183,13 @@ const Profile = (props) => {
       })
       .catch((error) => {
         console.log(error);
+      })
+      .finally(() => {
+        setLoading3(false);
       });
   };
   const acceptRequest = async (id) => {
+    setLoading3(true);
     axios
       .get(`friends/confirm/${id}`, {
         headers: {
@@ -195,9 +206,13 @@ const Profile = (props) => {
       })
       .catch((error) => {
         console.log(error);
+      })
+      .finally(() => {
+        setLoading3(false);
       });
   };
   const rejectRequest = async (id) => {
+    setLoading4(true);
     axios
       .get(`friends/reject/${id}`, {
         headers: {
@@ -214,9 +229,13 @@ const Profile = (props) => {
       })
       .catch((error) => {
         console.log(error);
+      })
+      .finally(() => {
+        setLoading4(false);
       });
   };
   const startConversation = async () => {
+    setLoading4(true);
     let obj = {
       user2: props.match.params.id,
     };
@@ -251,6 +270,9 @@ const Profile = (props) => {
       })
       .catch((error) => {
         console.log(error);
+      })
+      .finally(() => {
+        setLoading4(false);
       });
   };
   useEffect(() => {
@@ -343,17 +365,25 @@ const Profile = (props) => {
                 <div className="d-flex">
                   <a
                     role="button"
-                    className="btn btn-outline-danger btn-sm btn-block text-font-family d-flex align-items-center"
+                    className="btn btn-outline-danger btn-sm btn-block text-font-family d-flex align-items-center btn-width"
                     onClick={unfriend}
                   >
-                    Unfriend
+                    {loading3 ? (
+                      <Spinner animation="grow" size="sm" />
+                    ) : (
+                      "Remove"
+                    )}
                   </a>
                   <a
                     role="button"
-                    className="btn btn-outline-primary btn-sm btn-block text-font-family d-flex align-items-center ms-2"
+                    className="btn btn-outline-primary btn-sm btn-block text-font-family d-flex align-items-center ms-2 btn-width"
                     onClick={() => startConversation()}
                   >
-                    Message
+                    {loading4 ? (
+                      <Spinner animation="grow" size="sm" />
+                    ) : (
+                      "Message"
+                    )}
                   </a>
                 </div>
               ) : requested ? (
@@ -367,26 +397,38 @@ const Profile = (props) => {
                 <div className="d-flex">
                   <a
                     role="button"
-                    className="btn btn-outline-success btn-sm btn-block text-font-family d-flex align-items-center"
+                    className="btn btn-outline-success btn-sm btn-block text-font-family d-flex align-items-center btn-width"
                     onClick={() => acceptRequest(props.match.params.id)}
                   >
-                    Accept
+                    {loading3 ? (
+                      <Spinner animation="grow" size="sm" />
+                    ) : (
+                      "Accept"
+                    )}
                   </a>
                   <a
                     role="button"
-                    className="btn btn-outline-danger btn-sm btn-block text-font-family d-flex align-items-center ms-2"
+                    className="btn btn-outline-danger btn-sm btn-block text-font-family d-flex align-items-center ms-2 btn-width"
                     onClick={() => rejectRequest(props.match.params.id)}
                   >
-                    Reject
+                    {loading4 ? (
+                      <Spinner animation="grow" size="sm" />
+                    ) : (
+                      "Reject"
+                    )}
                   </a>
                 </div>
               ) : (
                 <a
                   role="button"
-                  className="btn btn-outline-primary btn-sm btn-block text-font-family d-flex align-items-center"
+                  className="btn btn-outline-primary btn-sm btn-block text-font-family d-flex align-items-center btn-width"
                   onClick={() => sendRequest()}
                 >
-                  Add Friend
+                  {loading3 ? (
+                    <Spinner animation="grow" size="sm" />
+                  ) : (
+                    "Add Friend"
+                  )}
                 </a>
               )}
 
