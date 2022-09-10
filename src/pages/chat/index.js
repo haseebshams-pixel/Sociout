@@ -12,6 +12,8 @@ import { Spinner } from "react-bootstrap";
 import FeatherIcon from "feather-icons-react";
 import Animation from "../../shared/components/common/animation";
 import { NoConversationsAnim } from "../../assets/index";
+import { useQuery } from "react-query";
+import { setChat } from "../../shared/redux/reducers/chatSlice";
 
 const Chat = () => {
   const { user, chat } = useSelector((state) => state.root);
@@ -45,10 +47,30 @@ const Chat = () => {
   };
 
   useEffect(() => {
-    // fetchAllConversations();
     initSocket();
     socket.emit("addUser", { userId: user?.user?.id });
   }, []);
+
+  useEffect(() => {
+    if (selectedConversation)
+      fetchAllConversationMessages(selectedConversation?._id);
+  }, []);
+  const fetchAllConversations = async () => {
+    const { data } = await axios.get(`chat/getAllConversations`, {
+      headers: {
+        "x-auth-token": user?.token,
+      },
+    });
+    if (data) {
+      dispatch(setChat({ conversations: data?.conversations }));
+    }
+    return data;
+  };
+  const { data, error, isError, isLoading } = useQuery(
+    "chats",
+    fetchAllConversations
+  );
+  console.log("data", data);
 
   return (
     <>
@@ -56,8 +78,8 @@ const Chat = () => {
       <div className="container " data-aos="fade-up" data-aos-duration="350">
         <div className="row d-flex justify-content-center">
           <div className="col-3 chat-container">
-            {allConversations?.length > 0 ? (
-              allConversations?.map((item, key) => {
+            {!data?.conversations?.length > 0 ? (
+              data?.conversations?.map((item, key) => {
                 return (
                   <PersonCard
                     item={item}
