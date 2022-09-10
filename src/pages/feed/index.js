@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
-import { useSelector } from "react-redux";
+import { useSelector, dispatch, useDispatch } from "react-redux";
 import Header from "../../shared/components/common/header";
 import Footer from "../../shared/components/common/footer";
 import CreateCard from "../../shared/components/common/createCard";
@@ -9,8 +9,10 @@ import { Spinner } from "react-bootstrap";
 import SharePostCard from "../../shared/components/common/sharePostCard";
 import Animation from "../../shared/components/common/animation";
 import { NotFoundAnim } from "../../assets/index";
+import { setChat } from "../../shared/redux/reducers/chatSlice";
 const Feed = () => {
   const { user } = useSelector((state) => state.root);
+  const dispatch = useDispatch();
   const [open, setOpen] = useState(false);
   const openModal = () => setOpen(true);
   const hideModal = () => setOpen(false);
@@ -21,7 +23,7 @@ const Feed = () => {
 
   const fetchPosts = async () => {
     setLoading(true);
-    axios
+    await axios
       .get(`posts/skiping/${skip}`)
       .then((res) => {
         if (res.statusText === "OK") {
@@ -35,9 +37,29 @@ const Feed = () => {
         setLoading(false);
       });
   };
+  const fetchConversations = async () => {
+    await axios
+      .get(`chat/getAllConversations`, {
+        headers: {
+          "x-auth-token": user?.token,
+        },
+      })
+      .then((res) => {
+        if (res.statusText === "OK") {
+          dispatch(setChat({ conversations: res?.data?.conversations }));
+        }
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  };
   useEffect(() => {
     fetchPosts();
   }, [skip]);
+
+  useEffect(() => {
+    fetchConversations();
+  }, []);
 
   const scrollToEnd = () => {
     setSkip(posts.length);

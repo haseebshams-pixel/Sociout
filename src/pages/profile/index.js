@@ -233,12 +233,19 @@ const Profile = (props) => {
             user1: res?.data?.user1,
             user2: res?.data?.user2,
           };
-          let temp = chat?.conversations;
-          temp.push(resp);
-          let newchat = {
-            conversations: temp,
-          };
-          dispatch(setChat(newchat));
+
+          let temp = [...chat?.conversations];
+          var filterArr = temp?.filter((item) => {
+            return item._id == res?.data?._id;
+          });
+          if (filterArr?.length == 0) {
+            temp.push(resp);
+            let newchat = {
+              conversations: temp,
+            };
+            dispatch(setChat(newchat));
+          }
+
           history.push("/chat", { chat: res?.data });
         }
       })

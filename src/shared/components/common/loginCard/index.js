@@ -2,10 +2,8 @@ import React, { useState } from "react";
 import { Spinner } from "react-bootstrap";
 import Form from "react-bootstrap/Form";
 import FloatingLabel from "react-bootstrap/FloatingLabel";
-import { useHistory } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { setUser } from "../../../redux/reducers/userSlice";
-import { setChat } from "../../../redux/reducers/chatSlice";
 import { toastMessage } from "../toast";
 import { Formik } from "formik";
 import { LoginVS } from "../../../utils/validation";
@@ -16,7 +14,6 @@ import "./style.css";
 import ResetPasswordModal from "../../modals/resetPassword";
 import FeatherIcon from "feather-icons-react";
 const LoginCard = () => {
-  const history = useHistory();
   const [reset, setReset] = useState(false);
   const dispatch = useDispatch();
   const initialValues = {
@@ -37,22 +34,8 @@ const LoginCard = () => {
             token: res.data.token,
             user: res.data.user,
           };
-          axios
-            .get(`chat/getAllConversations`, {
-              headers: {
-                "x-auth-token": res.data.token,
-              },
-            })
-            .then((res2) => {
-              if (res2.statusText === "OK") {
-                dispatch(setUser(resp));
-                dispatch(setChat({ conversations: res2?.data?.conversations }));
-                toastMessage("User Logged In Successfully", "success");
-              }
-            })
-            .catch((error) => {
-              console.log(error);
-            });
+          dispatch(setUser(resp));
+          toastMessage("User Logged In Successfully", "success");
         }
       })
       .catch((error) => {
@@ -78,22 +61,8 @@ const LoginCard = () => {
             token: res.data.token,
             user: res.data.user,
           };
-          axios
-            .get(`chat/getAllConversations`, {
-              headers: {
-                "x-auth-token": res.data.token,
-              },
-            })
-            .then((res2) => {
-              if (res2.statusText === "OK") {
-                dispatch(setUser(resp));
-                dispatch(setChat({ conversations: res2?.data?.conversations }));
-                toastMessage("User Logged In Successfully", "success");
-              }
-            })
-            .catch((error) => {
-              console.log(error);
-            });
+          dispatch(setUser(resp));
+          toastMessage("User Logged In Successfully", "success");
         }
       })
       .catch((error) => {
@@ -121,22 +90,8 @@ const LoginCard = () => {
             token: res.data.token,
             user: res.data.user,
           };
-          axios
-            .get(`chat/getAllConversations`, {
-              headers: {
-                "x-auth-token": res.data.token,
-              },
-            })
-            .then((res2) => {
-              if (res2.statusText === "OK") {
-                dispatch(setUser(resp));
-                dispatch(setChat({ conversations: res2?.data?.conversations }));
-                toastMessage("User Logged In Successfully", "success");
-              }
-            })
-            .catch((error) => {
-              console.log(error);
-            });
+          dispatch(setUser(resp));
+          toastMessage("User Logged In Successfully", "success");
         }
       })
       .catch((error) => {
