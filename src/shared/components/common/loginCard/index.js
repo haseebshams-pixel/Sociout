@@ -169,7 +169,7 @@ const LoginCard = () => {
                 type="submit"
               >
                 {isSubmitting ? (
-                  <Spinner animation="grow" size="sm" />
+                  <Spinner className="mb-1" animation="grow" size="sm" />
                 ) : (
                   <p className="mb-0 login-btn-txt-size">Sign in</p>
                 )}

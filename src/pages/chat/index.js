@@ -8,18 +8,14 @@ import Message from "./message";
 import { socket, initSocket } from "../../shared/services/socket.service";
 import { useLocation } from "react-router";
 import PersonCard from "./singlePersonCard";
-import { Spinner } from "react-bootstrap";
 import FeatherIcon from "feather-icons-react";
 import Animation from "../../shared/components/common/animation";
 import { NoConversationsAnim } from "../../assets/index";
 import { useQuery } from "react-query";
-import { setChat } from "../../shared/redux/reducers/chatSlice";
 
 const Chat = () => {
-  const { user, chat } = useSelector((state) => state.root);
-  const dispatch = useDispatch();
+  const { user } = useSelector((state) => state.root);
   const location = useLocation();
-  const [allConversations, setAllConversations] = useState(chat?.conversations);
   const [selectedConversation, setSelectedConversation] = useState(
     location?.state ? location?.state?.chat : null
   );
@@ -61,16 +57,13 @@ const Chat = () => {
         "x-auth-token": user?.token,
       },
     });
-    if (data) {
-      dispatch(setChat({ conversations: data?.conversations }));
-    }
+
     return data;
   };
   const { data, error, isError, isLoading } = useQuery(
     "chats",
     fetchAllConversations
   );
-  console.log("data", data);
 
   return (
     <>
@@ -78,44 +71,49 @@ const Chat = () => {
       <div className="container " data-aos="fade-up" data-aos-duration="350">
         <div className="row d-flex justify-content-center">
           <div className="col-3 chat-container">
-            {!data?.conversations?.length > 0 ? (
-              data?.conversations?.map((item, key) => {
-                return (
-                  <PersonCard
-                    item={item}
-                    key={key}
-                    setSelectedConversation={setSelectedConversation}
-                    selectedConversation={selectedConversation}
-                    setMsgs={setMsgs}
-                    fetchAllConversationMessages={fetchAllConversationMessages}
-                  />
-                );
-              })
-            ) : (
-              <Animation
-                Pic={NoConversationsAnim}
-                Message="No Conversations Found"
-                isConvs
-              />
-            )}
+            <>
+              {data?.conversations?.length > 0 &&
+                data?.conversations?.map((item, key) => {
+                  return (
+                    <PersonCard
+                      item={item}
+                      key={key}
+                      setSelectedConversation={setSelectedConversation}
+                      selectedConversation={selectedConversation}
+                      setMsgs={setMsgs}
+                      fetchAllConversationMessages={
+                        fetchAllConversationMessages
+                      }
+                    />
+                  );
+                })}
+              {(data?.conversations?.length < 1 || isLoading) && (
+                <Animation
+                  Pic={NoConversationsAnim}
+                  Message={isLoading ? "Fetching" : "No Conversations Found"}
+                  isConvs
+                />
+              )}
+            </>
           </div>
           <div className="col-8 chat-container ms-2 position-relative">
-            {selectedConversation ? (
-              <Message
-                selectedConversation={selectedConversation}
-                msgs={msgs}
-                loader={chatLoader}
-                setMsgs={setMsgs}
-                setSelectedConversation={setSelectedConversation}
-              />
-            ) : (
-              <div className="position-absolute chat-message-container">
-                <h4 style={{ color: "#919191" }}>
-                  <FeatherIcon icon="message-circle" size="25" /> Select a
-                  Conversation
-                </h4>
-              </div>
-            )}
+            {!isLoading &&
+              (selectedConversation ? (
+                <Message
+                  selectedConversation={selectedConversation}
+                  msgs={msgs}
+                  loader={chatLoader}
+                  setMsgs={setMsgs}
+                  setSelectedConversation={setSelectedConversation}
+                />
+              ) : (
+                <div className="position-absolute chat-message-container">
+                  <h4 style={{ color: "#919191" }}>
+                    <FeatherIcon icon="message-circle" size="25" /> Select a
+                    Conversation
+                  </h4>
+                </div>
+              ))}
           </div>
         </div>
       </div>
