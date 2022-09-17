@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useHistory } from "react-router-dom";
 import axios from "axios";
+import { PhotoURL } from "../../../utils/endpoints";
 import "./style.css";
 
 const FriendRequestCard = ({ item, acceptRequest, rejectRequest }) => {
@@ -28,7 +29,7 @@ const FriendRequestCard = ({ item, acceptRequest, rejectRequest }) => {
         <img
           src={
             currentUser?.avatar
-              ? currentUser?.avatar
+              ? PhotoURL + currentUser?.avatar
               : require("../../../../assets/images/profilePlaceholder.png")
           }
           className=" p-0 rounded-top"

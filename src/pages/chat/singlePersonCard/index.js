@@ -1,5 +1,6 @@
 import React from "react";
 import { useSelector } from "react-redux";
+import { PhotoURL } from "../../../shared/utils/endpoints";
 import "./style.css";
 
 const PersonCard = ({
@@ -25,11 +26,11 @@ const PersonCard = ({
           src={
             item?.user1?._id != user?.user?.id
               ? item?.user1?.avatar
-                ? item?.user1?.avatar
+                ? PhotoURL + item?.user1?.avatar
                 : require("../../../assets/images/profilePlaceholder.png")
               : item?.user2?._id != user?.user?.id &&
                 (item?.user2?.avatar
-                  ? item?.user2?.avatar
+                  ? PhotoURL + item?.user2?.avatar
                   : require("../../../assets/images/profilePlaceholder.png"))
           }
           width="50px"

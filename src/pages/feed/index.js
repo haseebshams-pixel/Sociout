@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
-import { useSelector, dispatch, useDispatch } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 import Header from "../../shared/components/common/header";
 import Footer from "../../shared/components/common/footer";
 import CreateCard from "../../shared/components/common/createCard";
@@ -9,15 +9,14 @@ import { Spinner } from "react-bootstrap";
 import SharePostCard from "../../shared/components/common/sharePostCard";
 import Animation from "../../shared/components/common/animation";
 import { NotFoundAnim } from "../../assets/index";
-import { setChat } from "../../shared/redux/reducers/chatSlice";
+import { setAllPosts } from "../../shared/redux/reducers/postsSlice";
 const Feed = () => {
-  const { user } = useSelector((state) => state.root);
+  const { user, posts } = useSelector((state) => state.root);
   const dispatch = useDispatch();
   const [open, setOpen] = useState(false);
   const openModal = () => setOpen(true);
   const hideModal = () => setOpen(false);
   const [loading, setLoading] = useState(false);
-  const [posts, setPosts] = useState([]);
   const [newPostLength, setNewPostLength] = useState(0);
   const [skip, setSkip] = useState(0);
 
@@ -27,7 +26,7 @@ const Feed = () => {
       .get(`posts/skiping/${skip}`)
       .then((res) => {
         if (res.statusText === "OK") {
-          setPosts([...posts, ...res.data]);
+          dispatch(setAllPosts({ posts: [...posts?.posts, ...res.data] }));
           setLoading(false);
           setNewPostLength(res?.data.length);
         }
@@ -37,32 +36,12 @@ const Feed = () => {
         setLoading(false);
       });
   };
-  const fetchConversations = async () => {
-    await axios
-      .get(`chat/getAllConversations`, {
-        headers: {
-          "x-auth-token": user?.token,
-        },
-      })
-      .then((res) => {
-        if (res.statusText === "OK") {
-          dispatch(setChat({ conversations: res?.data?.conversations }));
-        }
-      })
-      .catch((error) => {
-        console.log(error);
-      });
-  };
   useEffect(() => {
     fetchPosts();
   }, [skip]);
 
-  useEffect(() => {
-    fetchConversations();
-  }, []);
-
   const scrollToEnd = () => {
-    setSkip(posts.length);
+    setSkip(posts?.posts?.length);
   };
 
   window.onscroll = function () {
@@ -92,22 +71,25 @@ const Feed = () => {
               </>
             )}
 
-            {posts?.length > 0 && (
+            {posts?.posts?.map((item, index) => {
+              return <PostCard item={item} key={index} />;
+            })}
+            {posts?.posts?.length > 0 && (
               <>
-                {posts?.map((item, index) => {
+                {/* {posts?.posts?.map((item, index) => {
                   return item?.PostObject[0]?.isShared ? (
                     <SharePostCard item={item} key={index} />
                   ) : (
                     <PostCard item={item} key={index} />
                   );
-                })}
+                })} */}
                 {newPostLength == 0 && "Looks like we have reached end❗"}
               </>
             )}
             {loading ? (
               <Spinner animation="grow" size="xl" />
             ) : (
-              posts?.length < 1 && (
+              posts?.posts?.length < 1 && (
                 <Animation Pic={NotFoundAnim} Message="No Posts Found" />
               )
             )}
@@ -115,7 +97,7 @@ const Feed = () => {
         </div>
       </div>
 
-      {posts?.length > 0 && <div className="space" />}
+      {posts?.posts?.length > 0 && <div className="space" />}
       <Footer />
     </>
   );

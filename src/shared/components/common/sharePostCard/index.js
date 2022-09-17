@@ -11,6 +11,7 @@ import { toastMessage } from "../toast";
 import PostCard from "../postCard";
 import { toast } from "react-toastify";
 import PostUserLoader from "../../loaders/postUserLoader";
+import { PhotoURL } from "../../../utils/endpoints";
 
 function SharePostCard({ item }) {
   const { user } = useSelector((state) => state.root);
@@ -194,7 +195,7 @@ function SharePostCard({ item }) {
                   <img
                     src={
                       postUser?.avatar
-                        ? postUser?.avatar
+                        ? PhotoURL + postUser?.avatar
                         : require("../../../../assets/images/profilePlaceholder.png")
                     }
                     className="profile-pic"
@@ -221,7 +222,7 @@ function SharePostCard({ item }) {
                 </>
               )}
             </div>
-            {!userLoader && user?.user?.id === item?.sharedBy && (
+            {!userLoader && user?.user?.id === item?.PostObject[0]?.sharedBy && (
               <div className="d-flex">
                 <FeatherIcon
                   icon="trash"

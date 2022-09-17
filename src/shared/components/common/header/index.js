@@ -11,6 +11,7 @@ import { useHistory } from "react-router-dom";
 import "./style.css";
 import NotificationsModal from "../../modals/notifications";
 import { socket } from "../../../services/socket.service";
+import { PhotoURL } from "../../../utils/endpoints";
 
 export default function Header() {
   const user = useSelector((state) => state.root.user);
@@ -144,7 +145,7 @@ export default function Header() {
                           <img
                             src={
                               user?.user?.avatar
-                                ? user?.user?.avatar
+                                ? PhotoURL + user?.user?.avatar
                                 : require("../../../../assets/images/profilePlaceholder.png")
                             }
                             className="profile-pic"

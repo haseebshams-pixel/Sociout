@@ -1,23 +1,26 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import moment from "moment";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { Spinner } from "react-bootstrap";
 import Card from "react-bootstrap/Card";
 import Carousel from "react-bootstrap/Carousel";
 import FeatherIcon from "feather-icons-react";
-import PostComment from "../postComment";
 import { useHistory } from "react-router-dom";
-import { toastMessage } from "../toast";
 import { toast } from "react-toastify";
 
-import "./style.css";
+import { toastMessage } from "../toast";
+import PostComment from "../postComment";
 import EditPostModal from "../../modals/editPost";
 import PostUserLoader from "../../loaders/postUserLoader";
 import PostContentLoader from "../../loaders/postContentLoader";
+import { PhotoURL } from "../../../utils/endpoints";
+import "./style.css";
+import { resetPosts, setAllPosts } from "../../../redux/reducers/postsSlice";
 
 function PostCard({ item }) {
-  const { user } = useSelector((state) => state.root);
+  const { user, posts } = useSelector((state) => state.root);
+  const dispatch = useDispatch();
   const history = useHistory();
   const [like, setLike] = useState(false);
   const [allComments, setAllComments] = useState([]);
@@ -28,6 +31,7 @@ function PostCard({ item }) {
   const [postUser, setPostUser] = useState(null);
   const [loader, setLoader] = useState(false);
   const [userLoader, setUserLoader] = useState(false);
+  const [localItem, setLocalItem] = useState(item?.PostObject[0]);
   const [open, setOpen] = useState(false);
   const openModal = () => {
     setOpen(true);
@@ -39,6 +43,21 @@ function PostCard({ item }) {
     history.push(`/profile/${id}`);
   };
   const onDelete = async () => {
+    let tempArr = [...posts?.posts];
+    let filter = [];
+    // var filterArr = tempArr.filter((val, ind) => {
+    //   return val?.PostObject[0]?._id != localItem?._id;
+    // });
+    // tempArr.pop();
+    // for (let k = 0; k < tempArr.length; k++) {
+    //   if (tempArr[k]._id != item?._id) {
+    //     filter.push(tempArr[k]);
+    //   }
+    // }
+    // console.log("filer", filter);
+    // dispatch(setAllPosts({ posts: filter }));
+    // dispatch(resetPosts());
+
     toast.promise(
       axios
         .delete(`posts/${item?.PostObject[0]?._id}`, {
@@ -48,7 +67,7 @@ function PostCard({ item }) {
         })
         .then((res) => {
           if (res.statusText === "OK") {
-            window.location.reload();
+            // window.location.reload();
           }
         })
         .catch((error) => {
@@ -198,7 +217,6 @@ function PostCard({ item }) {
         })
         .then((res) => {
           if (res.statusText === "OK") {
-            window.location.reload();
           }
         })
         .catch((error) => {
@@ -261,7 +279,7 @@ function PostCard({ item }) {
                   <img
                     src={
                       postUser?.avatar
-                        ? postUser?.avatar
+                        ? PhotoURL + postUser?.avatar
                         : require("../../../../assets/images/profilePlaceholder.png")
                     }
                     className="profile-pic"
@@ -316,15 +334,15 @@ function PostCard({ item }) {
             <PostContentLoader />
           ) : (
             <>
-              <Card.Text>{item?.PostObject[0]?.text}</Card.Text>
-              {item?.PostObject[0]?.images.length > 0 && (
+              <Card.Text>{localItem?.text}</Card.Text>
+              {localItem?.images.length > 0 && (
                 <Carousel className="carosal">
-                  {item?.PostObject[0]?.images?.map((picture, index) => {
+                  {localItem?.images?.map((picture, index) => {
                     return (
                       <Carousel.Item key={index}>
                         <img
                           className="carosal-image"
-                          src={picture}
+                          src={PhotoURL + picture}
                           alt="First slide"
                         />
                       </Carousel.Item>
@@ -431,7 +449,12 @@ function PostCard({ item }) {
           )}
         </Card.Body>
       </Card>
-      <EditPostModal show={open} hide={closeModal} item={item?.PostObject[0]} />
+      <EditPostModal
+        show={open}
+        hide={closeModal}
+        item={localItem}
+        setLocalItem={setLocalItem}
+      />
     </div>
   );
 }

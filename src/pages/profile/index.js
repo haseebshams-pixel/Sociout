@@ -20,6 +20,7 @@ import { setChat } from "../../shared/redux/reducers/chatSlice";
 import ProfileLoader from "../../shared/components/loaders/profileLoader";
 import Animation from "../../shared/components/common/animation";
 import { NotFoundAnim } from "../../assets/index";
+import { PhotoURL } from "../../shared/utils/endpoints";
 
 const Profile = (props) => {
   const user = useSelector((state) => state.root.user);
@@ -312,10 +313,10 @@ const Profile = (props) => {
                         src={
                           currentUser?.id === user.user.id
                             ? user?.user?.avatar
-                              ? `${user?.user?.avatar}`
+                              ? `${PhotoURL}${user?.user?.avatar}`
                               : require("../../assets/images/profilePlaceholder.png")
                             : currentUser?.avatar
-                            ? `${currentUser.avatar}`
+                            ? `${PhotoURL}${currentUser.avatar}`
                             : require("../../assets/images/profilePlaceholder.png")
                         }
                         alt="profilePic"

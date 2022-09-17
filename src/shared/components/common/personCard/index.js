@@ -1,8 +1,9 @@
 import React, { useEffect, useState } from "react";
 import { useHistory } from "react-router-dom";
 import axios from "axios";
-import "./style.css";
 import PersonCardLoader from "../../loaders/personCardLoader";
+import { PhotoURL } from "../../../utils/endpoints";
+import "./style.css";
 
 const PersonCard = ({ item }) => {
   const history = useHistory();
@@ -41,7 +42,7 @@ const PersonCard = ({ item }) => {
           <img
             src={
               currentUser?.avatar
-                ? currentUser?.avatar
+                ? PhotoURL + currentUser?.avatar
                 : require("../../../../assets/images/profilePlaceholder.png")
             }
             className="p-3 person-card-img"

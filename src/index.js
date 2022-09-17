@@ -7,11 +7,12 @@ import "./index.css";
 import App from "./App";
 import axios from "axios";
 import { QueryClient, QueryClientProvider } from "react-query";
+import { BaseURL } from "./shared/utils/endpoints";
 
 const queryClient = new QueryClient();
 
-axios.defaults.baseURL = "https://sociout-dev.herokuapp.com/api/";
-// axios.defaults.baseURL = "http://localhost:8000/api/";
+axios.defaults.baseURL = BaseURL;
+
 ReactDOM.render(
   <React.StrictMode>
     <Provider store={store}>

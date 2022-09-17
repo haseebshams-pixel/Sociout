@@ -6,35 +6,28 @@ import { setUser } from "../../../redux/reducers/userSlice";
 import { toastMessage } from "../../common/toast";
 import axios from "axios";
 import "./style.css";
+import { PhotoURL } from "../../../utils/endpoints";
 
 const UploadProfilePhotoModal = ({ show, hide, user }) => {
   const [submitting, setSubmitting] = useState(false);
   const dispatch = useDispatch();
-  const [userPhoto, setUserPhoto] = useState(user?.user?.avatar);
+  const [userPhoto, setUserPhoto] = useState(PhotoURL + user?.user?.avatar);
   const [avatar, setAvatar] = useState(user?.user?.avatar);
   const handleFiles = (e) => {
     let file = e.target.files[0];
     const fileImage = URL.createObjectURL(file);
     setUserPhoto(fileImage);
-    onFileUpload(e);
+    setAvatar(file);
   };
   const handleDelete = (e) => {
     setUserPhoto(undefined);
     setAvatar(null);
   };
-  const onFileUpload = (e) => {
-    let file = e.target.files[0];
-    let fileReader = new FileReader();
-    fileReader.readAsDataURL(file);
-    fileReader.onload = (event) => {
-      setAvatar(event.target.result);
-    };
-  };
+
   const handleSubmit = async () => {
     setSubmitting(true);
-    const formData = {
-      avatar: avatar,
-    };
+    let formData = new FormData();
+    formData.append("file", avatar);
     axios
       .put("users/change_profile", formData, {
         headers: {
