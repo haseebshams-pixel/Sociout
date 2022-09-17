@@ -3,39 +3,51 @@ import FeatherIcon from "feather-icons-react";
 import { Spinner } from "react-bootstrap";
 import { Modal } from "react-bootstrap";
 import { useSelector } from "react-redux";
-import { toastMessage } from "../../common/toast";
 import axios from "axios";
+import { toastMessage } from "../../common/toast";
+import { PhotoURL } from "../../../utils/endpoints";
 import "./style.css";
 
-const EditPostModal = ({ show, hide, item }) => {
+const EditPostModal = ({ show, hide, item, setLocalItem }) => {
   const user = useSelector((state) => state.root.user);
   const [text, setText] = useState(item?.text);
   const [photos, setPhotos] = useState(item?.images);
+  const [removedPhotos, setRemovedPhotos] = useState([]);
+  const [newPhotos, setNewPhotos] = useState([]);
   const [photosCount, setPhotosCount] = useState(0);
   const [submitting, setSubmitting] = useState(false);
   const editBlog = async () => {
     setSubmitting(true);
-    if (photos.length === 0 && text === "") {
+    if (photos.length === 0 && text === "" && newPhotos === null) {
       setSubmitting(false);
       toastMessage("Write Something", "error");
     } else {
-      const formData = {
-        text: text,
-        photos: photos,
-        postedBy: item.postedBy,
-      };
+      let formData = new FormData();
+      if (newPhotos != null) {
+        for (let i = 0; i < newPhotos.length; i++) {
+          formData.append("photos", newPhotos[i]);
+        }
+      }
+      formData.append("text", text);
+      formData.append("postedBy", item?.postedBy);
+      formData.append("removedImages", JSON.stringify(removedPhotos));
+      formData.append("images", JSON.stringify(photos));
       axios
         .put(`posts/${item?._id}`, formData, {
           headers: {
+            "Content-Type": "multipart/form-data",
             "x-auth-token": user?.token,
           },
         })
         .then((res) => {
           if (res.statusText === "OK") {
             setSubmitting(false);
-            setPhotos(null);
-            setText("");
-            window.location.reload();
+            setPhotos(res?.data?.images);
+            setNewPhotos([]);
+            let tempObj = { ...item };
+            tempObj.images = res?.data?.images;
+            tempObj.text = res?.data?.text;
+            setLocalItem(tempObj);
             hide();
             toastMessage("Post updated Successfully", "success");
           }
@@ -54,19 +66,14 @@ const EditPostModal = ({ show, hide, item }) => {
       return value !== val;
     });
     setPhotos(filtered);
+    let obj = [...removedPhotos];
+    obj.push(val);
+    setRemovedPhotos(obj);
   };
   const onFileUpload = (e) => {
-    let obj = photos;
     let files = e.target.files;
     setPhotosCount(files.length);
-    for (let i = 0; i < files.length; i++) {
-      let fileReader = new FileReader();
-      fileReader.readAsDataURL(files[i]);
-      fileReader.onload = (event) => {
-        obj.push(event.target.result);
-      };
-    }
-    setPhotos(obj);
+    setNewPhotos(files);
   };
 
   return (
@@ -97,7 +104,7 @@ const EditPostModal = ({ show, hide, item }) => {
               <img
                 src={
                   user?.user?.avatar
-                    ? user?.user?.avatar
+                    ? PhotoURL + user?.user?.avatar
                     : require("../../../../assets/images/profilePlaceholder.png")
                 }
                 className="profile-pic"
@@ -120,7 +127,11 @@ const EditPostModal = ({ show, hide, item }) => {
               {photos?.map((val, ind) => {
                 return (
                   <div key={ind} className="position-relative">
-                    <img src={val} className="edit-image" alt="post-photo" />
+                    <img
+                      src={PhotoURL + val}
+                      className="edit-image"
+                      alt="post-photo"
+                    />
                     <FeatherIcon
                       icon={"x-circle"}
                       size="20"

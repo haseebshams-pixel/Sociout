@@ -1,8 +1,8 @@
 import React from "react";
-import PostModal from "../../modals/post";
-import CreateJobModal from "../../modals/createJob";
-
 import { useSelector } from "react-redux";
+import CreatePostModal from "../../modals/createPost";
+import CreateJobModal from "../../modals/createJob";
+import { PhotoURL } from "../../../utils/endpoints";
 import "./style.css";
 const CreateCard = ({
   openModal,
@@ -25,7 +25,7 @@ const CreateCard = ({
         <img
           src={
             user?.user?.avatar
-              ? user?.user?.avatar
+              ? PhotoURL + user?.user?.avatar
               : require("../../../../assets/images/profilePlaceholder.png")
           }
           className="profile-pic"
@@ -40,7 +40,7 @@ const CreateCard = ({
           <span className="create-card-span">{txt}</span>
         </div>
       </div>
-      <PostModal show={open} hide={hideModal} />
+      <CreatePostModal show={open} hide={hideModal} />
       <CreateJobModal show={open2} hide={hideModal2} />
     </>
   );

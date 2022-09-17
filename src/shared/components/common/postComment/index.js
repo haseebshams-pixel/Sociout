@@ -5,8 +5,9 @@ import { useHistory } from "react-router-dom";
 import FeatherIcon from "feather-icons-react";
 import moment from "moment";
 import { toastMessage } from "../toast";
-import "./style.css";
 import CommentUserLoader from "../../loaders/commentUserLoader";
+import { PhotoURL } from "../../../utils/endpoints";
+import "./style.css";
 const PostComment = ({
   item,
   setAllComments,
@@ -67,7 +68,7 @@ const PostComment = ({
       <img
         src={
           commentUser?.avatar
-            ? commentUser?.avatar
+            ? PhotoURL + commentUser?.avatar
             : require("../../../../assets/images/profilePlaceholder.png")
         }
         width="36px"

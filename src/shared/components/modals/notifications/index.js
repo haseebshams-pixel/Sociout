@@ -1,6 +1,6 @@
 import React from "react";
 import FeatherIcon from "feather-icons-react";
-import { Modal, NavItem, Spinner } from "react-bootstrap";
+import { Modal, Spinner } from "react-bootstrap";
 import "./style.css";
 import NotificationText from "./notificationText";
 import Animation from "../../common/animation";

@@ -2,8 +2,9 @@ import React, { useState } from "react";
 import FeatherIcon from "feather-icons-react";
 import { Modal, Spinner } from "react-bootstrap";
 import { useSelector } from "react-redux";
-import { toastMessage } from "../../common/toast";
 import axios from "axios";
+import { toastMessage } from "../../common/toast";
+import { PhotoURL } from "../../../utils/endpoints";
 import "./style.css";
 
 const PostModal = ({ show, hide }) => {
@@ -18,14 +19,17 @@ const PostModal = ({ show, hide }) => {
       setSubmitting(false);
       toastMessage("Write Something!", "error");
     } else {
-      const formData = {
-        text: textt,
-        photos: photoss,
-      };
-      console.log(formData);
+      let formData = new FormData();
+      if (photoss != null) {
+        for (let i = 0; i < photoss.length; i++) {
+          formData.append("photos", photoss[i]);
+        }
+      }
+      formData.append("text", textt);
       axios
         .post("posts/", formData, {
           headers: {
+            "Content-Type": "multipart/form-data",
             "x-auth-token": user?.token,
           },
         })
@@ -49,17 +53,9 @@ const PostModal = ({ show, hide }) => {
     }
   };
   const onFileUpload = (e) => {
-    let obj = [...photoss];
     let files = e.target.files;
     setPhotosCount(files.length);
-    for (let i = 0; i < files.length; i++) {
-      let fileReader = new FileReader();
-      fileReader.readAsDataURL(files[i]);
-      fileReader.onload = (event) => {
-        obj.push(event.target.result);
-      };
-    }
-    setPhotos(obj);
+    setPhotos(files);
   };
 
   return (
@@ -90,7 +86,7 @@ const PostModal = ({ show, hide }) => {
               <img
                 src={
                   user?.user?.avatar
-                    ? user?.user?.avatar
+                    ? PhotoURL + user?.user?.avatar
                     : require("../../../../assets/images/profilePlaceholder.png")
                 }
                 className="profile-pic"

@@ -127,7 +127,7 @@ const LoginCard = () => {
             handleSubmit,
             isSubmitting,
           }) => (
-            <div className="mt-4">
+            <form className="mt-4">
               <div className="position-relative">
                 <FloatingLabel
                   controlId="floatingInput"
@@ -174,7 +174,7 @@ const LoginCard = () => {
                   <p className="mb-0 login-btn-txt-size">Sign in</p>
                 )}
               </button>
-            </div>
+            </form>
           )}
         </Formik>
         <div className="mb-4 divider mt-4">
