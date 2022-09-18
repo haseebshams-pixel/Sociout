@@ -11,15 +11,20 @@ import { PhotoURL } from "../../../utils/endpoints";
 const UploadProfilePhotoModal = ({ show, hide, user }) => {
   const [submitting, setSubmitting] = useState(false);
   const dispatch = useDispatch();
-  const [userPhoto, setUserPhoto] = useState(PhotoURL + user?.user?.avatar);
+  const [userPhoto, setUserPhoto] = useState("");
+  const [localUserAvatar, setLocalUserAvatar] = useState(
+    PhotoURL + user?.user?.avatar
+  );
   const [avatar, setAvatar] = useState(user?.user?.avatar);
   const handleFiles = (e) => {
     let file = e.target.files[0];
     const fileImage = URL.createObjectURL(file);
+    setLocalUserAvatar(undefined);
     setUserPhoto(fileImage);
     setAvatar(file);
   };
   const handleDelete = (e) => {
+    setLocalUserAvatar(undefined);
     setUserPhoto(undefined);
     setAvatar(null);
   };
@@ -28,29 +33,57 @@ const UploadProfilePhotoModal = ({ show, hide, user }) => {
     setSubmitting(true);
     let formData = new FormData();
     formData.append("file", avatar);
-    axios
-      .put("users/change_profile", formData, {
-        headers: {
-          "x-auth-token": user?.token,
-        },
-      })
-      .then((res) => {
-        if (res.statusText === "OK") {
-          let obj = {
-            ...user,
-            user: res.data,
-          };
+    if (avatar) {
+      axios
+        .put("users/change_profile", formData, {
+          headers: {
+            "x-auth-token": user?.token,
+          },
+        })
+        .then((res) => {
+          if (res.statusText === "OK") {
+            let obj = {
+              ...user,
+              user: res.data,
+            };
+
+            dispatch(setUser(obj));
+            hide();
+            toastMessage("User Photo Updated Successfully", "success");
+          }
           setSubmitting(false);
-          dispatch(setUser(obj));
-          hide();
-          toastMessage("User Photo Updated Successfully", "success");
-        }
-      })
-      .catch((error) => {
-        console.log(error);
-        setSubmitting(false);
-        toastMessage(error.response.data, "error");
-      });
+        })
+        .catch((error) => {
+          console.log(error);
+          setSubmitting(false);
+          toastMessage(error, "error");
+        });
+    } else {
+      axios
+        .delete("users/delete_profile_photo", {
+          headers: {
+            "x-auth-token": user?.token,
+          },
+        })
+        .then((res) => {
+          if (res.statusText === "OK") {
+            let obj = {
+              ...user,
+              user: res.data,
+            };
+
+            dispatch(setUser(obj));
+            hide();
+            toastMessage("User Photo Updated Successfully", "success");
+          }
+          setSubmitting(false);
+        })
+        .catch((error) => {
+          console.log(error);
+          setSubmitting(false);
+          toastMessage(error, "error");
+        });
+    }
   };
   return (
     <Modal
@@ -73,7 +106,9 @@ const UploadProfilePhotoModal = ({ show, hide, user }) => {
           <div className="d-flex align-items-center justify-content-center">
             <img
               src={
-                userPhoto
+                localUserAvatar
+                  ? localUserAvatar
+                  : userPhoto
                   ? userPhoto
                   : require("../../../../assets/images/profilePlaceholder.png")
               }
