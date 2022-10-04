@@ -40,7 +40,7 @@ const EditPostModal = ({ show, hide, item, setLocalItem }) => {
           },
         })
         .then((res) => {
-          if (res.statusText === "OK") {
+          if (res?.data) {
             setSubmitting(false);
             setPhotos(res?.data?.images);
             setNewPhotos([]);

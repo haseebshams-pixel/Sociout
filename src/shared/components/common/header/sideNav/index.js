@@ -23,7 +23,7 @@ const SideNav = ({ offCanvas, closeSideNav, user }) => {
         },
       })
       .then((res) => {
-        if (res.statusText === "OK") {
+        if (res?.data) {
           setListNotify(res.data);
         }
         setLoader(false);

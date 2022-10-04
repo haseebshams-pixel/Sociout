@@ -66,7 +66,7 @@ const Profile = (props) => {
     axios
       .get(`posts/user/${props.match.params.id}`)
       .then((res) => {
-        if (res.statusText === "OK") {
+        if (res?.data) {
           setPosts(res.data);
         }
         setLoading(false);
@@ -84,7 +84,7 @@ const Profile = (props) => {
         },
       })
       .then((res) => {
-        if (res.statusText === "OK") {
+        if (res?.data) {
           if (res.data.state === "friend") {
             setFriend(true);
             setRequested(false);
@@ -114,7 +114,7 @@ const Profile = (props) => {
     axios
       .get(`friends/user/${props.match.params.id}`)
       .then((res) => {
-        if (res.statusText === "OK") {
+        if (res?.data) {
           setFriends(res.data);
         }
         setLoading2(false);
@@ -133,7 +133,7 @@ const Profile = (props) => {
         },
       })
       .then((res) => {
-        if (res.statusText === "OK") {
+        if (res?.data) {
           setPendingRequests(res.data);
         }
         setLoading2(false);
@@ -152,7 +152,7 @@ const Profile = (props) => {
         },
       })
       .then((res) => {
-        if (res.statusText === "OK") {
+        if (res) {
           setRequested(false);
           setFriend(false);
           setPending(false);
@@ -175,7 +175,7 @@ const Profile = (props) => {
         },
       })
       .then((res) => {
-        if (res.statusText === "OK") {
+        if (res) {
           toastMessage("Request Sent", "success");
           setRequested(true);
           setFriend(false);
@@ -198,7 +198,7 @@ const Profile = (props) => {
         },
       })
       .then((res) => {
-        if (res.statusText === "OK") {
+        if (res) {
           setRequested(false);
           setFriend(true);
           setPending(false);
@@ -221,7 +221,7 @@ const Profile = (props) => {
         },
       })
       .then((res) => {
-        if (res.statusText === "OK") {
+        if (res) {
           setRequested(false);
           setFriend(false);
           setPending(false);
@@ -247,7 +247,7 @@ const Profile = (props) => {
         },
       })
       .then((res) => {
-        if (res.statusText === "OK") {
+        if (res?.data) {
           let resp = {
             _id: res?.data?._id,
             user1: res?.data?.user1,
@@ -282,7 +282,7 @@ const Profile = (props) => {
     axios
       .get(`users/${props.match.params.id}`)
       .then((res) => {
-        if (res.statusText === "OK") {
+        if (res?.data) {
           setCurrentUser(res.data);
         }
         setProfileLoader(false);

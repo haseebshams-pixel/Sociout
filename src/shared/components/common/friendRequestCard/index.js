@@ -15,7 +15,7 @@ const FriendRequestCard = ({ item, acceptRequest, rejectRequest }) => {
     axios
       .get(`users/${item}`)
       .then((res) => {
-        if (res.statusText === "OK") {
+        if (res?.data) {
           setCurrentUser(res.data);
         }
       })

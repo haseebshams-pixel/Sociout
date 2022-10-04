@@ -28,7 +28,7 @@ const LoginCard = () => {
     axios
       .post("users/signin", data)
       .then(async (res) => {
-        if (res.statusText === "OK") {
+        if (res?.data) {
           let resp = {
             isLoggedIn: true,
             token: res.data.token,
@@ -55,7 +55,7 @@ const LoginCard = () => {
     axios
       .post("users/google_auth", data)
       .then(async (res) => {
-        if (res.statusText === "OK") {
+        if (res?.data) {
           let resp = {
             isLoggedIn: true,
             token: res.data.token,
@@ -84,7 +84,7 @@ const LoginCard = () => {
     axios
       .post("users/facebook_auth", data)
       .then(async (res) => {
-        if (res.statusText === "OK") {
+        if (res?.data) {
           let resp = {
             isLoggedIn: true,
             token: res.data.token,

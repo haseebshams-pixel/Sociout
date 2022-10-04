@@ -31,7 +31,7 @@ const Chat = () => {
         },
       })
       .then((res) => {
-        if (res.statusText === "OK") {
+        if (res?.data) {
           setMsgs(res?.data);
         }
         setChatLoader(false);

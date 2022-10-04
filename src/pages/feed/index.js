@@ -25,7 +25,7 @@ const Feed = () => {
     await axios
       .get(`posts/skiping/${skip}`)
       .then((res) => {
-        if (res.statusText === "OK") {
+        if (res?.data) {
           dispatch(setAllPosts({ posts: [...posts?.posts, ...res.data] }));
           setLoading(false);
           setNewPostLength(res?.data.length);

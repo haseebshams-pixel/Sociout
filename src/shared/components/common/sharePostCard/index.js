@@ -37,7 +37,7 @@ function SharePostCard({ item }) {
           },
         })
         .then((res) => {
-          if (res.statusText === "OK") {
+          if (res) {
             window.location.reload();
           }
         })
@@ -58,7 +58,7 @@ function SharePostCard({ item }) {
     axios
       .get(`users/${item?.PostObject[0]?.sharedBy}`)
       .then((res) => {
-        if (res.statusText === "OK") {
+        if (res?.data) {
           setPostUser(res.data);
         }
         setUserLoader(false);
@@ -83,7 +83,7 @@ function SharePostCard({ item }) {
           },
         })
         .then((res) => {
-          if (res.statusText === "OK") {
+          if (res) {
             setLike(true);
           }
         })
@@ -111,7 +111,7 @@ function SharePostCard({ item }) {
           },
         })
         .then((res) => {
-          if (res.statusText === "OK") {
+          if (res) {
             setLike(false);
           }
         })
@@ -144,7 +144,7 @@ function SharePostCard({ item }) {
           },
         })
         .then((res) => {
-          if (res.statusText === "OK") {
+          if (res?.data) {
             setCommentText("");
             setAllComments((p) => {
               return p.concat(res?.data);

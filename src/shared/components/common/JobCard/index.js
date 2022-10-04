@@ -33,7 +33,7 @@ const JobCard = ({ item }) => {
         },
       })
       .then((res) => {
-        if (res.statusText === "OK") {
+        if (res) {
           toastMessage("Deleted Successfuly", "success");
           window.location.reload();
         }
