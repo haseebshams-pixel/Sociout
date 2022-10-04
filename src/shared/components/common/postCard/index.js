@@ -66,7 +66,7 @@ function PostCard({ item }) {
           },
         })
         .then((res) => {
-          if (res.statusText === "OK") {
+          if (res) {
             // window.location.reload();
           }
         })
@@ -87,7 +87,7 @@ function PostCard({ item }) {
     axios
       .get(`users/${item?.PostObject[0]?.postedBy}`)
       .then((res) => {
-        if (res.statusText === "OK") {
+        if (res?.data) {
           setPostUser(res.data);
         }
         setUserLoader(false);
@@ -114,7 +114,7 @@ function PostCard({ item }) {
           },
         })
         .then((res) => {
-          if (res.statusText === "OK") {
+          if (res) {
             setLike(true);
           }
         })
@@ -149,7 +149,7 @@ function PostCard({ item }) {
           }
         )
         .then((res) => {
-          if (res.statusText === "OK") {
+          if (res) {
             setLike(false);
           }
         })
@@ -184,7 +184,7 @@ function PostCard({ item }) {
           },
         })
         .then((res) => {
-          if (res.statusText === "OK") {
+          if (res?.data) {
             setCommentText("");
             setAllComments((p) => {
               return p.concat(res?.data);
@@ -216,7 +216,7 @@ function PostCard({ item }) {
           },
         })
         .then((res) => {
-          if (res.statusText === "OK") {
+          if (res) {
           }
         })
         .catch((error) => {

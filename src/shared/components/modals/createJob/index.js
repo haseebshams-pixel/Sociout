@@ -38,7 +38,7 @@ const CreateJobModal = ({ show, hide, item, isEdit }) => {
             },
           })
           .then((res) => {
-            if (res.statusText === "OK") {
+            if (res) {
               action.setSubmitting(false);
               hide();
               window.location.reload();
@@ -58,7 +58,7 @@ const CreateJobModal = ({ show, hide, item, isEdit }) => {
             },
           })
           .then((res) => {
-            if (res.statusText === "OK") {
+            if (res) {
               action.setSubmitting(false);
               hide();
               window.location.reload();

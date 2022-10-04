@@ -26,7 +26,7 @@ const Search = () => {
       ? axios
           .post("search", formData)
           .then((res) => {
-            if (res.statusText === "OK") {
+            if (res?.data) {
               setResults1(res.data);
               setLoading(false);
             }
@@ -38,7 +38,7 @@ const Search = () => {
       : axios
           .post("search/jobs", formData)
           .then((res) => {
-            if (res.statusText === "OK") {
+            if (res?.data) {
               setResults2(res.data);
               setLoading(false);
             }

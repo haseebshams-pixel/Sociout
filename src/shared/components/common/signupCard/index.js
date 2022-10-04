@@ -37,7 +37,7 @@ const SignUpCard = () => {
     axios
       .post("users/signup", data)
       .then((res) => {
-        if (res.statusText === "OK") {
+        if (res?.data) {
           action.setSubmitting(false);
           let resp = {
             isLoggedIn: true,
@@ -67,7 +67,7 @@ const SignUpCard = () => {
     axios
       .post("users/google_auth", data)
       .then((res) => {
-        if (res.statusText === "OK") {
+        if (res?.data) {
           console.log("data", res.data.user);
           let resp = {
             isLoggedIn: true,
@@ -99,7 +99,7 @@ const SignUpCard = () => {
     axios
       .post("users/facebook_auth", data)
       .then((res) => {
-        if (res.statusText === "OK") {
+        if (res?.data) {
           console.log("data", res.data.user);
           let resp = {
             isLoggedIn: true,

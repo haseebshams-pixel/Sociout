@@ -28,7 +28,7 @@ const PostComment = ({
     axios
       .get(`users/${item?.postedBy}`)
       .then((res) => {
-        if (res.statusText === "OK") {
+        if (res?.data) {
           setCommentUser(res.data);
         }
         setLoader(false);
@@ -46,7 +46,7 @@ const PostComment = ({
         },
       })
       .then((res) => {
-        if (res.statusText === "OK") {
+        if (res) {
           toastMessage("Deleted Successfuly", "success");
           var filteredArr = allComments.filter((itm) => {
             return itm?._id != item?._id;

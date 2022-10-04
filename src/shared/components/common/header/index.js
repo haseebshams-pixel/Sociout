@@ -58,7 +58,7 @@ export default function Header() {
         },
       })
       .then((res) => {
-        if (res.statusText === "OK") {
+        if (res?.data) {
           setListNotify(res.data);
         }
         setLoader(false);

@@ -41,7 +41,7 @@ const UploadProfilePhotoModal = ({ show, hide, user }) => {
           },
         })
         .then((res) => {
-          if (res.statusText === "OK") {
+          if (res?.data) {
             let obj = {
               ...user,
               user: res.data,
@@ -66,7 +66,7 @@ const UploadProfilePhotoModal = ({ show, hide, user }) => {
           },
         })
         .then((res) => {
-          if (res.statusText === "OK") {
+          if (res?.data) {
             let obj = {
               ...user,
               user: res.data,

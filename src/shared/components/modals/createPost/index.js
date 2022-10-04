@@ -34,7 +34,7 @@ const PostModal = ({ show, hide }) => {
           },
         })
         .then((res) => {
-          if (res.statusText === "OK") {
+          if (res) {
             setSubmitting(false);
             setText("");
             setPhotos([]);

@@ -21,7 +21,7 @@ const Jobs = () => {
     axios
       .get(`jobs/skiping/${skip}`)
       .then((res) => {
-        if (res.statusText === "OK") {
+        if (res?.data) {
           setJobs([...jobs, ...res.data]);
           setLoading(false);
         }

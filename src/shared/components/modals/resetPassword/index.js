@@ -22,7 +22,7 @@ const ResetPasswordModal = ({ show, hide }) => {
     axios
       .post(`users/forgot_pass/${values.email}`)
       .then((res) => {
-        if (res.statusText === "OK") {
+        if (res?.data) {
           action.setSubmitting(false);
           toastMessage(res.data, "success");
           setIsOtp(true);
@@ -43,7 +43,7 @@ const ResetPasswordModal = ({ show, hide }) => {
     axios
       .post("users/verify-otp", data)
       .then((res) => {
-        if (res.statusText === "OK") {
+        if (res?.data) {
           action.setSubmitting(false);
           toastMessage(res.data, "success");
           setIsPassword(true);
@@ -68,7 +68,7 @@ const ResetPasswordModal = ({ show, hide }) => {
       axios
         .put("users/set-pass", data)
         .then((res) => {
-          if (res.statusText === "OK") {
+          if (res?.data) {
             action.setSubmitting(false);
             toastMessage(res.data, "success");
             setIsPassword(false);
