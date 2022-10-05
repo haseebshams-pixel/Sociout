@@ -8,8 +8,9 @@ import { toastMessage } from "../../common/toast";
 import { PhotoURL } from "../../../utils/endpoints";
 import "./style.css";
 
-const EditPostModal = ({ show, hide, item, setLocalItem }) => {
+const EditPostModal = ({ show, hide, item, setItem }) => {
   const user = useSelector((state) => state.root.user);
+  const [localItem, setLocalItem] = useState(item);
   const [text, setText] = useState(item?.text);
   const [photos, setPhotos] = useState(item?.images);
   const [removedPhotos, setRemovedPhotos] = useState([]);
@@ -29,11 +30,11 @@ const EditPostModal = ({ show, hide, item, setLocalItem }) => {
         }
       }
       formData.append("text", text);
-      formData.append("postedBy", item?.postedBy);
+      formData.append("postedBy", localItem?.postedBy);
       formData.append("removedImages", JSON.stringify(removedPhotos));
       formData.append("images", JSON.stringify(photos));
       axios
-        .put(`posts/${item?._id}`, formData, {
+        .put(`posts/${localItem?._id}`, formData, {
           headers: {
             "Content-Type": "multipart/form-data",
             "x-auth-token": user?.token,
@@ -44,10 +45,10 @@ const EditPostModal = ({ show, hide, item, setLocalItem }) => {
             setSubmitting(false);
             setPhotos(res?.data?.images);
             setNewPhotos([]);
-            let tempObj = { ...item };
+            let tempObj = { ...localItem };
             tempObj.images = res?.data?.images;
             tempObj.text = res?.data?.text;
-            setLocalItem(tempObj);
+            setItem(tempObj);
             hide();
             toastMessage("Post updated Successfully", "success");
           }
@@ -75,6 +76,12 @@ const EditPostModal = ({ show, hide, item, setLocalItem }) => {
     setPhotosCount(files.length);
     setNewPhotos(files);
   };
+
+  useEffect(() => {
+    setLocalItem(item);
+    setText(item?.text);
+    setPhotos(item?.images);
+  }, [item]);
 
   return (
     <Modal

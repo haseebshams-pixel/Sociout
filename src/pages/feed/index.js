@@ -1,4 +1,5 @@
-import React, { useState, useEffect } from "react";
+import React, { useEffect } from "react";
+import useState from "react-usestateref";
 import axios from "axios";
 import { useSelector, useDispatch } from "react-redux";
 import Header from "../../shared/components/common/header";
@@ -9,10 +10,9 @@ import { Spinner } from "react-bootstrap";
 import SharePostCard from "../../shared/components/common/sharePostCard";
 import Animation from "../../shared/components/common/animation";
 import { NotFoundAnim } from "../../assets/index";
-import { setAllPosts } from "../../shared/redux/reducers/postsSlice";
 const Feed = () => {
-  const { user, posts } = useSelector((state) => state.root);
-  const dispatch = useDispatch();
+  const { user } = useSelector((state) => state.root);
+  const [posts, setPosts, postsRef] = useState([]);
   const [open, setOpen] = useState(false);
   const openModal = () => setOpen(true);
   const hideModal = () => setOpen(false);
@@ -26,7 +26,7 @@ const Feed = () => {
       .get(`posts/skiping/${skip}`)
       .then((res) => {
         if (res?.data) {
-          dispatch(setAllPosts({ posts: [...posts?.posts, ...res.data] }));
+          setPosts([...posts, ...res.data]);
           setLoading(false);
           setNewPostLength(res?.data.length);
         }
@@ -41,7 +41,7 @@ const Feed = () => {
   }, [skip]);
 
   const scrollToEnd = () => {
-    setSkip(posts?.posts?.length);
+    setSkip(posts?.length);
   };
 
   window.onscroll = function () {
@@ -71,33 +71,34 @@ const Feed = () => {
               </>
             )}
 
-            {posts?.posts?.map((item, index) => {
-              return <PostCard item={item} key={index} />;
-            })}
-            {posts?.posts?.length > 0 && (
+            {posts?.length > 0 && (
               <>
-                {/* {posts?.posts?.map((item, index) => {
+                {posts?.map((item, index) => {
                   return item?.PostObject[0]?.isShared ? (
                     <SharePostCard item={item} key={index} />
                   ) : (
-                    <PostCard item={item} key={index} />
+                    <PostCard
+                      item={item}
+                      key={index}
+                      posts={posts}
+                      setPosts={setPosts}
+                    />
                   );
-                })} */}
+                })}
                 {newPostLength == 0 && "Looks like we have reached end❗"}
               </>
             )}
             {loading ? (
               <Spinner animation="grow" size="xl" />
             ) : (
-              posts?.posts?.length < 1 && (
+              posts?.length < 1 && (
                 <Animation Pic={NotFoundAnim} Message="No Posts Found" />
               )
             )}
           </div>
         </div>
       </div>
-
-      {posts?.posts?.length > 0 && <div className="space" />}
+      {posts?.length > 0 && <div className="space" />}
       <Footer />
     </>
   );

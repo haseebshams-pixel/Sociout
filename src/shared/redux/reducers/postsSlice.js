@@ -12,7 +12,10 @@ export const postsSlice = createSlice({
       let tempObj = { ...state, ...action.payload };
       return tempObj;
     },
-    resetPosts: () => initState,
+    resetPosts: () => {
+      console.log("rest");
+      return initState;
+    },
   },
 });
 
