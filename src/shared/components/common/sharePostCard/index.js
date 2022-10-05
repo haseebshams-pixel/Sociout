@@ -275,7 +275,7 @@ function SharePostCard({ item }) {
                 <img
                   src={
                     user?.user?.avatar
-                      ? user?.user?.avatar
+                      ? PhotoURL + user?.user?.avatar
                       : require("../../../../assets/images/profilePlaceholder.png")
                   }
                   width="36px"

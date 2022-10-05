@@ -1,26 +1,25 @@
-import React, { useState, useEffect } from "react";
+import React, { useEffect } from "react";
+import useState from "react-usestateref";
 import axios from "axios";
+import FeatherIcon from "feather-icons-react";
 import moment from "moment";
-import { useDispatch, useSelector } from "react-redux";
 import { Spinner } from "react-bootstrap";
 import Card from "react-bootstrap/Card";
 import Carousel from "react-bootstrap/Carousel";
-import FeatherIcon from "feather-icons-react";
+import { useSelector } from "react-redux";
 import { useHistory } from "react-router-dom";
 import { toast } from "react-toastify";
-
-import { toastMessage } from "../toast";
-import PostComment from "../postComment";
-import EditPostModal from "../../modals/editPost";
-import PostUserLoader from "../../loaders/postUserLoader";
-import PostContentLoader from "../../loaders/postContentLoader";
 import { PhotoURL } from "../../../utils/endpoints";
+import PostContentLoader from "../../loaders/postContentLoader";
+import PostUserLoader from "../../loaders/postUserLoader";
+import EditPostModal from "../../modals/editPost";
+import PostComment from "../postComment";
+import { toastMessage } from "../toast";
 import "./style.css";
-import { resetPosts, setAllPosts } from "../../../redux/reducers/postsSlice";
+import { current } from "@reduxjs/toolkit";
 
-function PostCard({ item }) {
-  const { user, posts } = useSelector((state) => state.root);
-  const dispatch = useDispatch();
+function PostCard({ item, posts, setPosts }) {
+  const { user } = useSelector((state) => state.root);
   const history = useHistory();
   const [like, setLike] = useState(false);
   const [allComments, setAllComments] = useState([]);
@@ -31,9 +30,11 @@ function PostCard({ item }) {
   const [postUser, setPostUser] = useState(null);
   const [loader, setLoader] = useState(false);
   const [userLoader, setUserLoader] = useState(false);
-  const [localItem, setLocalItem] = useState(item?.PostObject[0]);
+  const [localItem, setLocalItem, localRef] = useState(item?.PostObject[0]);
+  const [localObject, setLocalObject, localObjectRef] = useState(item);
   const [open, setOpen] = useState(false);
   const openModal = () => {
+    setLocalItem(item?.PostObject[0]);
     setOpen(true);
   };
   const closeModal = () => {
@@ -43,31 +44,19 @@ function PostCard({ item }) {
     history.push(`/profile/${id}`);
   };
   const onDelete = async () => {
-    let tempArr = [...posts?.posts];
-    let filter = [];
-    // var filterArr = tempArr.filter((val, ind) => {
-    //   return val?.PostObject[0]?._id != localItem?._id;
-    // });
-    // tempArr.pop();
-    // for (let k = 0; k < tempArr.length; k++) {
-    //   if (tempArr[k]._id != item?._id) {
-    //     filter.push(tempArr[k]);
-    //   }
-    // }
-    // console.log("filer", filter);
-    // dispatch(setAllPosts({ posts: filter }));
-    // dispatch(resetPosts());
-
     toast.promise(
       axios
-        .delete(`posts/${item?.PostObject[0]?._id}`, {
+        .delete(`posts/${localItem?._id}`, {
           headers: {
             "x-auth-token": user?.token,
           },
         })
         .then((res) => {
           if (res) {
-            // window.location.reload();
+            var filterArr = posts.filter((val, ind) => {
+              return val?.post != localItem?._id;
+            });
+            setPosts(filterArr);
           }
         })
         .catch((error) => {
@@ -85,7 +74,7 @@ function PostCard({ item }) {
     setPostUser(null);
     setUserLoader(true);
     axios
-      .get(`users/${item?.PostObject[0]?.postedBy}`)
+      .get(`users/${localItem?.postedBy}`)
       .then((res) => {
         if (res?.data) {
           setPostUser(res.data);
@@ -100,9 +89,7 @@ function PostCard({ item }) {
 
   const likePost = async () => {
     let obj = {
-      id: item?.PostObject[0]?.isShared
-        ? item?.PostObject[0]?.postId
-        : item?.PostObject[0]?._id,
+      id: localItem?.isShared ? localItem?.postId : localItem?._id,
     };
     setLike(true);
     setLikeCount(likeCount + 1);
@@ -138,9 +125,7 @@ function PostCard({ item }) {
       axios
         .get(
           `likes/unlike/${
-            item?.PostObject[0]?.isShared
-              ? item?.PostObject[0]?.postId
-              : item?.PostObject[0]?._id
+            localItem?.isShared ? localItem?.postId : localItem?._id
           }`,
           {
             headers: {
@@ -172,9 +157,7 @@ function PostCard({ item }) {
     } else {
       setLoader(true);
       let obj = {
-        post: item?.PostObject[0]?.isShared
-          ? item?.PostObject[0]?.postId
-          : item?.PostObject[0]?._id,
+        post: localItem?.isShared ? localItem?.postId : localItem?._id,
         text: commentText,
       };
       axios
@@ -204,9 +187,7 @@ function PostCard({ item }) {
 
   const sharePost = async () => {
     const formData = {
-      id: item?.PostObject[0]?.isShared
-        ? item?.PostObject[0]?.postId
-        : item?.PostObject[0]?._id,
+      id: localItem?.isShared ? localItem?.postId : localItem?._id,
     };
     toast.promise(
       axios
@@ -232,35 +213,41 @@ function PostCard({ item }) {
 
   const postActions = async () => {
     var filterArray = [];
-    if (item?.PostObject[0]?.isShared) {
-      setLikeCount(item?.PostObject[0]?.shareLikedBy[0]?.likedBy?.length);
-      filterArray = item?.PostObject[0]?.shareLikedBy[0]?.likedBy?.filter(
+    if (localRef?.isShared) {
+      setLikeCount(localRef?.current?.shareLikedBy[0]?.likedBy?.length);
+      filterArray = localRef?.current?.shareLikedBy[0]?.likedBy?.filter(
         (id) => {
           return id == user?.user?.id;
         }
       );
       if (filterArray.length > 0) {
         setLike(true);
+      } else {
+        setLike(false);
       }
-      setCommentCount(item?.PostObject[0]?.shareComments?.length);
-      setAllComments(item?.PostObject[0]?.shareComments);
+      setCommentCount(localRef?.current?.shareComments?.length);
+      setAllComments(localRef?.current?.shareComments);
     } else {
-      setLikeCount(item?.likedBy?.length);
-      filterArray = item?.likedBy.filter((id) => {
+      setLikeCount(localObjectRef?.current?.likedBy?.length);
+      filterArray = localObjectRef?.current?.likedBy.filter((id) => {
         return id == user?.user?.id;
       });
       if (filterArray.length > 0) {
         setLike(true);
+      } else {
+        setLike(false);
       }
-      setCommentCount(item?.CommentObject?.length);
-      setAllComments(item?.CommentObject);
+      setCommentCount(localObjectRef?.current?.CommentObject?.length);
+      setAllComments(localObjectRef?.current?.CommentObject);
     }
   };
 
   useEffect(() => {
     fetchUser();
+    setLocalItem(item?.PostObject[0]);
+    setLocalObject(item);
     postActions();
-  }, []);
+  }, [item]);
 
   return (
     <div
@@ -285,25 +272,25 @@ function PostCard({ item }) {
                     className="profile-pic"
                     alt="profile-pic"
                     role="button"
-                    onClick={() => navigate(item?.PostObject[0]?.postedBy)}
+                    onClick={() => navigate(localItem?.postedBy)}
                   />
                   <div>
                     <Card.Title
                       className="d-flex align-items-center m-0"
                       role="button"
-                      onClick={() => navigate(item?.PostObject[0]?.postedBy)}
+                      onClick={() => navigate(localItem?.postedBy)}
                     >
                       <span className="ms-2">
-                        {user?.user?.id === item?.PostObject[0]?.postedBy
+                        {user?.user?.id === localItem?.postedBy
                           ? user?.user?.firstname + " " + user?.user?.lastname
                           : postUser?.firstname + " " + postUser?.lastname}
                       </span>
                     </Card.Title>
                     <Card.Subtitle className="text-muted post-card-subtitle">
                       {moment(
-                        item?.PostObject[0]?.isShared
-                          ? item?.PostObject[0]?.oldDate
-                          : item?.PostObject[0]?.date
+                        localItem?.isShared
+                          ? localItem?.oldDate
+                          : localItem?.date
                       ).fromNow()}
                     </Card.Subtitle>
                   </div>
@@ -311,8 +298,8 @@ function PostCard({ item }) {
               )}
             </div>
             {!userLoader &&
-              user?.user?.id === item?.PostObject[0]?.postedBy &&
-              !item?.PostObject[0]?.isShared && (
+              user?.user?.id === localItem?.postedBy &&
+              !localItem?.isShared && (
                 <div className="d-flex">
                   <FeatherIcon
                     icon="edit-2"
@@ -396,7 +383,7 @@ function PostCard({ item }) {
                 <img
                   src={
                     user?.user?.avatar
-                      ? user?.user?.avatar
+                      ? PhotoURL + user?.user?.avatar
                       : require("../../../../assets/images/profilePlaceholder.png")
                   }
                   width="36px"
@@ -453,7 +440,7 @@ function PostCard({ item }) {
         show={open}
         hide={closeModal}
         item={localItem}
-        setLocalItem={setLocalItem}
+        setItem={setLocalItem}
       />
     </div>
   );
