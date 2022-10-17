@@ -1,5 +1,5 @@
 import { io } from "socket.io-client";
-let socket = io.connect("https://sociout-dev.vercel.app", {
+let socket = io.connect("https://sociout-dev.fly.dev", {
   transports: ["websocket"],
 });
 const initSocket = () => {
