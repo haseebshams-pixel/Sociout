@@ -9,6 +9,7 @@ const PersonCard = ({
   selectedConversation,
   setMsgs,
   fetchAllConversationMessages,
+  setDisplayChat,
 }) => {
   const { user } = useSelector((state) => state.root);
   return (
@@ -19,6 +20,7 @@ const PersonCard = ({
       onClick={() => {
         setSelectedConversation(item);
         fetchAllConversationMessages(item._id);
+        setDisplayChat(true);
       }}
     >
       <div className="postCard-cmntimage">
@@ -41,7 +43,7 @@ const PersonCard = ({
         />
       </div>
 
-      <div className="w-100 ms-2  px-2 pt-1 rounded  justify-content-between d-none d-md-flex">
+      <div className="w-100 ms-2  px-2 pt-1 rounded  justify-content-between  d-flex">
         <div>
           <strong>
             {item?.user1?._id != user?.user?.id

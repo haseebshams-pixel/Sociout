@@ -7,6 +7,37 @@
 .chat-message-container {
   top: 50%;
   left: 50%;
-  margin-left: -50px;
+  margin-left: -100px;
   margin-top: -50px;
+}
+.chat-add-btn-style {
+  background-color: white;
+  border: none;
+  outline: none;
+  display: flex;
+  align-items: center;
+  text-align: center;
+}
+.chat-menu {
+  position: absolute;
+  top: 10px;
+  right: 25px;
+  width: 100px;
+  background: white;
+  padding: 10px;
+  box-shadow: 1px 2px 3px 0 rgba(21, 21, 21, 0.6);
+  transition: all 0.3s cubic-bezier(0.35, 0, 0.25, 1);
+  transform-origin: top right;
+  font-size: 1em;
+  z-index: 3;
+}
+.chat-menu-open {
+  visibility: visible;
+  transform: scale(1);
+  opacity: 1;
+}
+.chat-menu-close {
+  visibility: hidden;
+  transform: scale(0);
+  opacity: 0;
 }
