@@ -1,6 +1,5 @@
 .allmessages-container {
-  min-height: 65vh;
-  height: 550px;
+  height: 480px;
   display: flex;
   flex-direction: column;
   overflow-y: scroll;
@@ -13,8 +12,7 @@
 }
 
 .allmessages-container2 {
-  min-height: 65vh;
-  height: 550px;
+  height: 480px;
   overflow: auto;
   display: flex;
   flex-direction: column;

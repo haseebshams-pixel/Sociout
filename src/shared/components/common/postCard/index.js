@@ -322,9 +322,10 @@ function PostCard({ item, posts, setPosts }) {
           ) : (
             <>
               <Card.Text>{localItem?.text}</Card.Text>
-              {localItem?.images.length > 0 && (
-                <Carousel className="carosal">
-                  {localItem?.images?.map((picture, index) => {
+
+              <Carousel className="carosal">
+                {localItem?.images.length > 0 &&
+                  localItem?.images?.map((picture, index) => {
                     return (
                       <Carousel.Item key={index}>
                         <img
@@ -335,8 +336,25 @@ function PostCard({ item, posts, setPosts }) {
                       </Carousel.Item>
                     );
                   })}
-                </Carousel>
-              )}
+                {localItem?.videos.length > 0 &&
+                  localItem?.videos?.map((vid, index) => {
+                    return (
+                      <Carousel.Item key={index}>
+                        <div className="d-flex justify-content-center align-items-center">
+                          <div className="w-75">
+                            <video
+                              width="100%"
+                              height="100%"
+                              src={PhotoURL + vid}
+                              alt="First slide"
+                              controls
+                            />
+                          </div>
+                        </div>
+                      </Carousel.Item>
+                    );
+                  })}
+              </Carousel>
             </>
           )}
 

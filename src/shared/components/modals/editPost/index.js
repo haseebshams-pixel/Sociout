@@ -13,26 +13,35 @@ const EditPostModal = ({ show, hide, item, setItem }) => {
   const [localItem, setLocalItem] = useState(item);
   const [text, setText] = useState(item?.text);
   const [photos, setPhotos] = useState(item?.images);
+  const [videos, setVideos] = useState(item?.videos);
   const [removedPhotos, setRemovedPhotos] = useState([]);
-  const [newPhotos, setNewPhotos] = useState([]);
-  const [photosCount, setPhotosCount] = useState(0);
+  const [removedVideos, setRemovedVideos] = useState([]);
+  const [newFiles, setNewFiles] = useState([]);
+  const [filesCount, setFilesCount] = useState(0);
   const [submitting, setSubmitting] = useState(false);
   const editBlog = async () => {
     setSubmitting(true);
-    if (photos.length === 0 && text === "" && newPhotos === null) {
+    if (
+      photos.length === 0 &&
+      videos.length == 0 &&
+      text === "" &&
+      newFiles === null
+    ) {
       setSubmitting(false);
       toastMessage("Write Something", "error");
     } else {
       let formData = new FormData();
-      if (newPhotos != null) {
-        for (let i = 0; i < newPhotos.length; i++) {
-          formData.append("photos", newPhotos[i]);
+      if (newFiles != null) {
+        for (let i = 0; i < newFiles.length; i++) {
+          formData.append("files", newFiles[i]);
         }
       }
       formData.append("text", text);
       formData.append("postedBy", localItem?.postedBy);
       formData.append("removedImages", JSON.stringify(removedPhotos));
+      formData.append("removedVideos", JSON.stringify(removedVideos));
       formData.append("images", JSON.stringify(photos));
+      formData.append("videos", JSON.stringify(videos));
       axios
         .put(`posts/${localItem?._id}`, formData, {
           headers: {
@@ -44,10 +53,12 @@ const EditPostModal = ({ show, hide, item, setItem }) => {
           if (res?.data) {
             setSubmitting(false);
             setPhotos(res?.data?.images);
-            setNewPhotos([]);
+            setVideos(res?.data?.videos);
+            setNewFiles([]);
             let tempObj = { ...localItem };
             tempObj.images = res?.data?.images;
             tempObj.text = res?.data?.text;
+            tempObj.videos = res?.data?.videos;
             setItem(tempObj);
             hide();
             toastMessage("Post updated Successfully", "success");
@@ -66,21 +77,34 @@ const EditPostModal = ({ show, hide, item, setItem }) => {
     var filtered = photos.filter(function (value, index, arr) {
       return value !== val;
     });
-    setPhotos(filtered);
-    let obj = [...removedPhotos];
-    obj.push(val);
-    setRemovedPhotos(obj);
+    if (filtered.length < photos.length) {
+      setPhotos(filtered);
+      let obj = [...removedPhotos];
+      obj.push(val);
+      setRemovedPhotos(obj);
+    }
+    var filtered2 = videos.filter(function (value, index, arr) {
+      return value !== val;
+    });
+
+    if (filtered2.length < videos.length) {
+      setVideos(filtered2);
+      let obj = [...removedVideos];
+      obj.push(val);
+      setRemovedVideos(obj);
+    }
   };
   const onFileUpload = (e) => {
     let files = e.target.files;
-    setPhotosCount(files.length);
-    setNewPhotos(files);
+    setFilesCount(files.length);
+    setNewFiles(files);
   };
 
   useEffect(() => {
     setLocalItem(item);
     setText(item?.text);
     setPhotos(item?.images);
+    setVideos(item?.videos);
   }, [item]);
 
   return (
@@ -148,6 +172,24 @@ const EditPostModal = ({ show, hide, item, setItem }) => {
                   </div>
                 );
               })}
+              {videos?.map((val, ind) => {
+                return (
+                  <div key={ind} className="position-relative">
+                    <video
+                      src={PhotoURL + val}
+                      className="edit-image"
+                      alt="post-photo"
+                      controls
+                    />
+                    <FeatherIcon
+                      icon={"x-circle"}
+                      size="20"
+                      className="cross-icon"
+                      onClick={() => removeImage(val)}
+                    />
+                  </div>
+                );
+              })}
             </div>
           </div>
           <div className="d-flex justify-content-between mt-4 align-items-center">
@@ -163,7 +205,7 @@ const EditPostModal = ({ show, hide, item, setItem }) => {
                 multiple
                 onChange={(e) => onFileUpload(e)}
               />
-              <label>{photosCount} files</label>
+              <label>{filesCount} files</label>
             </div>
             <button className="post-modal-btn px-3 py-1" onClick={editBlog}>
               {submitting ? <Spinner animation="grow" size="sm" /> : "Post"}
