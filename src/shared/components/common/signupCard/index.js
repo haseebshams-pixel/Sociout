@@ -57,7 +57,6 @@ const SignUpCard = () => {
       });
   };
   const responseGoogle = async (response) => {
-    console.log(response);
     const data = {
       email: response.profileObj.email,
       firstname: response.profileObj.givenName,
@@ -68,7 +67,6 @@ const SignUpCard = () => {
       .post("users/google_auth", data)
       .then((res) => {
         if (res?.data) {
-          console.log("data", res.data.user);
           let resp = {
             isLoggedIn: true,
             token: res.data.token,
@@ -89,7 +87,6 @@ const SignUpCard = () => {
     toastMessage("Something Went Wrong!", "error");
   };
   const responseFacebook = (response) => {
-    console.log("Facebook", response);
     const data = {
       email: response.email,
       firstname: response.first_name,
@@ -100,7 +97,6 @@ const SignUpCard = () => {
       .post("users/facebook_auth", data)
       .then((res) => {
         if (res?.data) {
-          console.log("data", res.data.user);
           let resp = {
             isLoggedIn: true,
             token: res.data.token,

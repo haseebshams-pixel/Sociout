@@ -10,7 +10,6 @@ import { useHistory } from "react-router-dom";
 import { toastMessage } from "../toast";
 import PostCard from "../postCard";
 import { toast } from "react-toastify";
-import PostUserLoader from "../../loaders/postUserLoader";
 import { PhotoURL } from "../../../utils/endpoints";
 
 function SharePostCard({ item }) {
@@ -22,8 +21,6 @@ function SharePostCard({ item }) {
   const [commentCount, setCommentCount] = useState(0);
   const [comment, setComment] = useState(false);
   const [commentText, setCommentText] = useState("");
-  const [postUser, setPostUser] = useState(null);
-  const [userLoader, setUserLoader] = useState(false);
   const [loader, setLoader] = useState(false);
   const navigate = (id) => {
     history.push(`/profile/${id}`);
@@ -51,22 +48,6 @@ function SharePostCard({ item }) {
         error: "Rejected 🤯",
       }
     );
-  };
-  const fetchUser = async () => {
-    setPostUser(null);
-    setUserLoader(true);
-    axios
-      .get(`users/${item?.PostObject[0]?.sharedBy}`)
-      .then((res) => {
-        if (res?.data) {
-          setPostUser(res.data);
-        }
-        setUserLoader(false);
-      })
-      .catch((error) => {
-        console.log(error);
-        setUserLoader(false);
-      });
   };
 
   const likePost = async () => {
@@ -175,7 +156,6 @@ function SharePostCard({ item }) {
   };
 
   useEffect(() => {
-    fetchUser();
     postActions();
   }, []);
   return (
@@ -188,51 +168,48 @@ function SharePostCard({ item }) {
         <Card.Body>
           <div className="d-flex align-items-center justify-content-between mb-3">
             <div className="d-flex">
-              {userLoader ? (
-                <PostUserLoader />
-              ) : (
-                <>
-                  <img
-                    src={
-                      postUser?.avatar
-                        ? PhotoURL + postUser?.avatar
-                        : require("../../../../assets/images/profilePlaceholder.png")
-                    }
-                    className="profile-pic"
-                    alt="profile-pic"
-                    role="button"
-                    onClick={() => navigate(item?.PostObject[0]?.sharedBy)}
-                  />
-                  <div>
-                    <Card.Title
-                      className="d-flex align-items-center m-0"
-                      role="button"
-                      onClick={() => navigate(item?.PostObject[0]?.sharedBy)}
-                    >
-                      <span className="ms-2">
-                        {user?.user?.id === item?.PostObject[0]?.sharedBy
-                          ? user?.user?.firstname + " " + user?.user?.lastname
-                          : postUser?.firstname + " " + postUser?.lastname}
-                      </span>
-                    </Card.Title>
-                    <Card.Subtitle className="text-muted post-card-subtitle">
-                      {moment(item?.PostObject[0]?.date).fromNow()}
-                    </Card.Subtitle>
-                  </div>
-                </>
-              )}
-            </div>
-            {!userLoader && user?.user?.id === item?.PostObject[0]?.sharedBy && (
-              <div className="d-flex">
-                <FeatherIcon
-                  icon="trash"
-                  size="20"
-                  className="ms-2"
+              <>
+                <img
+                  src={
+                    item?.PostObject[0]?.postUser[0]?.avatar
+                      ? PhotoURL + item?.PostObject[0]?.postUser[0]?.avatar
+                      : require("../../../../assets/images/profilePlaceholder.png")
+                  }
+                  className="profile-pic"
+                  alt="profile-pic"
                   role="button"
-                  onClick={onDelete}
+                  onClick={() => navigate(item?.PostObject[0]?.postedBy)}
                 />
-              </div>
-            )}
+                <div>
+                  <Card.Title
+                    className="d-flex align-items-center m-0"
+                    role="button"
+                    onClick={() => navigate(item?.PostObject[0]?.postedBy)}
+                  >
+                    <span className="ms-2">
+                      {user?.user?.id === item?.PostObject[0]?.postedBy
+                        ? user?.user?.firstname + " " + user?.user?.lastname
+                        : item?.PostObject[0]?.postUser[0]?.firstname +
+                          " " +
+                          item?.PostObject[0]?.postUser[0]?.lastname}
+                    </span>
+                  </Card.Title>
+                  <Card.Subtitle className="text-muted post-card-subtitle">
+                    {moment(item?.PostObject[0]?.date).fromNow()}
+                  </Card.Subtitle>
+                </div>
+              </>
+            </div>
+
+            <div className="d-flex">
+              <FeatherIcon
+                icon="trash"
+                size="20"
+                className="ms-2"
+                role="button"
+                onClick={onDelete}
+              />
+            </div>
           </div>
           <PostCard item={item} />
 
