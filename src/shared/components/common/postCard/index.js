@@ -213,7 +213,7 @@ function PostCard({ item, posts, setPosts }) {
 
   const postActions = async () => {
     var filterArray = [];
-    if (localRef?.isShared) {
+    if (localRef?.current?.isShared) {
       setLikeCount(localRef?.current?.shareLikedBy[0]?.likedBy?.length);
       filterArray = localRef?.current?.shareLikedBy[0]?.likedBy?.filter(
         (id) => {
