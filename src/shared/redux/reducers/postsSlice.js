@@ -13,7 +13,6 @@ export const postsSlice = createSlice({
       return tempObj;
     },
     resetPosts: () => {
-      console.log("rest");
       return initState;
     },
   },

@@ -72,19 +72,11 @@ function PostCard({ item, posts, setPosts }) {
   };
   const fetchUser = async () => {
     setPostUser(null);
-    setUserLoader(true);
-    axios
-      .get(`users/${localItem?.postedBy}`)
-      .then((res) => {
-        if (res?.data) {
-          setPostUser(res.data);
-        }
-        setUserLoader(false);
-      })
-      .catch((error) => {
-        console.log(error);
-        setUserLoader(false);
-      });
+    if (localItem.isShared) {
+      setPostUser(localItem.sharedPostUser[0]);
+    } else {
+      setPostUser(localItem.postUser[0]);
+    }
   };
 
   const likePost = async () => {
@@ -259,70 +251,70 @@ function PostCard({ item, posts, setPosts }) {
         <Card.Body>
           <div className="d-flex align-items-center justify-content-between mb-3">
             <div className="d-flex">
-              {userLoader ? (
-                <PostUserLoader />
-              ) : (
-                <>
-                  <img
-                    src={
-                      postUser?.avatar
-                        ? PhotoURL + postUser?.avatar
-                        : require("../../../../assets/images/profilePlaceholder.png")
-                    }
-                    className="profile-pic"
-                    alt="profile-pic"
+              <>
+                <img
+                  src={
+                    postUser?.avatar
+                      ? PhotoURL + postUser?.avatar
+                      : require("../../../../assets/images/profilePlaceholder.png")
+                  }
+                  className="profile-pic"
+                  alt="profile-pic"
+                  role="button"
+                  onClick={() =>
+                    navigate(
+                      localItem?.isShared
+                        ? localItem?.sharedBy
+                        : localItem?.postedBy
+                    )
+                  }
+                />
+                <div>
+                  <Card.Title
+                    className="d-flex align-items-center m-0"
                     role="button"
-                    onClick={() => navigate(localItem?.postedBy)}
-                  />
-                  <div>
-                    <Card.Title
-                      className="d-flex align-items-center m-0"
-                      role="button"
-                      onClick={() => navigate(localItem?.postedBy)}
-                    >
-                      <span className="ms-2">
-                        {user?.user?.id === localItem?.postedBy
-                          ? user?.user?.firstname + " " + user?.user?.lastname
-                          : postUser?.firstname + " " + postUser?.lastname}
-                      </span>
-                    </Card.Title>
-                    <Card.Subtitle className="text-muted post-card-subtitle">
-                      {moment(
+                    onClick={() =>
+                      navigate(
                         localItem?.isShared
-                          ? localItem?.oldDate
-                          : localItem?.date
-                      ).fromNow()}
-                    </Card.Subtitle>
-                  </div>
-                </>
-              )}
-            </div>
-            {!userLoader &&
-              user?.user?.id === localItem?.postedBy &&
-              !localItem?.isShared && (
-                <div className="d-flex">
-                  <FeatherIcon
-                    icon="edit-2"
-                    size="20"
-                    role="button"
-                    onClick={openModal}
-                  />
-                  <FeatherIcon
-                    icon="trash"
-                    size="20"
-                    className="ms-2"
-                    role="button"
-                    onClick={onDelete}
-                  />
+                          ? localItem?.sharedBy
+                          : localItem?.postedBy
+                      )
+                    }
+                  >
+                    <span className="ms-2">
+                      {postUser?.firstname + " " + postUser?.lastname}
+                    </span>
+                  </Card.Title>
+                  <Card.Subtitle className="text-muted post-card-subtitle">
+                    {moment(
+                      localItem?.isShared ? localItem?.oldDate : localItem?.date
+                    ).fromNow()}
+                  </Card.Subtitle>
                 </div>
-              )}
+              </>
+            </div>
+            {user?.user?.id === localItem?.postedBy && !localItem?.isShared && (
+              <div className="d-flex">
+                <FeatherIcon
+                  icon="edit-2"
+                  size="20"
+                  role="button"
+                  onClick={openModal}
+                />
+                <FeatherIcon
+                  icon="trash"
+                  size="20"
+                  className="ms-2"
+                  role="button"
+                  onClick={onDelete}
+                />
+              </div>
+            )}
           </div>
-          {userLoader ? (
-            <PostContentLoader />
-          ) : (
-            <>
-              <Card.Text>{localItem?.text}</Card.Text>
-
+          <>
+            <Card.Text>{localItem?.text}</Card.Text>
+            {(localItem?.images.length > 0 ||
+              localItem?.videos?.length > 0) && (
               <Carousel className="carosal">
                 {localItem?.images.length > 0 &&
                   localItem?.images?.map((picture, index) => {
@@ -355,8 +347,8 @@ function PostCard({ item, posts, setPosts }) {
                     );
                   })}
               </Carousel>
-            </>
-          )}
+            )}
+          </>
 
           <div className="d-flex align-items-center justify-content-between">
             <span>
