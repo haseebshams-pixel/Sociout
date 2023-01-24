@@ -331,9 +331,9 @@ function PostCard({ item, posts, setPosts }) {
                 {localItem?.videos.length > 0 &&
                   localItem?.videos?.map((vid, index) => {
                     return (
-                      <Carousel.Item key={index}>
-                        <div className="d-flex justify-content-center align-items-center">
-                          <div className="w-75">
+                      <Carousel.Item key={index} className="height-100">
+                        <div className="d-flex justify-content-center align-items-center height-100">
+                          <div className="w-75 height-100">
                             <video
                               width="100%"
                               height="100%"
